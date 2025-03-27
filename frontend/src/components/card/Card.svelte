@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import Heading from '../typography/Heading.svelte';
 
 	export let title;
 	export let closeable: boolean | undefined = true;
@@ -23,24 +22,22 @@
 
 <!-- Card START -->
 {#if open}
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		id="card"
 		class="container mx-auto z-[1100] bg-white px-4 pt-4 rounded-t-xl h-[80vh] max-h-[80vh]"
 		on:click|stopPropagation
-		role="button"
-		tabindex="0"
-		on:keydown={(e) => {
-			if (e.key !== 'Enter' && e.key !== ' ') return;
-			e.preventDefault();
-			e.target.click();
-		}}
 	>
 		<div id="card-content" class="flex flex-col h-full">
 			<!-- Navigation -->
 			<div class="flex flex-row items-center justify-between shrink">
+				<div>
+					<h1 class="text-2xl font-bold">{title}</h1>
+				</div>
 				{#if closeable}
 					<button class="shrink" on:click={close}>
-						<img src="/cross.svg" alt="" />
+						<img src="/cross.svg" />
 					</button>
 				{/if}
 			</div>
@@ -57,3 +54,4 @@
 	</div>
 {/if}
 <!-- Card END -->
+
