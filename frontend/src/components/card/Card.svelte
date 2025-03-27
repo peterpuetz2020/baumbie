@@ -22,6 +22,8 @@
 
 <!-- Card START -->
 {#if open}
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		id="card"
 		class="container mx-auto z-[1100] bg-white px-4 pt-4 rounded-t-xl h-[80vh] max-h-[80vh]"
@@ -52,3 +54,4 @@
 	</div>
 {/if}
 <!-- Card END -->
+

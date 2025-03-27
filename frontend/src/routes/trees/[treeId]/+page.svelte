@@ -4,7 +4,12 @@
 	import WaterColumn from '../../../components/WaterColumn.svelte';
 	import Chat from '../../../components/chat/Chat.svelte';
 	import Card from '../../../components/card/Card.svelte';
-	export let data;
+	import Heading from '../../../components/typography/Heading.svelte';
+	import AdoptTree from '../../../features/adoption/AdoptTree.svelte';
+	import { supabase } from '../../../supabase';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+	import type { Tree } from '../../../types/Tree';
 
 	export let activeTabIndex: number = 0;
 
@@ -17,66 +22,29 @@
 
 	$: buttonLabels = ['Infos', 'Chat'];
 
-	let testreeprops = {
-		pitID: '00008100:00c0fbd5',
-		Standort_N: 1,
-		Zusatz: null,
-		laufende_n: '1',
-		gefaellt: 0,
-		Stammdurch: 80.0,
-		Kronendurc: 12.0,
-		Baumhoehe_: 21.0,
-		Stammumfan: 251.33,
-		Baumgruppe: 0,
-		Bezirk_Nr: '11',
-		Bezirk_Bez: 'WEST - BUERGERPARK',
-		Objekt_Nr: '001',
-		Objekt_Bez: 'GA BÃ¼rgerpark',
-		Baumart_bo: 'Quercus robur',
-		Baumart_de: 'Stiel-Eiche',
-		Baumart_ku: 'q r',
-		PflE_Art_N: '1270',
-		PflE_Art_B: 'Einzelbaum',
-		Stammradiu: 40.0,
-		Kronenradi: 6.0,
-		geometry: { type: 'Point', coordinates: [8.511457515202823, 52.026940411111674] },
-		waterdata: [
-			{
-				source: 'Dir',
-				amount: 20
-			},
-			{
-				source: 'Peter',
-				amount: 10
-			},
-			{
-				label: 'Stadt',
-				amount: 30
-			},
-			{
-				label: 'Regen',
-				amount: 30
-			}
-		]
-	};
 
-	const {
-		Baumart_de: art_de,
-		Stammdurch: durchmesser_stamm,
-		Kronendurc: durchmesser_krone,
-		Baumhoehe_: hoehe,
-		Stammumfan: umfang_stamm,
-		waterdata: water_history
-	} = testreeprops;
+	export let tree: Tree;
+
+	$: tree;
+
+	onMount(async () => {
+		const { data, error } = await supabase
+			.from('trees')
+			.select()
+			.eq('uuid', $page.params.treeId)
+			.maybeSingle();
+		tree = data;
+	});
 </script>
 
-<Card title={`${art_de}, ALTER`} open={true}>
+{#if tree}
+<Card title={`${tree.tree_type_german}, ALTER`} open={true}>
 	<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 
 	<div slot="navigation">
 		<nav
 			id="single-tree-navigation"
-			class="flex flex-col justify-center px-3 py-2 text-base font-medium text-center bg-green-300 rounded-md shadow-sm whitespace-nowrap"
+			class="flex flex-col justify-center px-3 py-2 text-base font-medium text-center bg-green-600 bg-opacity-60 rounded-md shadow-sm whitespace-nowrap mb-4"
 			role="tablist"
 			aria-label="Content sections"
 		>
@@ -114,25 +82,64 @@
 	</div>
 
 	<div id="single-tree-content" class="flex flex-col">
-		<div>
+		<div class="flex flex-col gap-4">
 			{#if activeTabIndex === 0}
 				<Accordion>
+					<div class="flex flex-col gap-4">
 					<AccordionItem key="a">
-						<h2 slot="header">
-							Über Mich
-							<button><img src="/plusButton.svg" alt="Plusbutton" /></button>
-						</h2>
+						<div slot="header">
+							<div class="inline-flex flex-row items-start gap-2.5">
+								<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
+								Über Mich
+								</p>
+							<button class="translate-y-1.5"><img src="/plusButton.svg" alt="Plusbutton" /></button>
+							</div>
+						</div>
 						<p slot="body">
-							Höhe: {hoehe}<br />
-							Kronendurchmesser: {durchmesser_krone}<br />
-							Stammdurchmesser: {durchmesser_stamm}
+							<b>Höhe:</b>{tree.height} Meter<br />
+							<b>Kronendurchmesser:</b> {tree.crown_diameter} Meter<br />
+							<b>Stammdurchmesser:</b> {tree.trunk_diameter} Zentimeter
 						</p>
 					</AccordionItem>
+
+					<AccordionItem key="b">
+						<div slot="header">
+							<div class="inline-flex flex-row items-start gap-2.5">
+								<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
+								Wasserbedarf
+								</p>
+							<button class="translate-y-1.5"><img src="/plusButton.svg" alt="Plusbutton" /></button>
+							</div>
+						</div>
+						<p slot="body">
+							<WaterColumn/>
+						</p>
+					</AccordionItem>
+
+					<AccordionItem key="c">
+						<div slot="header">
+							<div class="inline-flex flex-row items-start gap-2.5">
+								<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
+								Wer wann gegossen hat
+								</p>
+								<button class="translate-y-1.5"><img src="/plusButton.svg" alt="Plusbutton" /></button>
+								</div>
+							</div>
+						<p slot="body">
+							Hier werden die letzten 10 Gießungen angezeigt
+						</p>
+					</AccordionItem>
+				</div>
 				</Accordion>
-				<WaterColumn />
+
+      		<AdoptTree {tree} />
+
 			{:else}
 				<Chat />
 			{/if}
+
 		</div>
 	</div>
+
 </Card>
+{/if}

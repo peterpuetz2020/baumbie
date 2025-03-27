@@ -1,11 +1,12 @@
 <script lang="ts">
-	export const level: number = 1;
+	export let level: number = 1;
+	console.log("level: ",)
 </script>
 
 {#if level === 1}
 	<h1 {...$$props} class={`${$$props.class} font-bold text-2xl pb-4`}><slot /></h1>
 {:else if level === 2}
-	<h2 {...$$props} class={`${$$props.class} font-bold text-xl pb-4`}><slot /></h2>
+	<h2 {...$$props} class={`${$$props.class} font-bold pb-2`}><slot /></h2>
 {:else if level === 3}
 	<h3 {...$$props} class={`${$$props.class} font-bold pb-2`}><slot /></h3>
 {:else if level === 4}
