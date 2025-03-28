@@ -19,9 +19,9 @@
         <Heading level={2}>Deine adoptierten Bäume</Heading>
         <BaseButton label={"Base"}/>
         <LinkButton label={"link"}/>
-        <DefaultButton label={"default"} icon_src={"/tree.svg"} icon_alt={"Baum"}/>
+        <DefaultButton label={"default"} icon_src={"/icons/tree.svg"} icon_alt={"Baum"}/>
         <PrimaryButton label={"primary"}/>
-        <DefaultButton label={"default"} icon_src={"/tree.svg"} icon_alt={"Baum"}/>
+        <DefaultButton label={"default"} icon_src={"/icons/tree.svg"} icon_alt={"Baum"}/>
         <LinkButton label={"link"}/>
         <SecondaryButton label={"secondary"}/>
    

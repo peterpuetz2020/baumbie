@@ -63,7 +63,7 @@
             {#each adopted_trees as tree}
             <DefaultButton
             label={tree.name}
-            icon_src={"/tree.svg"}
+            icon_src={"/icons/tree.svg"}
             icon_alt={"Baum"}
             on:click={goto(`/trees/${tree.id}`)}/>
             {/each}

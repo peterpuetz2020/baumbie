@@ -92,7 +92,7 @@
 								<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
 								Über Mich
 								</p>
-							<button class="translate-y-1.5"><img src="/plusButton.svg" alt="Plusbutton" /></button>
+							<button class="translate-y-1.5"><img src="/trees/accordion-toggle.svg" alt="Toggle" /></button>
 							</div>
 						</div>
 						<p slot="body">
@@ -108,7 +108,7 @@
 								<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
 								Wasserbedarf
 								</p>
-							<button class="translate-y-1.5"><img src="/plusButton.svg" alt="Plusbutton" /></button>
+							<button class="translate-y-1.5"><img src="/trees/accordion-toggle.svg" alt="Toggle" /></button>
 							</div>
 						</div>
 						<p slot="body">
@@ -122,7 +122,7 @@
 								<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
 								Wer wann gegossen hat
 								</p>
-								<button class="translate-y-1.5"><img src="/plusButton.svg" alt="Plusbutton" /></button>
+								<button class="translate-y-1.5"><img src="/trees/accordion-toggle.svg" alt="Toggle" /></button>
 								</div>
 							</div>
 						<p slot="body">
