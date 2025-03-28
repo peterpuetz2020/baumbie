@@ -132,7 +132,7 @@
 					}
 				}}
 			>
-				<img src="/sendIcon.svg" class="w-8 h-8" alt="senden">
+				<img src="/chat/send.svg" class="w-8 h-8" alt="senden">
 			</button>
 		</div>
 	</div>

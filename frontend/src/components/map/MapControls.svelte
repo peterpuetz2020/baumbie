@@ -77,7 +77,7 @@
 		class="w-12 h-12 bg-white rounded-full shadow flex items-center justify-center hover:bg-gray-100 transition"
 		aria-label="Standort zentrieren"
 	>
-		<img src="/buttons/locate.svg" alt="Standort zentrieren" class="w-7 h-7" />
+		<img src="/map/controls/locate.svg" alt="Standort zentrieren" class="w-7 h-7" />
 	</button>
 
 	<!-- ➕ Zoom In -->
@@ -86,7 +86,7 @@
 		class="w-12 h-12 bg-white rounded-full shadow flex items-center justify-center hover:bg-gray-100 transition"
 		aria-label="Zoom in"
 	>
-		<img src="/buttons/zoom-in.svg" alt="Zoom in" class="w-8 h-8" />
+		<img src="/map/controls/zoom-in.svg" alt="Zoom in" class="w-8 h-8" />
 	</button>
 
 	<!-- ➖ Zoom Out -->
@@ -95,6 +95,6 @@
 		class="w-12 h-12 bg-white rounded-full shadow flex items-center justify-center hover:bg-gray-100 transition"
 		aria-label="Zoom out"
 	>
-		<img src="/buttons/zoom-out.svg" alt="Zoom out" class="w-8 h-8" />
+		<img src="/map/controls/zoom-out.svg" alt="Zoom out" class="w-8 h-8" />
 	</button>
 </div>

@@ -24,7 +24,7 @@
 
 	// 🌳 Baum-Marker
 	const greenIcon = L.icon({
-		iconUrl: '/Tree_Marker.svg',
+		iconUrl: '/map/markers/marker-tree.svg',
 		iconSize: [15, 15],
 		iconAnchor: [10, 10],
 		popupAnchor: [0, -10]
@@ -71,7 +71,7 @@
 											if (last_clicked && (last_clicked as any)._icon) {
 												(last_clicked as any)._icon.src = '/Tree_Marker.svg';
 											}
-											e.target._icon.src = '/Tree_Marker_Clicked.svg';
+											e.target._icon.src = '/map/markers/marker-tree-clicked.svg';
 											const treeId = e.sourceTarget.feature.properties.uuid;
 											goto(`/trees/${treeId}`);
 											if (e.target._icon) {

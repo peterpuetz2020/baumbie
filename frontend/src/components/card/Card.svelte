@@ -37,7 +37,7 @@
 				</div>
 				{#if closeable}
 					<button class="shrink" on:click={close}>
-						<img src="/cross.svg" />
+						<img src="/card/cross.svg" alt="close" />
 					</button>
 				{/if}
 			</div>

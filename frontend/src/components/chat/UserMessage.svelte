@@ -18,6 +18,6 @@
 		</div>
 	</div>
 	<div class="pt-2">
-		<img src="/userIcon.svg" alt="Bot" class="min-w-8 min-h-8" />	
+		<img src="/chat/user.svg" alt="Bot" class="min-w-8 min-h-8" />	
 	</div>
 </div>

@@ -14,7 +14,7 @@
 
 <div class="flex gap-1.5 flex-row w-full bot-message">
 	<div class="pt-2 ">
-			<img src="/tree.svg" alt="Bot" class="min-w-8 min-h-8" />	
+			<img src="/icons/tree.svg" alt="Bot" class="min-w-8 min-h-8" />	
 	</div>
 	<div>
 		<div class="p-3 text-black rounded-xl bg-message-bot box-border">
