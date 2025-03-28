@@ -69,7 +69,7 @@
 										return L.marker(latlng, { icon: greenIcon }).on('click', (e) => {
 											// Marker-Zustand aktualisieren
 											if (last_clicked && (last_clicked as any)._icon) {
-												(last_clicked as any)._icon.src = '/Tree_Marker.svg';
+												(last_clicked as any)._icon.src = '/map/markers/marker-tree.svg';
 											}
 											e.target._icon.src = '/map/markers/marker-tree-clicked.svg';
 											const treeId = e.sourceTarget.feature.properties.uuid;
