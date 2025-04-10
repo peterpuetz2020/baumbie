@@ -30,7 +30,7 @@
     
     <section class="flex relative flex-col items-start text-lg text-black max-w-[350px]">
       <header class="flex z-0 gap-10 items-start self-stretch w-full whitespace-nowrap">
-        <p class="font-black text-right">-</p>
+        <p class="font-black text-right"></p>
       </header>
     
       <article class="flex z-0 flex-col mt-3.5 max-w-full w-[249px]">

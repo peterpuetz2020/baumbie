@@ -38,7 +38,7 @@
 </script>
 
 {#if tree}
-<Card title={`${tree.tree_type_german}, ALTER`} open={true}>
+<Card title={`${tree.tree_type_german}`} open={true}>
 	<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 
 	<div slot="navigation">
@@ -96,7 +96,7 @@
 							</div>
 						</div>
 						<p slot="body">
-							<b>Höhe:</b>{tree.height} Meter<br />
+							<b>Höhe: </b>{tree.height} Meter<br />
 							<b>Kronendurchmesser:</b> {tree.crown_diameter} Meter<br />
 							<b>Stammdurchmesser:</b> {tree.trunk_diameter} Zentimeter
 						</p>
@@ -112,6 +112,7 @@
 							</div>
 						</div>
 						<p slot="body">
+							Das ist eine Beispielansicht. Wir sind noch dabei, alle nötigen Date einzusammeln.
 							<WaterColumn/>
 						</p>
 					</AccordionItem>
@@ -126,7 +127,7 @@
 								</div>
 							</div>
 						<p slot="body">
-							Hier werden die letzten 10 Gießungen angezeigt
+							Hier sollen künftig die letzten 10 Gießungen für diesen Baum angezeigt werden. Das Feature ist noch in der Entwicklung.
 						</p>
 					</AccordionItem>
 				</div>

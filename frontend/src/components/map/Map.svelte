@@ -95,7 +95,7 @@
 
 	// 🗺️ Leaflet-Initialisierung
 	onMount(() => {
-		const tileURL = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/light_nolabels/{z}/{x}/{y}.png';
+		const tileURL = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/light_all/{z}/{x}/{y}.png';
 
 		const layer = L.tileLayer(tileURL, {
 			attribution:
