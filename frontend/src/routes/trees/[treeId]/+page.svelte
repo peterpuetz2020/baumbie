@@ -10,6 +10,8 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Tree } from '../../../types/Tree';
+	import TreeMetric from '../../../components/trees/TreeMetric.svelte';
+
 
 	export let activeTabIndex: number = 0;
 
@@ -35,6 +37,7 @@
 			.maybeSingle();
 		tree = data;
 	});
+
 </script>
 
 {#if tree}
@@ -86,21 +89,23 @@
 			{#if activeTabIndex === 0}
 				<Accordion>
 					<div class="flex flex-col gap-4">
-					<AccordionItem key="a">
-						<div slot="header">
-							<div class="inline-flex flex-row items-start gap-2.5">
-								<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
-								Über Mich
-								</p>
-							<button class="translate-y-1.5"><img src="/trees/accordion-toggle.svg" alt="Toggle" /></button>
+						<AccordionItem key="a">
+							<div slot="header">
+								<div class="inline-flex flex-row items-start gap-2.5">
+									<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
+										Über mich
+									</p>
+									<button class="translate-y-1.5">
+										<img src="/trees/accordion-toggle.svg" alt="Toggle" />
+									</button>
+								</div>
 							</div>
-						</div>
-						<p slot="body">
-							<b>Höhe: </b>{tree.height} Meter<br />
-							<b>Kronendurchmesser:</b> {tree.crown_diameter} Meter<br />
-							<b>Stammdurchmesser:</b> {tree.trunk_diameter} Zentimeter
-						</p>
-					</AccordionItem>
+							<div slot="body" class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
+								<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
+								<TreeMetric label="Kronendurchmesser" value={tree.crown_diameter} unit="m" max={29} position="top" />
+								<TreeMetric label="Stammdurchmesser" value={tree.trunk_diameter} unit="cm" max={297} position="bottom" />
+							</div>
+						</AccordionItem>
 
 					<AccordionItem key="b">
 						<div slot="header">
