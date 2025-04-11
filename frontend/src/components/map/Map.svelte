@@ -83,7 +83,7 @@
 											const lat2 = map.getBounds()._southWest.lat;
 											const latb = e.latlng.lat;
 											const latn = latb - Math.abs(lat1 - lat2) / 2.35;
-											map.panTo({ lat: latn, lng: e.latlng.lng });
+											map.flyTo({ lat: latn, lng: e.latlng.lng }, map.getZoom(), {animate:true, duration: 0.75});
 										});
 									}
 								}).addTo(markers);
