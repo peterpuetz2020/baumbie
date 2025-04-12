@@ -13,15 +13,15 @@
 </script>
 
 <div class="flex gap-1.5 flex-row w-full bot-message">
-	<div class="pt-2 ">
-			<img src="/tree.svg" alt="Bot" class="min-w-8 min-h-8" />	
+	<div class="pt-2">
+		<img src="/tree.svg" alt="Bot" class="min-w-8 min-h-8" />
 	</div>
 	<div>
-		<div class="p-3 text-black rounded-xl bg-message-bot box-border">
+		<div class="box-border p-3 text-black rounded-xl bg-message-bot">
 			{message.text}
 			{#if message.ai}
-			<span class="text-gray-400 text-xs float-right inline-block mt-2">KI-generiert</span>
-			<div class="clear-both"></div>
+				<span class="inline-block float-right mt-2 text-xs text-gray-400">KI-generiert</span>
+				<div class="clear-both"></div>
 			{/if}
 		</div>
 	</div>

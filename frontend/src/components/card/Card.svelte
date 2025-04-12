@@ -29,10 +29,10 @@
 		role="button"
 		tabindex="0"
 		on:keydown={(e) => {
-            if (e.key !== 'Enter' && e.key !== ' ') return;
-            e.preventDefault();
-            e.target.click();
-        }}
+			if (e.key !== 'Enter' && e.key !== ' ') return;
+			e.preventDefault();
+			e.target.click();
+		}}
 	>
 		<div id="card-content" class="flex flex-col h-full">
 			<!-- Navigation -->
@@ -51,7 +51,7 @@
 			<slot name="navigation" />
 
 			<!-- Card Content -->
-			<div class="overflow-y-auto grow">
+			<div class="grow">
 				<slot />
 			</div>
 			<!-- Card Content END -->
