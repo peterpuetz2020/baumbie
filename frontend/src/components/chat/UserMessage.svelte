@@ -1,14 +1,7 @@
 <script lang="ts">
-	interface Message {
-		text: string;
-		label: string;
-		type: string;
-		sender: string;
-		source?: string;
-		clickable?: boolean;
-	}
+	import type { Message as MessageType } from './types';
 
-	export let message: Message;
+	export let message: MessageType;
 </script>
 
 <div class="flex gap-1.5 flex-row w-full flex-end">

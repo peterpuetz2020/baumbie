@@ -1,56 +1,23 @@
 <script lang="ts">
+	// === Imports ===
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import BotMessage from './BotMessage.svelte';
 	import Message from './Message.svelte';
-	import UserMessage from './UserMessage.svelte';
+	import type { Message as MessageType, RawMessage } from './types';
 
+	// === Props ===
 	export let treeId: string = '';
-
-	let sessionId: string = '';
-
 	$: treeId;
-
 	console.log('Chat got Tree ID: ', treeId);
-
-	interface Message {
-		text: string;
-		label: string;
-		type: string;
-		sender: string;
-		source?: string;
-		clickable?: boolean;
-	}
-
-	let messages: Array<Message> = [];
-
+	
+	// === State ===
+	let sessionId: string = '';
+	let messages: MessageType[] = [];
 	let newMessage: string = '';
 	let chatAvailable: boolean = true;
 
-	const handleNewChatMessages = (response: unknown) => {
-		console.log(response);
-		if (response.error !== null) {
-			console.error('Error fetching chat messages:', response.error);
-			return;
-		}
 
-		const data = response.data;
-		sessionId = data.sessionId;
-		messages = [
-			...messages,
-			...data.messages
-				.filter((msg) => ['no-reply', 'path'].indexOf(msg.type) === -1)
-				.map((msg: unknown) => ({
-					text: msg.payload.message,
-					label: '',
-					type: msg.payload.type,
-					sender: 'bot',
-					source: '',
-					clickable: false
-				}))
-		];
-	};
-
+	// === Lifecycle ===
 	onMount(() => {
 		if (!treeId) {
 			console.error('No treeId provided');
@@ -65,30 +32,78 @@
 			.then(handleNewChatMessages);
 	});
 
+	// === Helpers ===
+	const handleNewChatMessages = (response: unknown) => {
+		console.log(response);
+		if (
+			typeof response !== 'object' ||
+			response === null ||
+			!('data' in response) ||
+			!('error' in response)
+		) {
+			console.error('Invalid response structure:', response);
+			return;
+		}
+
+		const { data, error } = response as { data: any; error: any };
+
+		if (error !== null) {
+			console.error('Error fetching chat messages:', error);
+			return;
+		}
+
+		sessionId = data.sessionId;
+		messages = [
+			...messages,
+			...data.messages
+				.filter((msg: RawMessage) => !['no-reply', 'path'].includes(msg.type))
+				.map((msg: RawMessage): MessageType => {
+					const buttons = Array.isArray(msg.payload?.buttons)
+						? msg.payload!.buttons!.map((btn) => ({
+								label: btn.name,
+								request: btn.request
+							}))
+						: [];
+
+					return {
+						text: msg.payload?.message ?? '',
+						label: '',
+						type: msg.payload?.type ?? msg.type,
+						sender: 'bot',
+						source: '',
+						clickable: buttons.length > 0,
+						buttons
+					};
+				})
+		];
+
+	};
+
 	function sendMessage(text: string) {
 		if (text === '') {
 			return;
 		}
-		messages = [
-			...messages,
-			{
-				text,
-				label: '',
-				type: 'text',
-				sender: 'user',
-				source: '',
-				clickable: false
-			}
-		];
-		newMessage = '';
+		const newUserMessage: MessageType = {
+			text,
+			label: '',
+			type: 'text',
+			sender: 'user',
+			source: '',
+			clickable: false
+		};
+
+		messages = [...messages, newUserMessage];
+
 		supabase.functions
 			.invoke('chat', {
 				body: {
 					sessionId,
-					text: newMessage
+					text
 				}
 			})
 			.then(handleNewChatMessages);
+
+		newMessage = '';
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
@@ -103,7 +118,7 @@
 		<div class="sticky top-0 min-h-12 h-12 w-100 bg-gradient-to-b from-white z-[9999999]"></div>
 		<div class="flex flex-col h-full overflow-y-auto gap-y-1">
 			{#each messages as message}
-				<Message {message} />
+				<Message {message} {sendMessage} />
 			{/each}
 		</div>
 	</div>
@@ -117,6 +132,7 @@
 				placeholder={chatAvailable ? '' : 'Chat beendet.'}
 				on:keydown={handleKeydown}
 			/>
+			
 			<button
 				class="shrink"
 				disabled={!chatAvailable}
@@ -131,6 +147,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-</style>
