@@ -19,7 +19,7 @@
 	</div>
 	<div>
 		{#if message.text}
-			<div class="box-border p-3 text-black rounded-xl bg-message-bot">
+			<div class="box-border p-3 text-black rounded-xl bg-message-bot max-w-[80%] md:max-w-[70%]">
 				{message.text}
 				{#if message.ai}
 					<span class="inline-block float-right mt-2 text-xs text-gray-400">KI-generiert</span>

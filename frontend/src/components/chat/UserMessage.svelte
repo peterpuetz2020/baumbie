@@ -5,8 +5,8 @@
 </script>
 
 <div class="flex gap-1.5 flex-row w-full flex-end">
-	<div class="flex flex-grow">
-		<div class="p-3 text-black rounded-xl bg-message-user box-border w-full">
+	<div class="flex w-full justify-end">
+		<div class="p-3 text-black rounded-xl bg-message-user box-border max-w-[80%] md:max-w-[70%]">
 			{message.text}
 		</div>
 	</div>

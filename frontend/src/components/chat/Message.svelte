@@ -7,9 +7,7 @@
 	export let sendMessage: (text: string) => void;
 </script>
 
-<div
-	class={`message flex flex-row w-full ${message.sender === 'bot' ? 'justify-start' : 'justify-end'} mb-2`}
->
+<div class="message flex flex-row w-full mb-2">
 	{#if message.sender === 'bot'}
 		<BotMessage {message} {sendMessage}/>
 	{:else if message.sender === 'user'}
