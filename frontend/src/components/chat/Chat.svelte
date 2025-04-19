@@ -111,6 +111,8 @@
 			sendMessage(newMessage);
 		}
 	}
+
+	$: console.log('↪ newMessage:', JSON.stringify(newMessage));
 </script>
 
 <div id="chat-container" class="flex flex-col grow">
@@ -125,12 +127,13 @@
 
 	<div class="sticky bottom-0 pt-2 bg-white border-t shrink border-t-gray-500">
 		<div class="flex flex-row gap-2 mb-2">
-			<input
+			<input	
+				type="text"
 				class="px-3 py-1 bg-green-500 rounded-full grow placeholder:text-neutral-500 placeholder:italic"
 				disabled={!chatAvailable}
 				bind:value={newMessage}
 				placeholder={chatAvailable ? '' : 'Chat beendet.'}
-				on:keydown={handleKeydown}
+				on:keyup={handleKeydown}
 			/>
 			
 			<button

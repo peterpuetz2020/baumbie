@@ -18,21 +18,31 @@
 		open = false;
 		goto('/');
 	};
+
+	function handleKeyUp(e: KeyboardEvent) {
+		const target = e.target as HTMLElement;
+
+		if (!target || typeof target.click !== 'function') return;
+
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			target.click();
+		}
+	}
 </script>
 
 <!-- Card START -->
 {#if open}
+	
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<div
 		id="card"
+		aria-label="Dialogfenster"
+		aria-modal="true"
 		class="container mx-auto z-[1100] bg-white px-4 pt-4 rounded-t-xl h-[80vh] max-h-[80vh]"
 		on:click|stopPropagation
-		role="button"
-		tabindex="0"
-		on:keydown={(e) => {
-			if (e.key !== 'Enter' && e.key !== ' ') return;
-			e.preventDefault();
-			e.target.click();
-		}}
+		role="dialog"
+		on:keyup={handleKeyUp}
 	>
 		<div id="card-content" class="flex flex-col h-full">
 			<!-- Navigation -->
