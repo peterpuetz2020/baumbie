@@ -4,12 +4,13 @@
 	import WaterColumn from '../../../components/WaterColumn.svelte';
 	import Chat from '../../../components/chat/Chat.svelte';
 	import Card from '../../../components/card/Card.svelte';
-
+	import Heading from '../../../components/typography/Heading.svelte';
 	import AdoptTree from '../../../features/adoption/AdoptTree.svelte';
 	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Tree } from '../../../types/Tree';
+	import TreeMetric from '../../../components/trees/TreeMetric.svelte';
 
 	export let activeTabIndex: number = 0;
 
@@ -37,7 +38,7 @@
 </script>
 
 {#if tree}
-	<Card title={`${tree.tree_type_german}, ALTER`} open={true}>
+	<Card title={tree.tree_type_german} open={true}>
 		<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 
 		<div slot="navigation">
@@ -81,40 +82,56 @@
 		</div>
 
 		<div id="single-tree-content" class="flex flex-col h-full">
-			<div class="flex flex-col h-full gap-4">
+			<div class="flex flex-col gap-4 h-full">
 				{#if activeTabIndex === 0}
 					<Accordion>
 						<div class="flex flex-col gap-4">
 							<AccordionItem key="a">
 								<div slot="header">
 									<div class="inline-flex flex-row items-start gap-2.5">
-										<p class="text-base font-bold leading-normal text-black font-cera-bielefeld">
-											Über Mich
+										<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
+											Über mich
 										</p>
-										<button class="translate-y-1.5"
-											><img src="/plusButton.svg" alt="Plusbutton" /></button
-										>
+										<button class="translate-y-1.5">
+											<img src="/trees/accordion-toggle.svg" alt="Toggle" />
+										</button>
 									</div>
 								</div>
-								<p slot="body">
-									Höhe: {tree.height}<br />
-									Kronendurchmesser: {tree.crown_diameter}<br />
-									Stammdurchmesser: {tree.trunk_diameter}
-								</p>
+								<div
+									slot="body"
+									class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800"
+								>
+									<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
+									<TreeMetric
+										label="Kronendurchmesser"
+										value={tree.crown_diameter}
+										unit="m"
+										max={29}
+										position="top"
+									/>
+									<TreeMetric
+										label="Stammdurchmesser"
+										value={tree.trunk_diameter}
+										unit="cm"
+										max={297}
+										position="bottom"
+									/>
+								</div>
 							</AccordionItem>
 
 							<AccordionItem key="b">
 								<div slot="header">
 									<div class="inline-flex flex-row items-start gap-2.5">
-										<p class="text-base font-bold leading-normal text-black font-cera-bielefeld">
+										<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
 											Wasserbedarf
 										</p>
-										<button class="translate-y-1.5"
-											><img src="/plusButton.svg" alt="Plusbutton" /></button
-										>
+										<button class="translate-y-1.5">
+											<img src="/trees/accordion-toggle.svg" alt="Toggle" />
+										</button>
 									</div>
 								</div>
 								<p slot="body">
+									Das ist eine Beispielansicht. Wir sind noch dabei, alle nötigen Date einzusammeln.
 									<WaterColumn />
 								</p>
 							</AccordionItem>
@@ -122,12 +139,12 @@
 							<AccordionItem key="c">
 								<div slot="header">
 									<div class="inline-flex flex-row items-start gap-2.5">
-										<p class="text-base font-bold leading-normal text-black font-cera-bielefeld">
+										<p class="text-black font-cera-bielefeld text-base font-bold leading-normal">
 											Wer wann gegossen hat
 										</p>
-										<button class="translate-y-1.5"
-											><img src="/plusButton.svg" alt="Plusbutton" /></button
-										>
+										<button class="translate-y-1.5">
+											<img src="/trees/accordion-toggle.svg" alt="Plusbutton" />
+										</button>
 									</div>
 								</div>
 								<p slot="body">Hier werden die letzten 10 Gießungen angezeigt</p>

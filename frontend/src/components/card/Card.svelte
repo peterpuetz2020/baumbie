@@ -33,8 +33,7 @@
 
 <!-- Card START -->
 {#if open}
-	
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div
 		id="card"
 		aria-label="Dialogfenster"
@@ -52,7 +51,7 @@
 				</div>
 				{#if closeable}
 					<button class="shrink" on:click={close}>
-						<img src="/cross.svg" alt="" />
+						<img src="/card/cross.svg" alt="close" />
 					</button>
 				{/if}
 			</div>
@@ -69,3 +68,4 @@
 	</div>
 {/if}
 <!-- Card END -->
+

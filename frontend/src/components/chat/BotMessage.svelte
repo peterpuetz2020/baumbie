@@ -15,7 +15,7 @@
 
 <div class="flex gap-1.5 flex-row w-full bot-message">
 	<div class="pt-2">
-		<img src="/tree.svg" alt="Bot" class="min-w-8 min-h-8" />
+			<img src="/icons/tree.svg" alt="Bot" class="min-w-8 min-h-8" />	
 	</div>
 	<div class="w-full flex flex-row">
 		{#if message.text}
