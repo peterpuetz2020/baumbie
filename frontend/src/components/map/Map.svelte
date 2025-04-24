@@ -125,7 +125,7 @@
 </script>
 
 <!-- 🗺️ Karte -->
-<div {id} class="absolute top-0 left-0 min-w-full min-h-full" />
+<div {id} class="fixed top-0 left-0 min-w-full min-h-full" />
 
 <!-- 🧭 Custom Controls -->
 <MapControls {map} />
