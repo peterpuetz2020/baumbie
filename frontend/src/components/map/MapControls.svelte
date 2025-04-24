@@ -77,7 +77,7 @@ const userMarkerHtml = `
 </script>
 
 <!-- UI für Zoom + Standort -->
-<div class="absolute bottom-[90px] right-4 flex flex-col gap-2 z-[1000]">
+<div class="fixed bottom-[90px] right-4 flex flex-col gap-2 z-[1000]">
 	<!-- 📍 Standort zentrieren -->
 	<button
 		on:click={centerOnUser}

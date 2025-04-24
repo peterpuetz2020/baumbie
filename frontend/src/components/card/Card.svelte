@@ -33,39 +33,38 @@
 
 <!-- Card START -->
 {#if open}
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div
 		id="card"
+		role="dialog"
 		aria-label="Dialogfenster"
 		aria-modal="true"
-		class="container mx-auto z-[1100] bg-white px-4 pt-4 rounded-t-xl h-[80vh] max-h-[80vh]"
 		on:click|stopPropagation
-		role="dialog"
 		on:keyup={handleKeyUp}
+		class="fixed bottom-[64px] top-[80px] left-0 right-0 z-[800] flex justify-center"
 	>
-		<div id="card-content" class="flex flex-col h-full">
-			<!-- Navigation -->
-			<div class="flex flex-row items-center justify-between shrink">
-				<div>
-					<h1 class="text-2xl font-bold">{title}</h1>
-				</div>
+		<!-- Inhalt mit max-Breite und Padding -->
+		<div class="bg-white px-4 pt-4 rounded-t-xl shadow-xl flex flex-col w-full max-w-5xl mx-auto h-full overflow-hidden">
+			<!-- Header -->
+			<header class="flex flex-row items-center justify-between shrink-0">
+				<h1 class="text-2xl font-bold">{title}</h1>
 				{#if closeable}
-					<button class="shrink" on:click={close}>
+					<button on:click={close}>
 						<img src="/card/cross.svg" alt="close" />
 					</button>
 				{/if}
-			</div>
-			<!-- Navigation END -->
-
+			</header>
+	
 			<slot name="navigation" />
 
-			<!-- Card Content -->
-			<div class="grow">
-				<slot />
+			<!-- Hauptinhalt -->
+			<div class="grow min-h-0 flex flex-col">
+				<div class="overflow-y-auto grow min-h-0">
+					<slot />
+				</div>
 			</div>
-			<!-- Card Content END -->
+			
 		</div>
 	</div>
 {/if}
 <!-- Card END -->
-
