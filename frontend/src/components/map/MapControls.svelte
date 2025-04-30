@@ -1,30 +1,10 @@
 <script lang="ts">
 	import L from 'leaflet';
+	import { userMarkerIcon } from '$lib/map/user-marker';
 
 	export let map: L.Map;
 
 	let userMarker: L.Marker | null = null;
-
-    // Platzhalter für Positionsmarker
-
-// ... existing code ...
-const userMarkerHtml = `
-    <div class="relative">
-        <svg width="28" height="27" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 0C5.4 0 0 5.4 0 12C0 21 12 36 12 36C12 36 24 21 24 12C24 5.4 18.6 0 12 0Z" fill="#EF4444"/>
-            <circle cx="12" cy="12" r="8" fill="#EF4444" stroke="white" stroke-width="2"/>
-            <circle cx="12" cy="12" r="3" fill="white"/>
-        </svg>
-        <button
-            class="absolute -top-2 -right-2 bg-white text-red-500 border border-red-300 rounded-full w-4 h-4 text-[10px] flex items-center justify-center shadow hover:bg-red-50"
-            data-remove-marker
-            title="Marker entfernen"
-        >
-            ×
-        </button>
-    </div>
-`;
-
 
 	function zoomIn() {
 		map?.zoomIn();
@@ -40,11 +20,12 @@ const userMarkerHtml = `
 		if (userMarker) {
 			map.removeLayer(userMarker);
 			userMarker = null;
+			return
 		}
 
 		map.off('locationfound');
 		map.off('locationerror');
-		map.locate();
+		map.locate({ enableHighAccuracy: true });
 
 		map.once('locationfound', (e) => {
 			map.flyTo(e.latlng, 20, {
@@ -52,22 +33,7 @@ const userMarkerHtml = `
 				duration: 1.5
 			});
 
-			const icon = L.divIcon({
-				html: userMarkerHtml,
-				className: '',
-				iconSize: [20, 20],
-				iconAnchor: [10, 10]
-			});
-
-			userMarker = L.marker(e.latlng, { icon }).addTo(map);
-
-			const markerEl = userMarker.getElement();
-			if (markerEl) {
-				markerEl.querySelector('[data-remove-marker]')?.addEventListener('click', () => {
-					map.removeLayer(userMarker!);
-					userMarker = null;
-				});
-			}
+			userMarker = L.marker(e.latlng, { icon: userMarkerIcon() }).addTo(map);
 		});
 
 		map.once('locationerror', () => {
