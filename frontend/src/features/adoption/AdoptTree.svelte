@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import PrimaryButton from '../../components/button/PrimaryButton.svelte';
-	import Heading from '../../components/typography/Heading.svelte';
 	import Typography from '../../components/typography/Typography.svelte';
 	import { supabase } from '../../supabase';
-	import type { Tree } from '../../types/Tree';
+	import type { Tree } from '../../types/tree';
 
 	export let tree: Tree;
 

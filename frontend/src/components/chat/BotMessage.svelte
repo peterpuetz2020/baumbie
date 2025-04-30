@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Message } from './types';
+	import type { Message } from '../../types/chat';
 
 	export let message: Message;
 	export let sendMessage: (text: string) => void;
@@ -7,15 +7,16 @@
 	let selectedLabel: string | null = null;
 
 	function handleClick(label: string) {
-		if (selectedLabel !== null || !message.clickable) return;
+		if (selectedLabel !== null || message.type !== 'choice') return;
 		selectedLabel = label;
 		sendMessage(label);
 	}
+	// console.log('BotMessage received:', message);
 </script>
 
 <div class="flex gap-1.5 flex-row w-full bot-message">
 	<div class="pt-2">
-			<img src="/icons/tree.svg" alt="Bot" class="min-w-8 min-h-8" />	
+			<img src={ message.ai ? "/chat/tree-ai.svg" : "/icons/tree.svg"} alt="Bot" class="min-w-8 min-h-8" />	
 	</div>
 	<div class="w-full flex flex-row">
 		{#if message.text}
