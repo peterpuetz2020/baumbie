@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Message } from '../../types/chat';
+	import { parseMarkdown } from '$lib/parseMarkdown';
 
 	export let message: Message;
 	export let sendMessage: (text: string) => void;
@@ -21,7 +22,15 @@
 	<div class="w-full flex flex-row">
 		{#if message.text}
 			<div class="shrink box-border p-3 text-black rounded-xl bg-message-bot max-w-[80%] md:max-w-[70%]">
-				{message.text}
+				{@html parseMarkdown(message.text)}
+				<!--
+					WICHTIG: Die Verwendung von {@html ...} ist hier unbedenklich,
+					weil der parseMarkdown()-Parser alle potenziell gefährlichen HTML-Zeichen
+					(&, <, >) vor der Ausgabe escaped. Dadurch kann kein echter HTML- oder Script-Code
+					durchgeschleust werden.
+
+					Erlaubt sind ausschließlich sicher umgewandelte Tags wie <strong>, <em>, <br>.
+				-->
 				{#if message.ai}
 					<span class="inline-block float-right mt-2 text-xs text-gray-400">KI-generiert</span>
 					<div class="clear-both"></div>
