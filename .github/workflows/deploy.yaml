@@ -26,4 +26,4 @@ jobs:
       - uses: zugriffcloud/action-deploy@latest
         with:
           deploymentToken: ${{ secrets.ZUGRIFF_DEPLOY_TOKEN }}
-          dir: frontend
+          cwd: frontend
