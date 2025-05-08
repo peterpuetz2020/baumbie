@@ -10,14 +10,14 @@ export const userMarkerHtml = `
 <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220">
 	<!-- Erste Ripple-Welle: startet sofort -->
 	<circle cx="110" cy="110" r="0" fill="rgba(59, 130, 246, 0.4)">
-		<animate attributeName="r" from="0" to="100" dur="3.5s" begin="0s" repeatCount="indefinite" />
-		<animate attributeName="opacity" from="0.4" to="0" dur="3.5s" begin="0s" repeatCount="indefinite" />
+		<animate attributeName="r" from="0" to="100" dur="6s" begin="0s" repeatCount="indefinite" />
+		<animate attributeName="opacity" from="0.4" to="0" dur="6s" begin="0s" repeatCount="indefinite" />
 	</circle>
 
 	<!-- Zweite Ripple-Welle: startet nach 1.75s, für flüssigen Effekt -->
 	<circle cx="110" cy="110" r="0" fill="rgba(59, 130, 246, 0.4)">
-		<animate attributeName="r" from="0" to="100" dur="3.5s" begin="1.75s" repeatCount="indefinite" />
-		<animate attributeName="opacity" from="0.4" to="0" dur="3.5s" begin="1.75s" repeatCount="indefinite" />
+		<animate attributeName="r" from="0" to="100" dur="6s" begin="3s" repeatCount="indefinite" />
+		<animate attributeName="opacity" from="0.4" to="0" dur="6s" begin="3s" repeatCount="indefinite" />
 	</circle>
 
 	<!-- Hintergrundkreis: symbolisiert Ortungsgenauigkeit -->
