@@ -51,3 +51,5 @@ jobs:
         with:
           deploymentToken: ${{ secrets.ZUGRIFF_DEPLOY_TOKEN }}
           cwd: frontend
+          name: baumbie
+          promotions: production
