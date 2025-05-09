@@ -42,6 +42,10 @@ jobs:
       - name: Build project
         run: npm run build
         working-directory: frontend
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VOICEFLOW_API_KEY: ${{ secrets.VOICEFLOW_API_KEY }}
 
       - uses: zugriffcloud/action-deploy@latest
         with:
