@@ -33,7 +33,10 @@
 				duration: 1.5
 			});
 
-			userMarker = L.marker(e.latlng, { icon: userMarkerIcon() }).addTo(map);
+			userMarker = L.marker(e.latlng, { 
+				icon: userMarkerIcon(), 
+				interactive: false 
+			}).addTo(map);
 		});
 
 		map.once('locationerror', () => {
