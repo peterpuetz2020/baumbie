@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
 	import Message from './Message.svelte';
-	import type { Message as MessageType, RawMessage } from './types';
+	import type { Message as MessageType, RawMessage } from '../../types/chat';
 
 	// === Props ===
 	export let treeId: string = '';
@@ -37,7 +37,7 @@
 
 	// === Helpers ===
 	const handleNewChatMessages = (response: unknown) => {
-		console.log(response);
+		// console.log("📦 RAW Voiceflow Response:", JSON.stringify(response, null, 2));
 		if (
 			typeof response !== 'object' ||
 			response === null ||
@@ -62,7 +62,7 @@
 				.filter((msg: RawMessage) => !['no-reply', 'path'].includes(msg.type))
 				.map((msg: RawMessage): MessageType => {
 					const buttons = Array.isArray(msg.payload?.buttons)
-						? msg.payload!.buttons!.map((btn) => ({
+						? msg.payload!.buttons!.map((btn: { name: string; request: any }) => ({
 								label: btn.name,
 								request: btn.request
 							}))
@@ -73,9 +73,8 @@
 						label: '',
 						type: msg.payload?.type ?? msg.type,
 						sender: 'bot',
-						source: '',
-						clickable: buttons.length > 0,
-						buttons
+						buttons,
+						ai: msg.payload?.ai === true
 					};
 				})
 		];
@@ -89,9 +88,7 @@
 			text,
 			label: '',
 			type: 'text',
-			sender: 'user',
-			source: '',
-			clickable: false
+			sender: 'user'
 		};
 
 		messages = [...messages, newUserMessage];

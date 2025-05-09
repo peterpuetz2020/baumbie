@@ -1,7 +1,7 @@
 <script lang="ts">
 	import BotMessage from './BotMessage.svelte';
 	import UserMessage from './UserMessage.svelte';
-	import type { Message as MessageType } from './types';
+	import type { Message as MessageType } from '../../types/chat';
 
 	export let message: MessageType;
 	export let sendMessage: (text: string) => void;

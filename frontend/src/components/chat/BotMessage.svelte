@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { Message } from './types';
+	import type { Message } from '../../types/chat';
+	import { parseMarkdown } from '$lib/parseMarkdown';
 
 	export let message: Message;
 	export let sendMessage: (text: string) => void;
@@ -7,20 +8,29 @@
 	let selectedLabel: string | null = null;
 
 	function handleClick(label: string) {
-		if (selectedLabel !== null || !message.clickable) return;
+		if (selectedLabel !== null || message.type !== 'choice') return;
 		selectedLabel = label;
 		sendMessage(label);
 	}
+	// console.log('BotMessage received:', message);
 </script>
 
 <div class="flex gap-1.5 flex-row w-full bot-message">
 	<div class="pt-2">
-			<img src="/icons/tree.svg" alt="Bot" class="min-w-8 min-h-8" />	
+			<img src={ message.ai ? "/chat/tree-ai.svg" : "/icons/tree.svg"} alt="Bot" class="min-w-8 min-h-8" />	
 	</div>
 	<div class="w-full flex flex-row">
 		{#if message.text}
 			<div class="shrink box-border p-3 text-black rounded-xl bg-message-bot max-w-[80%] md:max-w-[70%]">
-				{message.text}
+				{@html parseMarkdown(message.text)}
+				<!--
+					WICHTIG: Die Verwendung von {@html ...} ist hier unbedenklich,
+					weil der parseMarkdown()-Parser alle potenziell gefährlichen HTML-Zeichen
+					(&, <, >) vor der Ausgabe escaped. Dadurch kann kein echter HTML- oder Script-Code
+					durchgeschleust werden.
+
+					Erlaubt sind ausschließlich sicher umgewandelte Tags wie <strong>, <em>, <br>.
+				-->
 				{#if message.ai}
 					<span class="inline-block float-right mt-2 text-xs text-gray-400">KI-generiert</span>
 					<div class="clear-both"></div>
