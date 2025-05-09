@@ -15,6 +15,9 @@
 	let messages: MessageType[] = [];
 	let newMessage: string = '';
 	let chatAvailable: boolean = true;
+	
+
+	let endRef: HTMLDivElement;
 
 
 	// === Lifecycle ===
@@ -75,7 +78,6 @@
 					};
 				})
 		];
-
 	};
 
 	function sendMessage(text: string) {
@@ -108,39 +110,51 @@
 			sendMessage(newMessage);
 		}
 	}
+
+	$: {
+		if (endRef && messages.length > 0) {
+			queueMicrotask(() => {
+				endRef.scrollIntoView({ behavior: 'smooth' });
+			});
+		}
+	}
+
+
+	$: console.log('↪ newMessage:', JSON.stringify(newMessage));
 </script>
 
-<div id="chat-container" class="flex flex-col grow">
-	<div class="grow">
-		<div class="sticky top-0 min-h-12 h-12 w-100 bg-gradient-to-b from-white z-[9999999]"></div>
-		<div class="flex flex-col h-full overflow-y-auto gap-y-1">
-			{#each messages as message}
-				<Message {message} {sendMessage} />
-			{/each}
-		</div>
+<!-- Chat innerhalb der Card -->
+<div id="chat-container" class="flex flex-col h-full min-h-0">
+	 <!--
+	TODO für später: transparenten Verlauf umsetzen
+	<div class="sticky top-0 min-h-12 h-12 w-100 bg-gradient-to-b from-red-800 z-[9999999]"></div>
+	-->
+	<!-- Nachrichtenbereich -->
+	
+	<div class="flex flex-col grow overflow-y-auto gap-y-1 min-h-0">
+		{#each messages as message}
+			<Message {message} {sendMessage} />
+		{/each}
+		<div bind:this={endRef} class="min-h-3"></div>
 	</div>
 
-	<div class="sticky bottom-0 pt-2 bg-white border-t shrink border-t-gray-500">
-		<div class="flex flex-row gap-2 mb-2">
-			<input	
+	<!-- Eingabe -->
+	<div class="sticky bottom-0 bg-white p-3 border-t z-[10] border-t-gray-500">
+		<div class="flex flex-row gap-2">
+			<input
 				type="text"
-				class="px-3 py-1 bg-green-500 rounded-full grow placeholder:text-neutral-500 placeholder:italic"
-				disabled={!chatAvailable}
 				bind:value={newMessage}
+				class="px-3 py-1 bg-green-500 rounded-full grow placeholder:text-neutral-500 placeholder:italic"
 				placeholder={chatAvailable ? '' : 'Chat beendet.'}
 				on:keyup={handleKeydown}
+				disabled={!chatAvailable}
 			/>
-			
 			<button
 				class="shrink"
+				on:click={() => newMessage && sendMessage(newMessage)}
 				disabled={!chatAvailable}
-				on:click={(e) => {
-					if (newMessage !== '') {
-						sendMessage(newMessage);
-					}
-				}}
 			>
-				<img src="/chat/send.svg" class="w-8 h-8" alt="senden">
+				<img src="/chat/send.svg" class="w-8 h-8" alt="senden" />
 			</button>
 		</div>
 	</div>
