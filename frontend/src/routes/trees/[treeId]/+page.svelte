@@ -7,7 +7,8 @@
 	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import type { Tree } from '../../../types/tree';
+	import type { Tree } from '../../../types/Tree';
+	import type { TreeMetadata } from '../../../types/TreeCharacter';
 	import TreeMetric from '../../../components/trees/TreeMetric.svelte';
 
 	export let activeTabIndex: number = 0;
@@ -18,21 +19,35 @@
 
 	let openAbout = true;
 	let openWater = false;
+	let openEnvironment = false;
 	let openHistory = false;
 
 	$: showInfo = true;
 	$: showChat = false;
 
 	let tree: Tree;
+	let treeCharacter: TreeMetadata;
 
 	onMount(async () => {
-		const { data, error } = await supabase
+		const { data: treeData, error: treeError } = await supabase
 			.from('trees')
 			.select()
 			.eq('uuid', $page.params.treeId)
 			.maybeSingle();
-		tree = data;
+		tree = treeData;
+		console.log('treeData', treeData);
+
+		if (tree) {
+			const { data: characterData, error: characterError } = await supabase
+				.from('Baumarten')
+				.select("*")
+				.eq('baumart_bo', tree.tree_type_botanic)
+				.maybeSingle();
+			treeCharacter = characterData;
+		}
 	});
+
+	$:console.log('treeCharacter', treeCharacter);
 </script>
 
 {#if tree}
@@ -75,23 +90,40 @@
 		<div id="single-tree-content" class="flex flex-col h-full">
 			<div class="flex flex-col gap-4 h-full">
 				{#if activeTabIndex === 0}
-					<Accordion bind:open={openAbout}>
 
-						<div slot="head">
+
+						<div>
 							<p class="text-black font-bold">Über mich</p>
+							<p class="text-sm text-gray-800">
+							{treeCharacter?.Vorstellungstext_emotional?
+								treeCharacter.Vorstellungstext_emotional :
+								"Hej, wie mein Name schon verrät komme ich ursprünglich aus dem Norden von Europa. Ich bin sehr variabel in meinem Äußeren. Entweder wachse ich bis zu 15m mit einem geraden Stamm, oder aber du findest mich als mehrstämmigen großen Strauch."
+							}
+							</p>
 						</div>
-						<div slot="details">
+						<div >
 							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
 								<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
 								<TreeMetric label="Kronendurchmesser" value={tree.crown_diameter} unit="m" max={29} position="top" />
 								<TreeMetric label="Stammdurchmesser" value={tree.trunk_diameter} unit="cm" max={297} position="bottom" />
 							</div>
 						</div>
+
+					<hr>
+					<Accordion bind:open={openEnvironment}>
+						<div slot="head">
+							<p class="text-black font-bold">Meine Bedeutung für die Umwelt</p>
+						</div>
+						<div slot="details">
+							<p class="text-sm text-gray-800">
+								Hier wollen wir zeigen, welche Wirkung dieser Baum auf seine direkte Umwelt hat: Schatten, Luftfeuchtigkeit, Temperatur, etc. Das Feature ist noch in der Entwicklung.
+							</p>
+						</div>
 					</Accordion>
 					<hr>
 					<Accordion bind:open={openWater}>
 						<div slot="head">
-							<p class="text-black font-bold">Wasserbedarf</p>
+							<p class="text-black font-bold">Mein Wasserbedarf</p>
 						</div>
 						<div slot="details">
 							<p class="text-sm text-gray-800">
@@ -103,7 +135,7 @@
 					<hr>
 					<Accordion bind:open={openHistory}>
 						<div slot="head">
-							<p class="text-black font-bold">Wer wann gegossen hat</p>
+							<p class="text-black font-bold">Wer mich wann gegossen hat</p>
 						</div>
 						<div slot="details">
 							<p class="text-sm text-gray-800">

@@ -1,4 +1,5 @@
 <!--Übernommen aus https://svelte.dev/playground/c109f83f3c114cb7829f04fe2440ef94?version=5.28.2 -->
+
 <script>
 	export let open = false;
 	import { slide } from 'svelte/transition';
