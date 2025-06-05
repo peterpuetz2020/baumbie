@@ -39,15 +39,16 @@
 
 		if (tree) {
 			const { data: characterData, error: characterError } = await supabase
-				.from('Baumarten')
-				.select("*")
+				.from('tree_types')
+				.select('*')
 				.eq('baumart_bo', tree.tree_type_botanic)
 				.maybeSingle();
 			treeCharacter = characterData;
+			console.log('treeCharacter', treeCharacter);
 		}
 	});
 
-	$:console.log('treeCharacter', treeCharacter);
+	// $: console.log('treeCharacter', treeCharacter);
 </script>
 
 {#if tree}
@@ -68,7 +69,9 @@
 					<button
 						role="tab"
 						aria-selected={activeTabIndex === 0}
-						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showInfo ? 'text-zinc-600' : 'text-neutral-500'} z-10"
+						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showInfo
+							? 'text-zinc-600'
+							: 'text-neutral-500'} z-10"
 						on:click={() => handleTabChange(0)}
 						tabindex="0"
 					>
@@ -77,7 +80,9 @@
 					<button
 						role="tab"
 						aria-selected={activeTabIndex === 1}
-						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showChat ? 'text-zinc-600' : 'text-neutral-500'} z-10"
+						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showChat
+							? 'text-zinc-600'
+							: 'text-neutral-500'} z-10"
 						on:click={() => handleTabChange(1)}
 						tabindex="0"
 					>
@@ -88,42 +93,53 @@
 		</div>
 
 		<div id="single-tree-content" class="flex flex-col h-full">
-			<div class="flex flex-col gap-4 h-full">
+			<div class="flex flex-col h-full gap-4">
 				{#if activeTabIndex === 0}
-
-
-						<div>
-							<p class="text-black font-bold">Über mich</p>
-							<p class="text-sm text-gray-800">
-							{treeCharacter?.Vorstellungstext_emotional?
-								treeCharacter.Vorstellungstext_emotional :
-								"Hej, wie mein Name schon verrät komme ich ursprünglich aus dem Norden von Europa. Ich bin sehr variabel in meinem Äußeren. Entweder wachse ich bis zu 15m mit einem geraden Stamm, oder aber du findest mich als mehrstämmigen großen Strauch."
-							}
-							</p>
+					<div>
+						<p class="font-bold text-black">Über mich</p>
+						<p class="text-sm text-gray-800">
+							{treeCharacter?.description
+								? treeCharacter.description
+								: 'Hej, wie mein Name schon verrät komme ich ursprünglich aus dem Norden von Europa. Ich bin sehr variabel in meinem Äußeren. Entweder wachse ich bis zu 15m mit einem geraden Stamm, oder aber du findest mich als mehrstämmigen großen Strauch.'}
+						</p>
+					</div>
+					<div>
+						<div class="grid grid-cols-1 gap-4 text-sm text-gray-800 sm:grid-cols-3">
+							<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
+							<TreeMetric
+								label="Kronendurchmesser"
+								value={tree.crown_diameter}
+								unit="m"
+								max={29}
+								position="top"
+							/>
+							<TreeMetric
+								label="Stammdurchmesser"
+								value={tree.trunk_diameter}
+								unit="cm"
+								max={297}
+								position="bottom"
+							/>
 						</div>
-						<div >
-							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
-								<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
-								<TreeMetric label="Kronendurchmesser" value={tree.crown_diameter} unit="m" max={29} position="top" />
-								<TreeMetric label="Stammdurchmesser" value={tree.trunk_diameter} unit="cm" max={297} position="bottom" />
-							</div>
-						</div>
+					</div>
 
-					<hr>
+					<hr />
 					<Accordion bind:open={openEnvironment}>
 						<div slot="head">
-							<p class="text-black font-bold">Meine Bedeutung für die Umwelt</p>
+							<p class="font-bold text-black">Meine Bedeutung für die Umwelt</p>
 						</div>
 						<div slot="details">
 							<p class="text-sm text-gray-800">
-								Hier wollen wir zeigen, welche Wirkung dieser Baum auf seine direkte Umwelt hat: Schatten, Luftfeuchtigkeit, Temperatur, etc. Das Feature ist noch in der Entwicklung.
+								Hier wollen wir zeigen, welche Wirkung dieser Baum auf seine direkte Umwelt hat:
+								Schatten, Luftfeuchtigkeit, Temperatur, etc. Das Feature ist noch in der
+								Entwicklung.
 							</p>
 						</div>
 					</Accordion>
-					<hr>
+					<hr />
 					<Accordion bind:open={openWater}>
 						<div slot="head">
-							<p class="text-black font-bold">Mein Wasserbedarf</p>
+							<p class="font-bold text-black">Mein Wasserbedarf</p>
 						</div>
 						<div slot="details">
 							<p class="text-sm text-gray-800">
@@ -132,20 +148,16 @@
 							<WaterColumn />
 						</div>
 					</Accordion>
-					<hr>
+					<hr />
 					<Accordion bind:open={openHistory}>
 						<div slot="head">
-							<p class="text-black font-bold">Wer mich wann gegossen hat</p>
+							<p class="font-bold text-black">Wer mich wann gegossen hat</p>
 						</div>
 						<div slot="details">
-							<p class="text-sm text-gray-800">
-								Hier werden die letzten 10 Gießungen angezeigt.
-							</p>
+							<p class="text-sm text-gray-800">Hier werden die letzten 10 Gießungen angezeigt.</p>
 						</div>
 					</Accordion>
-					<hr>
-							
-
+					<hr />
 
 					<AdoptTree {tree} />
 				{:else}
