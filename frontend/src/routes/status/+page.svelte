@@ -16,7 +16,7 @@
 
     onMount(async () => {
         const user = await getUserData();
-        const user_id = user.data.user.id;
+        const user_id = user?.data?.user?.id;
 
         const { data, error } = await supabase
             .from('adoptions')
