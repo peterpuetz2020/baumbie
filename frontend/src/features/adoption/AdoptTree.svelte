@@ -9,7 +9,8 @@
 
 	let errorMessage: string = '';
 	let successMessage: string = '';
-	let alertUnauthorized: string = 'Bitte zuerst einloggen, um diese Funktion zu nutzen.';
+	let alertUnauthorized: string = 'Bitte <a href="/login" class="underline text-blue-600">einloggen</a>, um diese Funktion zu nutzen.';
+
 
 	$: adopted = false;
 	$: label = 'Adoptiere diesen Baum';
@@ -78,7 +79,7 @@
 			{label}
 			on:click={handleAdoptTree}
 		/>
-		<p class="text-orange-500 text-center">{errorMessage}</p>
+		<p class="text-orange-500 text-center">{@html errorMessage}</p>
 		<p class="text-green-600 text-center">{successMessage}</p>
 		<Typography>
 			Mit einer Adoption dieses Baums zeigst du deine Verbundenheit mit diesem Baum und mit
