@@ -9,8 +9,8 @@
 
 	let errorMessage: string = '';
 	let successMessage: string = '';
-	let alertUnauthorized: string = 'Bitte <a href="/login" class="underline text-blue-600">einloggen</a>, um diese Funktion zu nutzen.';
-
+	let alertUnauthorized: string =
+		'Bitte <a href="/login" class="underline text-blue-600">einloggen</a>, um diese Funktion zu nutzen.';
 
 	$: adopted = false;
 	$: label = 'Adoptiere diesen Baum';
@@ -21,26 +21,30 @@
 		const userId = user?.data?.user?.id;
 		const treeId = tree.uuid;
 
+		if (!userId) {
+			return
+		}
+
 		const adoptedData = await supabase
 			.from('adoptions')
 			.select('*')
 			.eq('tree_uuid', treeId)
 			.eq('user_uuid', userId);
 		adopted = adoptedData.data?.length !== 0;
+
 		label = adopted ? 'Adoption aufheben' : 'Adoptiere diesen Baum';
 	});
 
 	const handleAdoptTree = async () => {
 		let { data, error }: any = await supabase.auth.getUser();
 		let isLoggedIn = !!data?.user;
-		
-		// not logged in
+
 		if (!isLoggedIn) {
 			console.log('user is not logged in', isLoggedIn);
 			errorMessage = alertUnauthorized;
 			return;
 		}
-		// other error on user fetching
+
 		if (error) {
 			errorMessage = error.message;
 			return;
