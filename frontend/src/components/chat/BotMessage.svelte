@@ -20,7 +20,7 @@
 	message = debugMessage; // zum Aktivieren auskommentieren
 	*/
 
-	export let sendMessage: (text: string) => void;
+	export let sendMessage: ({ text, label }: { text: string; label: string }) => void;
 
 	let htmlText: string | null = null;
 	let lastMessageText = '';
@@ -35,20 +35,30 @@
 		});
 	}
 
-	function handleClick(label: string) {
+	function handleClick(button) {
+		console.log('handleClick', button);
 		if (selectedLabel !== null || message.type !== 'choice') return;
-		selectedLabel = label;
-		sendMessage(label);
+		selectedLabel = button.label;
+		sendMessage({
+			text: button.label,
+			label: button.request?.payload?.intent?.name || button.request.payload.label
+		});
 	}
 </script>
 
 <div class="flex gap-1.5 flex-row w-full bot-message">
 	<div class="pt-2">
-			<img src={ message.ai ? "/chat/tree-ai.svg" : "/icons/tree.svg"} alt="Bot" class="min-w-8 min-h-8" />	
+		<img
+			src={message.ai ? '/chat/tree-ai.svg' : '/icons/tree.svg'}
+			alt="Bot"
+			class="min-w-8 min-h-8"
+		/>
 	</div>
-	<div class="w-full flex flex-row">
+	<div class="flex flex-row w-full">
 		{#if htmlText}
-			<div class="shrink box-border p-3 text-black rounded-xl bg-message-bot max-w-[80%] md:max-w-[70%]">
+			<div
+				class="shrink box-border p-3 text-black rounded-xl bg-message-bot max-w-[80%] md:max-w-[70%]"
+			>
 				{@html htmlText}
 				<!--
 					Debug-Ausgabe: zeigt das generierte HTML aus parseMarkdown()
@@ -63,13 +73,16 @@
 			<div class="flex flex-col gap-2 mt-1">
 				{#each message.buttons ?? [] as button}
 					<button
-						class="box-border px-3 py-5 text-black rounded-xl text-left transition-all duration-200"
+						class="box-border px-3 py-5 text-left text-black transition-all duration-200 rounded-xl"
 						class:bg-green-500={selectedLabel === button.label}
 						class:bg-gray-300={selectedLabel !== button.label}
 						class:opacity-50={selectedLabel !== null && selectedLabel !== button.label}
 						class:hover:bg-green-400={selectedLabel === null}
 						disabled={selectedLabel !== null}
-						on:click={() => handleClick(button.label)}
+						on:click={() => {
+							console.log(button);
+							handleClick(button);
+						}}
 					>
 						{button.label}
 					</button>

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Accordion from '$lib/components/Accordion.svelte';
-	import WaterColumn from '../$components/WaterColumn.svelte';
-	import Chat from '../$components/chat/Chat.svelte';
-	import Card from '../$components/card/Card.svelte';
+	import WaterColumn from '$components/WaterColumn.svelte';
+	import Chat from '$features/chat/Chat.svelte';
+	import Card from '$components/card/Card.svelte';
 	import AdoptTree from '../../../features/adoption/AdoptTree.svelte';
 	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import type { Tree } from '../../../types/tree';
-	import TreeMetric from '../$components/trees/TreeMetric.svelte';
+	import type { Tree } from '$types';
+	import TreeMetric from '$components/trees/TreeMetric.svelte';
 
 	export let activeTabIndex: number = 0;
 
@@ -77,14 +77,14 @@
 		</div>
 
 		<div id="single-tree-content" class="flex flex-col h-full">
-			<div class="flex flex-col gap-4 h-full">
+			<div class="flex flex-col h-full gap-4">
 				{#if activeTabIndex === 0}
 					<Accordion bind:open={openAbout}>
 						<div slot="head">
-							<p class="text-black font-bold">Über mich</p>
+							<p class="font-bold text-black">Über mich</p>
 						</div>
 						<div slot="details">
-							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
+							<div class="grid grid-cols-1 gap-4 text-sm text-gray-800 sm:grid-cols-3">
 								<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
 								<TreeMetric
 									label="Kronendurchmesser"
@@ -106,7 +106,7 @@
 					<hr />
 					<Accordion bind:open={openWater}>
 						<div slot="head">
-							<p class="text-black font-bold">Wasserbedarf</p>
+							<p class="font-bold text-black">Wasserbedarf</p>
 						</div>
 						<div slot="details">
 							<p class="text-sm text-gray-800">
@@ -118,7 +118,7 @@
 					<hr />
 					<Accordion bind:open={openHistory}>
 						<div slot="head">
-							<p class="text-black font-bold">Wer wann gegossen hat</p>
+							<p class="font-bold text-black">Wer wann gegossen hat</p>
 						</div>
 						<div slot="details">
 							<p class="text-sm text-gray-800">Hier werden die letzten 10 Gießungen angezeigt.</p>

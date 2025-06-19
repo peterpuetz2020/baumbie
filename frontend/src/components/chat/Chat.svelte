@@ -1,113 +1,27 @@
 <script lang="ts">
 	// === Imports ===
 	import { onMount } from 'svelte';
-	import { supabase } from '../../supabase';
 	import Message from './Message.svelte';
 	import type { Message as MessageType, RawMessage } from '../../types/chat';
 
 	// === Props ===
 	export let treeId: string = '';
-	$: treeId;
+	export let newMessage: string = '';
+	$: treeId, newMessage;
 	console.log('Chat got Tree ID: ', treeId);
-	
+
+	export let onSendMessage: ({ text, label }: { text: string; label: string }) => void = () => {};
+
 	// === State ===
-	let sessionId: string = '';
-	let messages: MessageType[] = [];
-	let newMessage: string = '';
-	let chatAvailable: boolean = true;
-	
+	export let messages: MessageType[] = [];
+	export let chatAvailable: boolean = true;
 
 	let endRef: HTMLDivElement;
 
-
-	// === Lifecycle ===
-	onMount(() => {
-		if (!treeId) {
-			console.error('No treeId provided');
-			return;
-		}
-		supabase.functions
-			.invoke('chat', {
-				body: {
-					treeId
-				}
-			})
-			.then(handleNewChatMessages);
-	});
-
 	// === Helpers ===
-	const handleNewChatMessages = (response: unknown) => {
-		// console.log("📦 RAW Voiceflow Response:", JSON.stringify(response, null, 2));
-		if (
-			typeof response !== 'object' ||
-			response === null ||
-			!('data' in response) ||
-			!('error' in response)
-		) {
-			console.error('Invalid response structure:', response);
-			return;
-		}
-
-		const { data, error } = response as { data: any; error: any };
-
-		if (error !== null) {
-			console.error('Error fetching chat messages:', error);
-			return;
-		}
-
-		sessionId = data.sessionId;
-		messages = [
-			...messages,
-			...data.messages
-				.filter((msg: RawMessage) => !['no-reply', 'path'].includes(msg.type))
-				.map((msg: RawMessage): MessageType => {
-					const buttons = Array.isArray(msg.payload?.buttons)
-						? msg.payload!.buttons!.map((btn: { name: string; request: any }) => ({
-								label: btn.name,
-								request: btn.request
-							}))
-						: [];
-
-					return {
-						text: msg.payload?.message ?? '',
-						label: '',
-						type: msg.payload?.type ?? msg.type,
-						sender: 'bot',
-						buttons,
-						ai: msg.payload?.ai === true
-					};
-				})
-		];
-	};
-
-	function sendMessage(text: string) {
-		if (text === '') {
-			return;
-		}
-		const newUserMessage: MessageType = {
-			text,
-			label: '',
-			type: 'text',
-			sender: 'user'
-		};
-
-		messages = [...messages, newUserMessage];
-
-		supabase.functions
-			.invoke('chat', {
-				body: {
-					sessionId,
-					text
-				}
-			})
-			.then(handleNewChatMessages);
-
-		newMessage = '';
-	}
-
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Enter' && newMessage !== '') {
-			sendMessage(newMessage);
+			onSendMessage({ text: newMessage, label: '' });
 		}
 	}
 
@@ -118,22 +32,19 @@
 			});
 		}
 	}
-
-
-	$: console.log('↪ newMessage:', JSON.stringify(newMessage));
 </script>
 
 <!-- Chat innerhalb der Card -->
 <div id="chat-container" class="flex flex-col h-full min-h-0">
-	 <!--
+	<!--
 	TODO für später: transparenten Verlauf umsetzen
 	<div class="sticky top-0 min-h-12 h-12 w-100 bg-gradient-to-b from-red-800 z-[9999999]"></div>
 	-->
 	<!-- Nachrichtenbereich -->
-	
-	<div class="flex flex-col grow overflow-y-auto gap-y-1 min-h-0">
+
+	<div class="flex flex-col min-h-0 overflow-y-auto grow gap-y-1">
 		{#each messages as message}
-			<Message {message} {sendMessage} />
+			<Message {message} sendMessage={onSendMessage} />
 		{/each}
 		<div bind:this={endRef} class="min-h-3"></div>
 	</div>
@@ -151,7 +62,7 @@
 			/>
 			<button
 				class="shrink"
-				on:click={() => newMessage && sendMessage(newMessage)}
+				on:click={() => newMessage && onSendMessage(newMessage)}
 				disabled={!chatAvailable}
 			>
 				<img src="/chat/send.svg" class="w-8 h-8" alt="senden" />
