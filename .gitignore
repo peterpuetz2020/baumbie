@@ -17,3 +17,5 @@ preparation/__pycache__
 !env.example
 
 .vscode
+
+mail-templates/*.html

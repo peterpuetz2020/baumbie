@@ -1,0 +1,27 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-text padding="0" />
+            <mj-class name="big" font-size="24px" padding-bottom="20px" />
+            <mj-style>
+                * {
+                    color: #333 !important;
+                    text-decoration: none !important;
+                }
+            </mj-style>
+            <mj-all font-family="Arial" />
+        </mj-attributes>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-text mj-class="big">Schön, dass du dabei bist!</mj-text>
+                <mj-text>Wir freuen uns, dass du dich für die Gesundheit der Bielefelder Stadtbäume interessierst!</mj-text>
+                <mj-text>Du hast deine Mail-Adresse jetzt erfolgreich verifiziert und kannst jetzt Bäume adoptieren:</mj-text>
+                <mj-button background-color="#51af8b" color="#fff" href="CONFIRMATION_URL">Jetzt loslegen!</mj-button>
+
+                <mj-text>BaumBie ist ein Projekt des <a style="color: #333" href="https://www.codefor.de/bielefeld/">Code for Bielefeld e.V.</a></mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>
