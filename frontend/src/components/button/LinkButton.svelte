@@ -1,20 +1,16 @@
 <script lang="ts">
-	import BaseButton from './BaseButton.svelte';
+	import BaseButton from './Button.svelte';
 	import { goto } from '$app/navigation';
 
-	const handleClick= (e: MouseEvent) => {
-		e.preventDefault(); 
-		if($$props.href) goto($$props.href);
+	export let className: string = '';
+	export let href: string = '';
+
+	const onClick = (e: MouseEvent) => {
+		e.preventDefault();
+		if (href) goto(href);
 	};
 </script>
 
-
-<a href={$$props.href}>
-<BaseButton
-	on:click={handleClick}
-	{...$$props}
-	{...$$restProps}
-	class={` border-2 border-green-500 text-black text-center ${$$props.class}` }
-	label={$$props.label}
-/>
-</a>
+<BaseButton {onClick} className={`border-2 border-green-500 text-black text-center ${className}`}>
+	<slot />
+</BaseButton>
