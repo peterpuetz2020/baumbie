@@ -74,7 +74,6 @@
 	};
 </script>
 
-<Dialog title="Registrierung">
 	<form class="flex flex-col gap-y-4">
 		<div class="flex flex-col gap-y-2">
 			<EmailField
@@ -112,4 +111,4 @@
 			<LinkButton href="/login" label="Anmelden" class="w-full" />
 		</div>
 	</form>
-</Dialog>
+

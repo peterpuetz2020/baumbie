@@ -71,7 +71,7 @@
 		/>
 	</div>
 	<div class="flex flex-col gap-y-2">
-		<PrimaryButton type="submit" label="Anmelden" on:click={handleLogin} class="w-full justify-center" />
-		<LinkButton href="/register" label="Registrieren" class="w-full justify-center" />
+		<PrimaryButton type="submit" label="Anmelden" on:click={handleLogin} class="w-full" />
+		<LinkButton href="/register" label="Registrieren" class="w-full" />
 	</div>
 </form>
