@@ -1,7 +1,6 @@
 <script lang="ts">
-	import LinkButton from '../../components/button/LinkButton.svelte';
-	import Card from '../../components/card/Card.svelte';
-	import Heading from '../../components/typography/Heading.svelte';
+	import Card from '$components/card/Card.svelte';
+	import Heading from '$components/typography/Heading.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';

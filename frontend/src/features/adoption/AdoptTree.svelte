@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Typography from '../../components/typography/Typography.svelte';
+	import Typography from '$components/typography/Typography.svelte';
 	import { supabase } from '../../supabase';
 	import type { Tree } from '../../types/tree';
 	import { Button } from '$components/button';
