@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Accordion from '$lib/components/Accordion.svelte';
-	import WaterColumn from '../$components/WaterColumn.svelte';
-	import Chat from '../$components/chat/Chat.svelte';
-	import Card from '../$components/card/Card.svelte';
+	import WaterColumn from '$components/WaterColumn.svelte';
+	import Chat from '$components/chat/Chat.svelte';
+	import Card from '$components/card/Card.svelte';
 	import AdoptTree from '../../../features/adoption/AdoptTree.svelte';
 	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Tree } from '../../../types/tree';
-	import TreeMetric from '../$components/trees/TreeMetric.svelte';
+	import TreeMetric from '$components/trees/TreeMetric.svelte';
 
 	export let activeTabIndex: number = 0;
 
