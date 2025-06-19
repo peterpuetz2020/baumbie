@@ -1,7 +1,8 @@
 <script lang="ts">
-	import Card from '$components/card/Card.svelte';
-	import Heading from '$components/typography/Heading.svelte';
-	import { Button, LinkButton } from '$components/button';
+	import { Card } from '$components/card';
+	import { Heading } from '$components/typography';
+	import { Button } from '$components/button';
+	import { goto } from '$app/navigation';
 </script>
 
 <Card title={'search'} open={true}>
@@ -12,7 +13,7 @@
 	<div>
 		Button Testing
 		<Heading level={2}>Deine adoptierten Bäume</Heading>
-		<LinkButton href="/login">Link</LinkButton>
+		<Button variant="secondary" onClick={() => goto('/login')}>Link</Button>
 		<Button>
 			label <img src={'/icons/tree.svg'} alt={'Baum'} />
 		</Button>

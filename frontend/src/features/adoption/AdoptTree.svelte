@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import PrimaryButton from '../../components/button/PrimaryButton.svelte';
 	import Typography from '../../components/typography/Typography.svelte';
 	import { supabase } from '../../supabase';
 	import type { Tree } from '../../types/tree';
+	import { Button } from '$components/button';
 
 	export let tree: Tree;
 
 	let errorMessage: string = '';
 	let successMessage: string = '';
 	let alertUnauthorized: string =
-		'Bitte <a href="/login" class="underline text-blue-600">einloggen</a>, um diese Funktion zu nutzen.';
+		'Bitte <a href="/login" class="text-blue-600 underline">einloggen</a>, um diese Funktion zu nutzen.';
 
 	$: adopted = false;
 	$: label = 'Adoptiere diesen Baum';
@@ -22,7 +22,7 @@
 		const treeId = tree.uuid;
 
 		if (!userId) {
-			return
+			return;
 		}
 
 		const adoptedData = await supabase
@@ -78,13 +78,13 @@
 
 {#if tree}
 	<div class="flex flex-col gap-2">
-		<PrimaryButton
-			class="{adopted ? 'bg-gray-300' : 'bg-green-600'} justify-center"
-			{label}
-			on:click={handleAdoptTree}
-		/>
-		<p class="text-orange-500 text-center">{@html errorMessage}</p>
-		<p class="text-green-600 text-center">{successMessage}</p>
+		<Button
+			variant="primary"
+			className="{adopted ? 'bg-gray-300' : 'bg-green-600'} justify-center"
+			on:click={handleAdoptTree}>{label}</Button
+		>
+		<p class="text-center text-orange-500">{@html errorMessage}</p>
+		<p class="text-center text-green-600">{successMessage}</p>
 		<Typography>
 			Mit einer Adoption dieses Baums zeigst du deine Verbundenheit mit diesem Baum und mit
 			Bielefeld. Denn Bäume helfen uns bei einem lebenswerten und gesunden Leben.</Typography

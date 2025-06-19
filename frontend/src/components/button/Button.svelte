@@ -1,9 +1,11 @@
 <script lang="ts">
 	type ButtonVariant = 'default' | 'primary' | 'secondary';
+	type ButtonType = 'submit' | 'button' | 'reset';
 
 	export let variant: ButtonVariant = 'default';
 	export let className: string = '';
-	let onClick?: (e: MouseEvent) => void;
+	export let type: ButtonType = 'button';
+	export let onClick: (e: MouseEvent) => void = () => {};
 
 	const variantClasses: Record<ButtonVariant, string> = {
 		default: 'border-black text-black hover:bg-green-800 hover:text-white',
@@ -13,7 +15,7 @@
 </script>
 
 <button
-	type="button"
+	{type}
 	class={`border-2 rounded-full px-4 py-2 flex items-center justify-center transition duration-150 ease-in-out ${variantClasses[variant]} ${className}`}
 	on:click={onClick}
 >
