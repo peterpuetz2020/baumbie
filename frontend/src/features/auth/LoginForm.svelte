@@ -70,7 +70,7 @@
 		/>
 	</div>
 	<div class="flex flex-col gap-y-2">
-		<Button variant="primary" type="submit" on:click={handleLogin} className="w-full"
+		<Button variant="primary" type="submit" onClick={handleLogin} className="w-full"
 			>Anmelden</Button
 		>
 		<Button variant="secondary" onClick={() => goto('/register')} className="w-full"

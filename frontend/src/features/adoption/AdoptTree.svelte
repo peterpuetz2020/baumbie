@@ -2,24 +2,21 @@
 	import { onMount } from 'svelte';
 	import Typography from '$components/typography/Typography.svelte';
 	import { supabase } from '../../supabase';
-	import type { Tree } from '../../types/tree';
+	import type { Tree } from '../../types/Tree.ts';
 	import { Button } from '$components/button';
 
 	export let tree: Tree;
 
 	let adopted = false;
-	let label = 'Adoptiere diesen Baum';
+	let label = '';
 	let errorMessage = '';
 	let successMessage = '';
 	let authorized = false;
 
-	// Hilfsfunktion zur Aktualisierung der Beschriftung
-	function updateLabel() {
-		label = adopted ? 'Adoption aufheben' : 'Adoptiere diesen Baum';
-	}
+	$: label = adopted ? 'Adoption aufheben' : 'Adoptiere diesen Baum';
 
 	onMount(async () => {
-		const { data, error } = await supabase.auth.getUser();
+		const { data } = await supabase.auth.getUser();
 		const user = data?.user;
 
 		if (!user) {
@@ -33,9 +30,7 @@
 			.select('*')
 			.eq('tree_uuid', tree.uuid)
 			.eq('user_uuid', user.id);
-
 		adopted = Array.isArray(adoptedData) && adoptedData.length > 0;
-		updateLabel();
 	});
 
 	const handleAdoptTree = async () => {
@@ -43,7 +38,6 @@
 		const user = data?.user;
 
 		if (!user) {
-			console.log('user is not logged in');
 			authorized = false;
 			errorMessage = '';
 			successMessage = '';
@@ -74,7 +68,6 @@
 		}
 
 		adopted = !adopted;
-		updateLabel();
 		successMessage = adopted ? 'Du hast diesen Baum erfolgreich adoptiert!' : 'Adoption aufgehoben';
 		errorMessage = '';
 	};
@@ -89,7 +82,7 @@
 				: 'bg-green-600'} justify-center opacity-{authorized ? '100' : '50'} cursor-{authorized
 				? 'pointer'
 				: 'default'}"
-			on:click={handleAdoptTree}
+			onClick={handleAdoptTree}
 		>
 			{label}
 		</Button>
