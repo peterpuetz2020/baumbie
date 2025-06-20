@@ -1,29 +1,11 @@
 <script lang="ts">
-	import Card from "../../components/card/Card.svelte";
-	import Heading from "../../components/typography/Heading.svelte";
-    import BaseButton from "../../components/button/BaseButton.svelte";
-	import DefaultButton from "../../components/button/DefaultButton.svelte";
-	import LinkButton from "../../components/button/LinkButton.svelte";
-	import PrimaryButton from "../../components/button/PrimaryButton.svelte";
-	import SecondaryButton from "../../components/button/SecondaryButton.svelte";
-
+	import Card from '../../components/card/Card.svelte';
+	import Heading from '../../components/typography/Heading.svelte';
+	import FilterTrees from '../../features/search/FilterTrees.svelte';
 </script>
 
-<Card title={"search"} open={true}>
-	<Heading level={1}>Bäume filtern</Heading>
-	<div>Standort filtern</div>
-	<div>Nach Alter filtern</div>
-	<div>Nach Wasserbedarf filtern</div>
-	<div>
-		Button Testing
-        <Heading level={2}>Deine adoptierten Bäume</Heading>
-        <BaseButton label={"Base"}/>
-        <LinkButton label={"link"}/>
-        <DefaultButton label={"default"} icon_src={"/icons/tree.svg"} icon_alt={"Baum"}/>
-        <PrimaryButton label={"primary"}/>
-        <DefaultButton label={"default"} icon_src={"/icons/tree.svg"} icon_alt={"Baum"}/>
-        <LinkButton label={"link"}/>
-        <SecondaryButton label={"secondary"}/>
-   
-    </div>
+<Card title={'Baumarten filtern'} open={true}>
+	<div class="pt-2 pb-6 space-y-4">
+		<FilterTrees />
+	</div>
 </Card>
