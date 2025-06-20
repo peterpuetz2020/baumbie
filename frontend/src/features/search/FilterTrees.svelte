@@ -16,17 +16,13 @@
 
 <div class="w-full max-w-screen-lg mx-auto space-y-10 pt-2">
 	<!-- Beschreibung -->
-	<div class="space-y-2">
-		<p class="text-lg text-gray-800 leading-relaxed">
-			Hier kannst du gezielt nach bestimmten Baumarten filtern.
+	<div class="space-y-2 text-lg text-gray-800 leading-relaxed">
+		<p>Hier kannst du gezielt nach bestimmten Baumarten filtern.</p>
+		<p>
+			Zur Auswahl stehen die <strong>30 häufigsten</strong> Arten in Bielefeld, die gemeinsam rund
+			<strong>85 % aller Stadtbäume</strong> ausmachen.
 		</p>
-		<p class="text-lg text-gray-800 leading-relaxed">
-			Zur Auswahl stehen die 30 häufigsten Arten in Bielefeld – sie machen gemeinsam rund 80 % aller
-			Stadtbäume aus.
-		</p>
-		<p class="text-lg text-gray-800 leading-relaxed">
-			Wähle eine oder mehrere Arten aus – die Karte zeigt anschließend nur diese an.
-		</p>
+		<p>Wähle eine oder mehrere Arten aus – die Karte zeigt anschließend nur diese an.</p>
 	</div>
 
 	<!-- Graue Box -->
@@ -48,11 +44,5 @@
 				/>
 			{/each}
 		</div>
-	</div>
-
-	<!-- Debug -->
-	<div class="bg-gray-100 rounded-xl p-5 text-sm text-gray-800">
-		<p class="font-semibold mb-1">Debug:</p>
-		<p>Ausgewählt: {current.length ? current.join(', ') : '– (nichts ausgewählt)'}</p>
 	</div>
 </div>
