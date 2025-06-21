@@ -4,6 +4,7 @@
 	import L from 'leaflet';
 	import 'leaflet/dist/leaflet.css';
 	import { goto } from '$app/navigation';
+	import { mapStore } from '$lib/map/mapInstance';
 
 	// 📦 Komponenten & externe Module
 	import MapControls from './MapControls.svelte';
@@ -83,7 +84,10 @@
 											const lat2 = map.getBounds()._southWest.lat;
 											const latb = e.latlng.lat;
 											const latn = latb - Math.abs(lat1 - lat2) / 2.35;
-											map.flyTo({ lat: latn, lng: e.latlng.lng }, map.getZoom(), {animate:true, duration: 0.75});
+											map.flyTo({ lat: latn, lng: e.latlng.lng }, map.getZoom(), {
+												animate: true,
+												duration: 0.75
+											});
 										});
 									}
 								}).addTo(markers);
@@ -95,7 +99,8 @@
 
 	// 🗺️ Leaflet-Initialisierung
 	onMount(() => {
-		const tileURL = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/light_all/{z}/{x}/{y}.png';
+		const tileURL =
+			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/light_all/{z}/{x}/{y}.png';
 
 		const layer = L.tileLayer(tileURL, {
 			attribution:
@@ -112,6 +117,8 @@
 		})
 			.addLayer(layer)
 			.on('moveend', onMove);
+
+		mapStore.set(map);
 
 		onMove({ target: map });
 
