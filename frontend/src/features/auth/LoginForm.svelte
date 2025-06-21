@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import LinkButton from '../../components/button/LinkButton.svelte';
-	import PrimaryButton from '../../components/button/PrimaryButton.svelte';
-	import EmailField from '../../components/input/EmailField.svelte';
-	import PasswordField from '../../components/input/PasswordField.svelte';
+	import EmailField from '$components/input/EmailField.svelte';
+	import PasswordField from '$components/input/PasswordField.svelte';
 	import { supabase } from '../../supabase';
 	import { goto } from '$app/navigation';
+	import { Button } from '$components/button';
 
 	let email: string = '';
 	let password: string = '';
@@ -71,7 +70,11 @@
 		/>
 	</div>
 	<div class="flex flex-col gap-y-2">
-		<PrimaryButton type="submit" label="Anmelden" on:click={handleLogin} class="w-full" />
-		<LinkButton href="/register" label="Registrieren" class="w-full" />
+		<Button variant="primary" type="submit" onClick={handleLogin} className="w-full"
+			>Anmelden</Button
+		>
+		<Button variant="secondary" onClick={() => goto('/register')} className="w-full"
+			>Registrieren</Button
+		>
 	</div>
 </form>

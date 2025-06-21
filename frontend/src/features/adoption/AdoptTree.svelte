@@ -1,68 +1,66 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import PrimaryButton from '../../components/button/PrimaryButton.svelte';
-	import Typography from '../../components/typography/Typography.svelte';
+	import Typography from '$components/typography/Typography.svelte';
 	import { supabase } from '../../supabase';
-	import type { Tree } from '../../types/tree';
+	import type { Tree } from '../../types/Tree.ts';
+	import { Button } from '$components/button';
 
 	export let tree: Tree;
 
-	let errorMessage: string = '';
-	let successMessage: string = '';
-	let alertUnauthorized: string =
-		'Bitte <a href="/login" class="underline text-blue-600">einloggen</a>, um diese Funktion zu nutzen.';
+	let adopted = false;
+	let label = '';
+	let errorMessage = '';
+	let successMessage = '';
+	let authorized = false;
 
-	$: adopted = false;
-	$: label = 'Adoptiere diesen Baum';
-	$: tree, adopted;
+	$: label = adopted ? 'Adoption aufheben' : 'Adoptiere diesen Baum';
 
 	onMount(async () => {
-		const user = await supabase.auth.getUser();
-		const userId = user?.data?.user?.id;
-		const treeId = tree.uuid;
+		const { data } = await supabase.auth.getUser();
+		const user = data?.user;
 
-		if (!userId) {
-			return
+		if (!user) {
+			authorized = false;
+			return;
 		}
+		authorized = true;
 
-		const adoptedData = await supabase
+		const { data: adoptedData } = await supabase
 			.from('adoptions')
 			.select('*')
-			.eq('tree_uuid', treeId)
-			.eq('user_uuid', userId);
-		adopted = adoptedData.data?.length !== 0;
-
-		label = adopted ? 'Adoption aufheben' : 'Adoptiere diesen Baum';
+			.eq('tree_uuid', tree.uuid)
+			.eq('user_uuid', user.id);
+		adopted = Array.isArray(adoptedData) && adoptedData.length > 0;
 	});
 
 	const handleAdoptTree = async () => {
-		let { data, error }: any = await supabase.auth.getUser();
-		let isLoggedIn = !!data?.user;
+		const { data, error } = await supabase.auth.getUser();
+		const user = data?.user;
 
-		if (!isLoggedIn) {
-			console.log('user is not logged in', isLoggedIn);
-			errorMessage = alertUnauthorized;
+		if (!user) {
+			authorized = false;
+			errorMessage = '';
+			successMessage = '';
 			return;
 		}
+		authorized = true;
 
 		if (error) {
 			errorMessage = error.message;
+			successMessage = '';
 			return;
 		}
 
+		let op;
 		if (!adopted) {
-			({ data, error } = await supabase
-				.from('adoptions')
-				.insert({ tree_uuid: tree.uuid, user_uuid: data?.user?.id })
-				.select());
+			op = supabase.from('adoptions').insert({ tree_uuid: tree.uuid, user_uuid: user.id }).select();
 		} else {
-			({ data, error } = await supabase
-				.from('adoptions')
-				.delete()
-				.eq('tree_uuid', tree.uuid)
-				.eq('user_uuid', data?.user?.id));
+			op = supabase.from('adoptions').delete().eq('tree_uuid', tree.uuid).eq('user_uuid', user.id);
 		}
-		if (error) {
+
+		const { error: opError } = await op;
+
+		if (opError) {
 			errorMessage =
 				'Beim Adoptieren des Baumes ist ein Fehler aufgetreten. Hast du ihn vielleicht bereits adoptiert?';
 			successMessage = '';
@@ -70,7 +68,6 @@
 		}
 
 		adopted = !adopted;
-		label = adopted ? 'Adoption aufheben' : 'Adoptiere diesen Baum';
 		successMessage = adopted ? 'Du hast diesen Baum erfolgreich adoptiert!' : 'Adoption aufgehoben';
 		errorMessage = '';
 	};
@@ -78,16 +75,34 @@
 
 {#if tree}
 	<div class="flex flex-col gap-2">
-		<PrimaryButton
-			class="{adopted ? 'bg-gray-300' : 'bg-green-600'} justify-center"
+		<Button
+			variant="primary"
+			className="{adopted || !authorized
+				? 'bg-gray-300'
+				: 'bg-green-600'} justify-center opacity-{authorized ? '100' : '50'} cursor-{authorized
+				? 'pointer'
+				: 'default'}"
+			onClick={handleAdoptTree}
+		>
 			{label}
-			on:click={handleAdoptTree}
-		/>
-		<p class="text-orange-500 text-center">{@html errorMessage}</p>
-		<p class="text-green-600 text-center">{successMessage}</p>
+		</Button>
+
+		{#if !authorized}
+			<p class="text-center text-orange-500">
+				Bitte <a href="/login" class="text-blue-600 underline">einloggen</a>, um diese Funktion zu
+				nutzen.
+			</p>
+		{:else if errorMessage}
+			<p class="text-center text-orange-500">{errorMessage}</p>
+		{/if}
+
+		{#if successMessage}
+			<p class="text-center text-green-600">{successMessage}</p>
+		{/if}
+
 		<Typography>
 			Mit einer Adoption dieses Baums zeigst du deine Verbundenheit mit diesem Baum und mit
-			Bielefeld. Denn Bäume helfen uns bei einem lebenswerten und gesunden Leben.</Typography
-		>
+			Bielefeld. Denn Bäume helfen uns bei einem lebenswerten und gesunden Leben.
+		</Typography>
 	</div>
 {/if}

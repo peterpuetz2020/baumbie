@@ -1,19 +1,19 @@
 <script lang="ts">
-	import Card from '../../components/card/Card.svelte';
+	import Card from '$components/card/Card.svelte';
 </script>
 
 <Card title="Impressum" closeable={true}>
 	<p class="mt-4">
 		<strong>Vereinsadresse</strong> <br />
-		Code for Bielefeld e.V. <br />℅ codecentric AG <br />Dr. Meike Wocken <br />Obernstr. 2 <br />33602
-		Bielefeld
+		Code for Bielefeld e.V. <br />℅ codecentric AG <br />Dr. Meike Wocken <br />Obernstr. 2
+		<br />33602 Bielefeld
 	</p>
 	<p class="mt-4">
-		<strong>Vereinsregister</strong> <br />Vereinsregister des Amtsgerichts Bielefeld, VR4790 <br />Der
-		Verein Code for Bielefeld e.V. betreibt die Webseite www.bodenfeuchte.org mit dazugehörigen
-		Unterseiten.
+		<strong>Vereinsregister</strong> <br />Vereinsregister des Amtsgerichts Bielefeld, VR4790
+		<br />Der Verein Code for Bielefeld e.V. betreibt die Webseite www.bodenfeuchte.org mit
+		dazugehörigen Unterseiten.
 	</p>
-<br>
+	<br />
 	<p>EMail: teuto.bodensensor@gmail.com</p>
 	<p>Telefon: +49 1577 7576 508</p>
 </Card>

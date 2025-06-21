@@ -1,29 +1,23 @@
 <script lang="ts">
-	import Card from "../../components/card/Card.svelte";
-	import Heading from "../../components/typography/Heading.svelte";
-    import BaseButton from "../../components/button/BaseButton.svelte";
-	import DefaultButton from "../../components/button/DefaultButton.svelte";
-	import LinkButton from "../../components/button/LinkButton.svelte";
-	import PrimaryButton from "../../components/button/PrimaryButton.svelte";
-	import SecondaryButton from "../../components/button/SecondaryButton.svelte";
-
+	import { Card } from '$components/card';
+	import { Heading } from '$components/typography';
+	import { Button } from '$components/button';
+	import { goto } from '$app/navigation';
 </script>
 
-<Card title={"search"} open={true}>
+<Card title={'search'} open={true}>
 	<Heading level={1}>Bäume filtern</Heading>
 	<div>Standort filtern</div>
 	<div>Nach Alter filtern</div>
 	<div>Nach Wasserbedarf filtern</div>
 	<div>
 		Button Testing
-        <Heading level={2}>Deine adoptierten Bäume</Heading>
-        <BaseButton label={"Base"}/>
-        <LinkButton label={"link"}/>
-        <DefaultButton label={"default"} icon_src={"/icons/tree.svg"} icon_alt={"Baum"}/>
-        <PrimaryButton label={"primary"}/>
-        <DefaultButton label={"default"} icon_src={"/icons/tree.svg"} icon_alt={"Baum"}/>
-        <LinkButton label={"link"}/>
-        <SecondaryButton label={"secondary"}/>
-   
-    </div>
+		<Heading level={2}>Deine adoptierten Bäume</Heading>
+		<Button variant="secondary" onClick={() => goto('/login')}>Link</Button>
+		<Button>
+			label <img src={'/icons/tree.svg'} alt={'Baum'} />
+		</Button>
+		<Button variant="primary">primary</Button>
+		<Button variant="secondary">secondary</Button>
+	</div>
 </Card>

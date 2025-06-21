@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import Dialog from '../../components/dialog/Dialog.svelte';
-	import EmailField from '../../components/input/EmailField.svelte';
-	import PasswordField from '../../components/input/PasswordField.svelte';
-	import PrimaryButton from '../../components/button/PrimaryButton.svelte';
-	import LinkButton from '../../components/button/LinkButton.svelte';
+	import EmailField from '$components/input/EmailField.svelte';
+	import PasswordField from '$components/input/PasswordField.svelte';
+	import { goto } from '$app/navigation';
+	import { Button } from '$components/button';
 
 	let email: string = '';
 	let password: string = '';
@@ -74,41 +73,37 @@
 	};
 </script>
 
-	<form class="flex flex-col gap-y-4">
-		<div class="flex flex-col gap-y-2">
-			<EmailField
-				id="email"
-				label="E-Mail:"
-				inputClass="w-full"
-				placeholder="jdoe@example.com"
-				error={emailErrorCode}
-				bind:value={email}
-			/>
-			<PasswordField
-				id="password"
-				label="Passwort:"
-				inputClass="w-full"
-				placeholder="Passwort"
-				error={passwordErrorCode}
-				bind:value={password}
-			/>
-			<PasswordField
-				id="password_confirmation"
-				label="Passwort (Wiederholung):"
-				inputClass="w-full"
-				placeholder="Passwort"
-				error={passwordErrorCode}
-				bind:value={passwordConfirmation}
-			/>
-		</div>
-		<div class="flex flex-col gap-y-2">
-			<PrimaryButton
-				type="submit"
-				label="Registrieren"
-				class="w-full"
-				on:click={handleRegistration}
-			/>
-			<LinkButton href="/login" label="Anmelden" class="w-full" />
-		</div>
-	</form>
-
+<form class="flex flex-col gap-y-4">
+	<div class="flex flex-col gap-y-2">
+		<EmailField
+			id="email"
+			label="E-Mail:"
+			inputClass="w-full"
+			placeholder="jdoe@example.com"
+			error={emailErrorCode}
+			bind:value={email}
+		/>
+		<PasswordField
+			id="password"
+			label="Passwort:"
+			inputClass="w-full"
+			placeholder="Passwort"
+			error={passwordErrorCode}
+			bind:value={password}
+		/>
+		<PasswordField
+			id="password_confirmation"
+			label="Passwort (Wiederholung):"
+			inputClass="w-full"
+			placeholder="Passwort"
+			error={passwordErrorCode}
+			bind:value={passwordConfirmation}
+		/>
+	</div>
+	<div class="flex flex-col gap-y-2">
+		<Button variant="primary" type="submit" className="w-full" onClick={handleRegistration}
+			>Registrieren</Button
+		>
+		<Button variant="secondary" onClick={() => goto('/login')} className="w-full">Anmelden</Button>
+	</div>
+</form>
