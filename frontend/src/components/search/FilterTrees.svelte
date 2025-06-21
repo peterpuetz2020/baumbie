@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$components/ui';
-	import { selectedSpecies } from '$lib/trees/filters';
-	import { loadTopSpecies } from '$lib/stats/topSpecies';
+	import { selectedSpecies, loadTopSpecies } from '$lib/trees';
+	import {} from '$lib/trees/topSpecies';
 	import { onMount } from 'svelte';
 
 	let topSpecies: { label: string; count: number }[] = [];

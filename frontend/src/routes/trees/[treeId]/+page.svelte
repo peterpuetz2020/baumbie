@@ -4,7 +4,7 @@
 
 	import { supabase } from '../../../supabase';
 
-	import type { Tree as TreeType } from '../../../types/Tree';
+	import type { Tree as TreeType } from '$types/tree';
 
 	import { Accordion } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';

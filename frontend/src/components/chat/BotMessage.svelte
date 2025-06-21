@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Message } from '../../types/chat';
-	import { parseMarkdown } from '$lib/utils';
+	import parseMarkdown from '$lib/utils/parseMarkdown';
 
 	export let message: Message;
 

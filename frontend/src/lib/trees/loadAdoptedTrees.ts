@@ -1,5 +1,5 @@
 import { supabase } from '../../supabase';
-import type { AdoptedTree } from '../../types/Tree';
+import type { AdoptedTree } from '$types/tree';
 
 export async function loadAdoptedTrees() {
 	const { data: userData } = await supabase.auth.getUser();

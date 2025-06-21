@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import type { Tree } from '../../types/Tree';
+	import type { Tree as TreeType } from '$types/tree';
 	import { Button } from '$components/ui';
 
-	export let tree: Tree;
+	export let tree: TreeType;
 
 	let adopted = false;
 	let label = '';
