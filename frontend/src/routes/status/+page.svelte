@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { DialogPanel } from '$components/overlay';
-	import SearchTrees from '../../features/status/SearchTrees.svelte';
-	import AdoptedTrees from '../../features/status/AdoptedTrees.svelte';
+	import { AdoptedTrees, NearbyTrees } from '$components/status';
 </script>
 
 <DialogPanel title={'Mein Bereich'} open={true}>
 	<div class="pt-6 pb-6 space-y-2">
-		<SearchTrees />
+		<NearbyTrees />
 	</div>
 
 	<div class="pb-6 space-y-2">
