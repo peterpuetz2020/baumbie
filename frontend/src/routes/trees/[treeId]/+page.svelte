@@ -2,7 +2,8 @@
 	import Accordion from '$lib/components/Accordion.svelte';
 	import WaterColumn from '$components/WaterColumn.svelte';
 	import Chat from '$components/chat/Chat.svelte';
-	import Card from '$components/card/Card.svelte';
+	import { DialogPanel } from '$components/layout';
+
 	import AdoptTree from '../../../features/adoption/AdoptTree.svelte';
 	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
@@ -36,7 +37,7 @@
 </script>
 
 {#if tree}
-	<Card title={tree.tree_type_german} open={true}>
+	<DialogPanel title={tree.tree_type_german} open={true}>
 		<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 		<div slot="navigation">
 			<nav
@@ -132,5 +133,5 @@
 				{/if}
 			</div>
 		</div>
-	</Card>
+	</DialogPanel>
 {/if}

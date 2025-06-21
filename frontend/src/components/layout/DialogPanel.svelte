@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import Heading from '$components/ui/Heading.svelte';
 	import { onMount } from 'svelte';
 
 	export let title;
@@ -31,12 +32,12 @@
 	}
 </script>
 
-<!-- Card START -->
+<!-- Panel START -->
 {#if open}
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-no-noninteractive-tabindex -->
 	<div
-		id="card"
 		role="dialog"
+		tabindex="0"
 		aria-label="Dialogfenster"
 		aria-modal="true"
 		on:click|stopPropagation
@@ -49,9 +50,9 @@
 		>
 			<!-- Header -->
 			<header class="flex flex-row items-center justify-between shrink-0">
-				<h1 class="text-2xl font-bold">{title}</h1>
+				<Heading level={1}>{title}</Heading>
 				{#if closeable}
-					<button on:click={close}>
+					<button on:click={close} class="translate-y-[-12px]">
 						<img src="/card/cross.svg" alt="close" />
 					</button>
 				{/if}
@@ -68,4 +69,4 @@
 		</div>
 	</div>
 {/if}
-<!-- Card END -->
+<!-- Panel END -->

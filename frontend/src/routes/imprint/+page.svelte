@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Card from '$components/card/Card.svelte';
+	import { DialogPanel } from '$components/layout';
 </script>
 
-<Card title="Impressum" closeable={true}>
+<DialogPanel title="Impressum" closeable={true}>
 	<p class="mt-4">
 		<strong>Vereinsadresse</strong> <br />
 		Code for Bielefeld e.V. <br />℅ codecentric AG <br />Dr. Meike Wocken <br />Obernstr. 2
@@ -16,4 +16,4 @@
 	<br />
 	<p>EMail: teuto.bodensensor@gmail.com</p>
 	<p>Telefon: +49 1577 7576 508</p>
-</Card>
+</DialogPanel>
