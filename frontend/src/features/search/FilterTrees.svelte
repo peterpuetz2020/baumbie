@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$components/button/Button.svelte';
+	import { Button } from '$components/ui';
 	import { selectedSpecies } from '$lib/map/treeFilter';
 	import { loadTopSpecies } from '$lib/map/topSpecies';
 	import { onMount } from 'svelte';

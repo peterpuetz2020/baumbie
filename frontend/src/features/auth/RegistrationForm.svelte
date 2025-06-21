@@ -4,7 +4,7 @@
 	import EmailField from '$components/input/EmailField.svelte';
 	import PasswordField from '$components/input/PasswordField.svelte';
 	import { goto } from '$app/navigation';
-	import { Button } from '$components/button';
+	import { Button } from '$components/ui';
 
 	let email: string = '';
 	let password: string = '';

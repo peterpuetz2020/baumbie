@@ -3,7 +3,7 @@
 	import { getCurrentPosition, getBoundingBox, extractTreeCandidates } from '$lib/geo';
 	import { goto } from '$app/navigation';
 	import findMatchingSegments from '../../businessLogic/findSegments';
-	import Button from '$components/button/Button.svelte';
+	import { Button } from '$components/ui';
 
 	let treesNearby: {
 		id: string;

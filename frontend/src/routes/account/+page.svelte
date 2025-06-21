@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import { Button } from '$components/button';
+	import { Button } from '$components/ui';
 
 	let user: { email?: string } | null = null;
 

@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { loadAdoptedTrees } from '$lib/trees/loadAdoptedTrees';
 
-	import { Button } from '$components/button';
+	import { Button } from '$components/ui';
 	import Heading from '$components/typography/Heading.svelte';
 
 	import type { AdoptedTree } from '../../types/Tree';

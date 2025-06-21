@@ -3,7 +3,7 @@
 	import Typography from '$components/typography/Typography.svelte';
 	import { supabase } from '../../supabase';
 	import type { Tree } from '../../types/Tree.ts';
-	import { Button } from '$components/button';
+	import { Button } from '$components/ui';
 
 	export let tree: Tree;
 
