@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Dialog from '$components/dialog/Dialog.svelte';
+	import { Modal } from '$components/overlay';
 	import RegistrationForm from '../../../features/auth/RegistrationForm.svelte';
 </script>
 
-<Dialog title="Registrierung">
+<Modal title="Registrierung">
 	<RegistrationForm />
-</Dialog>
+</Modal>

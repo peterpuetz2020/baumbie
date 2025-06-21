@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
 	import { Button, Heading } from '$components/ui';
-	import DialogPanel from '$components/layout/DialogPanel.svelte';
+	import { DialogPanel } from '$components/overlay';
 
 	let user: { email?: string } | null = null;
 

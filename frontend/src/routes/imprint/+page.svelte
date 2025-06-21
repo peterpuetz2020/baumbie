@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DialogPanel } from '$components/layout';
+	import { DialogPanel } from '$components/overlay';
 </script>
 
 <DialogPanel title="Impressum" closeable={true}>

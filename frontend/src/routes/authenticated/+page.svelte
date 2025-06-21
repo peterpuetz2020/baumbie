@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { DialogPanel } from '$components/layout';
+	import { DialogPanel } from '$components/overlay';
 	import { supabase } from '../../supabase';
 
 	let userEmail: string | undefined = '';

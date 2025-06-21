@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DialogPanel } from '$components/layout';
+	import { DialogPanel } from '$components/overlay';
 	import SearchTrees from '../../features/status/SearchTrees.svelte';
 	import AdoptedTrees from '../../features/status/AdoptedTrees.svelte';
 </script>

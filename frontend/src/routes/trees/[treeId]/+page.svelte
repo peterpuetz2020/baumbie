@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Accordion from '$lib/components/Accordion.svelte';
+	import { Accordion } from '$components/ui';
 	import WaterColumn from '$components/WaterColumn.svelte';
 	import Chat from '$components/chat/Chat.svelte';
-	import { DialogPanel } from '$components/layout';
+	import { DialogPanel } from '$components/overlay';
 
 	import AdoptTree from '../../../features/adoption/AdoptTree.svelte';
 	import { supabase } from '../../../supabase';
