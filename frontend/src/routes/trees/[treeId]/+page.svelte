@@ -7,7 +7,7 @@
 	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import type { Tree } from '../../../types/tree';
+	import type { Tree as TreeType } from '../../../types/Tree';
 	import TreeMetric from '$components/trees/TreeMetric.svelte';
 
 	export let activeTabIndex: number = 0;
@@ -23,7 +23,7 @@
 	$: showInfo = true;
 	$: showChat = false;
 
-	let tree: Tree;
+	let tree: TreeType;
 
 	onMount(async () => {
 		const { data, error } = await supabase

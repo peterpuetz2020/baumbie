@@ -25,4 +25,10 @@ export interface Tree {
 	geocoordinates: string;
 }
 
-export type { Tree as TreeInterface };
+type AdoptedTree = {
+	id: string;
+	name: string;
+};
+
+
+export type { Tree as TreeInterface, AdoptedTree };
