@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import type { Tree } from '../../types/Tree.ts';
+	import type { Tree } from '../../types/Tree';
 	import { Button } from '$components/ui';
 
 	export let tree: Tree;

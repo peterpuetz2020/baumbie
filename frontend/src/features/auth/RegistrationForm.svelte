@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import EmailField from '$components/ui/EmailField.svelte';
+	import EmailField from '$components/ui/input/EmailField.svelte';
 	import { PasswordField } from '$components/ui';
 	import { goto } from '$app/navigation';
 	import { Button } from '$components/ui';
