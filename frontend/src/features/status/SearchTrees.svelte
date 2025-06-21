@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Heading from '../../components/typography/Heading.svelte';
+	import Heading from '$components/typography/Heading.svelte';
 	import { getCurrentPosition, getBoundingBox, extractTreeCandidates } from '$lib/geo';
-	import { goToTree } from '$lib/map/goToTree';
+	import { goto } from '$app/navigation';
 	import findMatchingSegments from '../../businessLogic/findSegments';
+	import Button from '$components/button/Button.svelte';
 
-	let locationInfo = 'Noch kein Standort bestimmt.';
 	let treesNearby: {
 		id: string;
 		name: string;
@@ -14,17 +14,15 @@
 		crown?: number;
 	}[] = [];
 
+	let errorMessage: string | null = null;
+
 	async function findTreesNearby() {
-		locationInfo = '📍 Standort wird bestimmt...';
 		treesNearby = [];
+		errorMessage = null;
 
 		try {
 			const coords = await getCurrentPosition();
-			locationInfo = `📍 Standort: ${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
 
-			// We use a radius of 0.0015 degrees (~150 m) as a compromise:
-			// This ensures enough trees are included for comparison,
-			// while limiting the number of distance calculations for performance.
 			const radiusDeg = 0.0015;
 			const { minX, maxX, minY, maxY } = getBoundingBox(
 				coords.latitude,
@@ -45,52 +43,39 @@
 			);
 
 			treesNearby = candidates.sort((a, b) => a.distance - b.distance).slice(0, 5);
+
+			if (treesNearby.length === 0) {
+				errorMessage = '❌ Keine Bäume in deiner Nähe gefunden.';
+			}
 		} catch (error) {
-			locationInfo = '❌ Standort konnte nicht ermittelt werden.';
+			errorMessage = '❌ Dein Standort konnte nicht ermittelt werden.';
 		}
 	}
 </script>
 
 <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-3">
-	<Heading level={2}>🌳 Bäume in deiner Nähe</Heading>
+	<Heading level={2}>Bäume in meiner Nähe</Heading>
 
-	<button
-		on:click={findTreesNearby}
-		class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-	>
-		Bäume in der Nähe finden
-	</button>
+	<Button variant="primary" onClick={findTreesNearby}>Jetzt Bäume finden</Button>
 
-	<p class="text-sm text-gray-700">{locationInfo}</p>
+	{#if errorMessage}
+		<p class="text-sm text-red-600">{errorMessage}</p>
+	{/if}
 
 	{#if treesNearby.length}
-		<table class="w-full border border-collapse border-gray-300 mt-4">
-			<thead class="bg-gray-100">
-				<tr>
-					<th class="p-2 border w-[2.5rem] text-center"></th>
-					<th class="text-left p-2 border">Baumart</th>
-					<th class="text-left p-2 border">Entfernung (m)</th>
-					<th class="text-left p-2 border">Krone (m)</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each treesNearby as tree}
-					<tr class="hover:bg-green-50 transition-colors">
-						<td class="p-2 border text-center">
-							<button
-								class="text-xl hover:scale-125 transition-transform"
-								on:click={() => goToTree(tree)}
-								aria-label="Baumdetails anzeigen"
-							>
-								<img src="/icons/tree.svg" alt="Baum anzeigen" class="w-5 h-5 inline-block" />
-							</button>
-						</td>
-						<td class="p-2 border">{tree.name}</td>
-						<td class="p-2 border">{tree.distance}</td>
-						<td class="p-2 border">{tree.crown?.toFixed(1) ?? '–'}</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+		<ul class="mt-4 divide-y divide-gray-200 text-sm">
+			{#each treesNearby as tree}
+				<li class="flex items-center justify-between py-2">
+					<div class="flex items-center gap-2">
+						<span>{tree.name}</span>
+						<img src="/icons/tree.svg" alt="Baum" class="w-4 h-4" />
+					</div>
+
+					<Button onClick={() => goto(`/trees/${tree.id}`)}>
+						{tree.distance.toFixed(1)} m →
+					</Button>
+				</li>
+			{/each}
+		</ul>
 	{/if}
 </div>

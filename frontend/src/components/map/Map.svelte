@@ -4,7 +4,6 @@
 	import L from 'leaflet';
 	import 'leaflet/dist/leaflet.css';
 	import { goto } from '$app/navigation';
-	import { mapStore } from '$lib/map/mapInstance';
 
 	// 📦 Komponenten & externe Module
 	import MapControls from './MapControls.svelte';
@@ -117,8 +116,6 @@
 		})
 			.addLayer(layer)
 			.on('moveend', onMove);
-
-		mapStore.set(map);
 
 		onMove({ target: map });
 
