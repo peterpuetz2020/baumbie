@@ -1,10 +1,9 @@
 <script lang="ts">
 	import Card from '$components/card/Card.svelte';
-	import Heading from '$components/typography/Heading.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import { Button } from '$components/ui';
+	import { Button, Heading } from '$components/ui';
 
 	let user: { email?: string } | null = null;
 

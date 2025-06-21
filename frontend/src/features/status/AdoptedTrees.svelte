@@ -5,7 +5,7 @@
 	import { loadAdoptedTrees } from '$lib/trees/loadAdoptedTrees';
 
 	import { Button } from '$components/ui';
-	import Heading from '$components/typography/Heading.svelte';
+	import Heading from '$components/ui/Heading.svelte';
 
 	import type { AdoptedTree } from '../../types/Tree';
 

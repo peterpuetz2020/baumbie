@@ -1,9 +1,8 @@
 <script lang="ts">
-	import Heading from '$components/typography/Heading.svelte';
 	import { getCurrentPosition, getBoundingBox, extractTreeCandidates } from '$lib/geo';
 	import { goto } from '$app/navigation';
 	import findMatchingSegments from '../../businessLogic/findSegments';
-	import { Button } from '$components/ui';
+	import { Button, Heading } from '$components/ui';
 
 	let treesNearby: {
 		id: string;

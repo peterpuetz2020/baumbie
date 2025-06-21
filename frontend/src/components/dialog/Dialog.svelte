@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import Heading from '../typography/Heading.svelte';
+	import Heading from '$components/ui/Heading.svelte';
 	import { goto } from '$app/navigation';
 
 	export let title: string = '';
