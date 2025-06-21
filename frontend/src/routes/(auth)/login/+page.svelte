@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Modal } from '$components/overlay';
-	import LoginForm from '../../../features/auth/LoginForm.svelte';
+	import { LoginForm } from '$components/auth';
 </script>
 
 <Modal title="Anmelden">

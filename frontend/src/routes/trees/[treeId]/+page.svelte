@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { Accordion } from '$components/ui';
-	import WaterColumn from '$components/trees/WaterColumn.svelte';
-	import Chat from '$components/chat/Chat.svelte';
-	import { DialogPanel } from '$components/overlay';
-
-	import AdoptTree from '$components/trees/AdoptTreeButton.svelte';
-	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+
+	import { supabase } from '../../../supabase';
+
 	import type { Tree as TreeType } from '../../../types/Tree';
-	import TreeMetric from '$components/trees/TreeMetric.svelte';
+
+	import { Accordion } from '$components/ui';
+	import { DialogPanel } from '$components/overlay';
+	import { Chat } from '$components/chat';
+	import { AdoptTreeButton, TreeMetric, WaterColumn } from '$components/trees';
 
 	export let activeTabIndex: number = 0;
 
@@ -127,7 +127,7 @@
 					</Accordion>
 					<hr />
 
-					<AdoptTree {tree} />
+					<AdoptTreeButton {tree} />
 				{:else}
 					<Chat treeId={tree.uuid} />
 				{/if}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import Map from '../components/map/Map.svelte';
+	import Map from '$components/map/Map.svelte';
 	import { Navbar } from '$components/overlay';
 </script>
 

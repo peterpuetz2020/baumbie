@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { DialogPanel } from '$components/overlay';
-
-	import FilterTrees from '$components/search/FilterTrees.svelte';
+	import { FilterTrees } from '$components/search';
 </script>
 
 <DialogPanel title={'Nach Baumarten filtern'} open={true}>
