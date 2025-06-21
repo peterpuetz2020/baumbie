@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import PrimaryButton from '../button/PrimaryButton.svelte';
 	import { supabase } from '../../supabase';
+	import Button from '$components/button/Button.svelte';
 
 	let loggedIn = false;
 
@@ -32,6 +33,6 @@
 			</div>
 		</div>
 	{:else}
-		<PrimaryButton label="Anmelden" onClick={() => goto('/login')} />
+		<Button variant="primary" onClick={() => goto('/login')}>Anmelden</Button>
 	{/if}
 </div>

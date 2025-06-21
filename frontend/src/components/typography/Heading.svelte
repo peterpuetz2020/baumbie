@@ -1,18 +1,23 @@
 <script lang="ts">
-	export let level: number = 1;
-	console.log("level: ",)
+	type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
+	export let level: HeadingLevel = 1;
+	export let className: string = '';
+
+	const tag = `h${level}`;
+
+	const levelClassMap: Record<HeadingLevel, string> = {
+		1: 'font-bold text-2xl pb-4',
+		2: 'font-bold pb-2',
+		3: 'font-bold pb-2',
+		4: 'font-bold pb-2',
+		5: 'font-bold pb-2',
+		6: 'font-bold pb-2'
+	};
+
+	$: combinedClass = `${levelClassMap[level]} ${className}`.trim();
 </script>
 
-{#if level === 1}
-	<h1 {...$$props} class={`${$$props.class} font-bold text-2xl pb-4`}><slot /></h1>
-{:else if level === 2}
-	<h2 {...$$props} class={`${$$props.class} font-bold pb-2`}><slot /></h2>
-{:else if level === 3}
-	<h3 {...$$props} class={`${$$props.class} font-bold pb-2`}><slot /></h3>
-{:else if level === 4}
-	<h4 {...$$props} class={`${$$props.class} font-bold pb-2`}><slot /></h4>
-{:else if level === 5}
-	<h5 {...$$props} class={`${$$props.class} font-bold pb-2`}><slot /></h5>
-{:else if level === 6}
-	<h6 {...$$props} class={`${$$props.class} font-bold pb-2`}><slot /></h6>
-{/if}
+<svelte:element this={tag} class={combinedClass}>
+	<slot />
+</svelte:element>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import Card from '../../components/card/Card.svelte';
+	import Card from '$components/card/Card.svelte';
 	import { supabase } from '../../supabase';
 
 	let userEmail: string | undefined = '';
