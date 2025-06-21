@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Accordion from '$lib/components/Accordion.svelte';
-	import WaterColumn from '../../../components/WaterColumn.svelte';
-	import Chat from '../../../components/chat/Chat.svelte';
-	import Card from '../../../components/card/Card.svelte';
+	import WaterColumn from '$components/WaterColumn.svelte';
+	import Chat from '$components/chat/Chat.svelte';
+	import Card from '$components/card/Card.svelte';
 	import AdoptTree from '../../../features/adoption/AdoptTree.svelte';
 	import { supabase } from '../../../supabase';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import type { Tree } from '../../../types/tree';
-	import TreeMetric from '../../../components/trees/TreeMetric.svelte';
+	import type { Tree as TreeType } from '../../../types/Tree';
+	import TreeMetric from '$components/trees/TreeMetric.svelte';
 
 	export let activeTabIndex: number = 0;
 
@@ -23,7 +23,7 @@
 	$: showInfo = true;
 	$: showChat = false;
 
-	let tree: Tree;
+	let tree: TreeType;
 
 	onMount(async () => {
 		const { data, error } = await supabase
@@ -53,7 +53,9 @@
 					<button
 						role="tab"
 						aria-selected={activeTabIndex === 0}
-						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showInfo ? 'text-zinc-600' : 'text-neutral-500'} z-10"
+						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showInfo
+							? 'text-zinc-600'
+							: 'text-neutral-500'} z-10"
 						on:click={() => handleTabChange(0)}
 						tabindex="0"
 					>
@@ -62,7 +64,9 @@
 					<button
 						role="tab"
 						aria-selected={activeTabIndex === 1}
-						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showChat ? 'text-zinc-600' : 'text-neutral-500'} z-10"
+						class="flex-1 py-2 shrink gap-2.5 self-stretch my-auto ${showChat
+							? 'text-zinc-600'
+							: 'text-neutral-500'} z-10"
 						on:click={() => handleTabChange(1)}
 						tabindex="0"
 					>
@@ -76,19 +80,30 @@
 			<div class="flex flex-col gap-4 h-full">
 				{#if activeTabIndex === 0}
 					<Accordion bind:open={openAbout}>
-
 						<div slot="head">
 							<p class="text-black font-bold">Über mich</p>
 						</div>
 						<div slot="details">
 							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
 								<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
-								<TreeMetric label="Kronendurchmesser" value={tree.crown_diameter} unit="m" max={29} position="top" />
-								<TreeMetric label="Stammdurchmesser" value={tree.trunk_diameter} unit="cm" max={297} position="bottom" />
+								<TreeMetric
+									label="Kronendurchmesser"
+									value={tree.crown_diameter}
+									unit="m"
+									max={29}
+									position="top"
+								/>
+								<TreeMetric
+									label="Stammdurchmesser"
+									value={tree.trunk_diameter}
+									unit="cm"
+									max={297}
+									position="bottom"
+								/>
 							</div>
 						</div>
 					</Accordion>
-					<hr>
+					<hr />
 					<Accordion bind:open={openWater}>
 						<div slot="head">
 							<p class="text-black font-bold">Wasserbedarf</p>
@@ -100,20 +115,16 @@
 							<WaterColumn />
 						</div>
 					</Accordion>
-					<hr>
+					<hr />
 					<Accordion bind:open={openHistory}>
 						<div slot="head">
 							<p class="text-black font-bold">Wer wann gegossen hat</p>
 						</div>
 						<div slot="details">
-							<p class="text-sm text-gray-800">
-								Hier werden die letzten 10 Gießungen angezeigt.
-							</p>
+							<p class="text-sm text-gray-800">Hier werden die letzten 10 Gießungen angezeigt.</p>
 						</div>
 					</Accordion>
-					<hr>
-							
-
+					<hr />
 
 					<AdoptTree {tree} />
 				{:else}
