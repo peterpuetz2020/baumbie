@@ -4,7 +4,7 @@
 	import L from 'leaflet';
 	import 'leaflet/dist/leaflet.css';
 	import { goto } from '$app/navigation';
-	import { selectedSpecies } from '$lib/map/treeFilter';
+	import { selectedSpecies } from '$lib/trees/filters';
 
 	// 📦 Komponenten & externe Module
 	import MapControls from './MapControls.svelte';
@@ -13,7 +13,7 @@
 	import './Map.css';
 
 	// 📦 Projektinterne Logik
-	import findMatchingSegments from '../../businessLogic/findSegments';
+	import { findMatchingSegments } from '$lib/geo';
 
 	// 🆔 zufällige ID für Karten-Div
 	const id = 'map-' + Math.random().toString(36).substring(2, 9);

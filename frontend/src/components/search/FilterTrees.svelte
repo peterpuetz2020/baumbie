@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Button from '$components/button/Button.svelte';
-	import { selectedSpecies } from '$lib/map/treeFilter';
-	import { loadTopSpecies } from '$lib/map/topSpecies';
+	import { Button } from '$components/ui';
+	import { selectedSpecies, loadTopSpecies } from '$lib/trees';
+	import {} from '$lib/trees/topSpecies';
 	import { onMount } from 'svelte';
 
 	let topSpecies: { label: string; count: number }[] = [];

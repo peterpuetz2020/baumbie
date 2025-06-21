@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Message } from '../../types/chat';
-	import { parseMarkdown } from '$lib/parseMarkdown';
+	import parseMarkdown from '$lib/utils/parseMarkdown';
 
 	export let message: Message;
 
@@ -44,11 +44,17 @@
 
 <div class="flex gap-1.5 flex-row w-full bot-message">
 	<div class="pt-2">
-			<img src={ message.ai ? "/chat/tree-ai.svg" : "/icons/tree.svg"} alt="Bot" class="min-w-8 min-h-8" />	
+		<img
+			src={message.ai ? '/chat/tree-ai.svg' : '/icons/tree.svg'}
+			alt="Bot"
+			class="min-w-8 min-h-8"
+		/>
 	</div>
 	<div class="w-full flex flex-row">
 		{#if htmlText}
-			<div class="shrink box-border p-3 text-black rounded-xl bg-message-bot max-w-[80%] md:max-w-[70%]">
+			<div
+				class="shrink box-border p-3 text-black rounded-xl bg-message-bot max-w-[80%] md:max-w-[70%]"
+			>
 				{@html htmlText}
 				<!--
 					Debug-Ausgabe: zeigt das generierte HTML aus parseMarkdown()

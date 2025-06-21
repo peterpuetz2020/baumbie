@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Typography from '$components/typography/Typography.svelte';
 	import { supabase } from '../../supabase';
-	import type { Tree } from '../../types/Tree.ts';
-	import { Button } from '$components/button';
+	import type { Tree as TreeType } from '$types/tree';
+	import { Button } from '$components/ui';
 
-	export let tree: Tree;
+	export let tree: TreeType;
 
 	let adopted = false;
 	let label = '';
@@ -100,9 +99,9 @@
 			<p class="text-center text-green-600">{successMessage}</p>
 		{/if}
 
-		<Typography>
+		<p>
 			Mit einer Adoption dieses Baums zeigst du deine Verbundenheit mit diesem Baum und mit
 			Bielefeld. Denn Bäume helfen uns bei einem lebenswerten und gesunden Leben.
-		</Typography>
+		</p>
 	</div>
 {/if}

@@ -1,7 +1,7 @@
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
-export async function parseMarkdown(input: string): Promise<string> {
+export default async function parseMarkdown(input: string): Promise<string> {
   const rawHtml = await marked(input, {
     breaks: true,
   });

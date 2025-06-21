@@ -1,6 +1,6 @@
 <script lang="ts">
 	import L from 'leaflet';
-	import { userMarkerIcon } from '$lib/map/user-marker';
+	import { userMarkerIcon } from '$lib/map/userMarker';
 
 	export let map: L.Map;
 
@@ -20,7 +20,7 @@
 		if (userMarker) {
 			map.removeLayer(userMarker);
 			userMarker = null;
-			return
+			return;
 		}
 
 		map.off('locationfound');
@@ -33,9 +33,9 @@
 				duration: 1.5
 			});
 
-			userMarker = L.marker(e.latlng, { 
-				icon: userMarkerIcon(), 
-				interactive: false 
+			userMarker = L.marker(e.latlng, {
+				icon: userMarkerIcon(),
+				interactive: false
 			}).addTo(map);
 		});
 

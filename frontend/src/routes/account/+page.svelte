@@ -1,10 +1,9 @@
 <script lang="ts">
-	import Card from '$components/card/Card.svelte';
-	import Heading from '$components/typography/Heading.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { supabase } from '../../supabase';
-	import { Button } from '$components/button';
+	import { Button, Heading } from '$components/ui';
+	import { DialogPanel } from '$components/overlay';
 
 	let user: { email?: string } | null = null;
 
@@ -19,7 +18,7 @@
 	};
 </script>
 
-<Card title={''} open={true}>
+<DialogPanel title={''} open={true}>
 	<Heading level={1}>Mein Account</Heading>
 	<div>
 		{#if user}
@@ -62,4 +61,4 @@
 			<a class="underline" href="https://codefor.de/bielefeld/">Code for Bielefeld e.V.</a>
 		</p>
 	</div>
-</Card>
+</DialogPanel>

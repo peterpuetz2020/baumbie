@@ -10,7 +10,8 @@ export default defineConfig({
 	envDir: '..',
 	resolve: {
 		alias: {
-			$components: path.resolve(__dirname, 'src/components')
+			$components: path.resolve(__dirname, 'src/components'),
+			$types: path.resolve(__dirname, 'src/types')
 		}
 	}
 });

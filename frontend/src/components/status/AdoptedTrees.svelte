@@ -4,10 +4,9 @@
 	import { goto } from '$app/navigation';
 	import { loadAdoptedTrees } from '$lib/trees/loadAdoptedTrees';
 
-	import { Button } from '$components/button';
-	import Heading from '$components/typography/Heading.svelte';
+	import { Button, Heading } from '$components/ui';
 
-	import type { AdoptedTree } from '../../types/Tree';
+	import type { AdoptedTree } from '$types/tree';
 
 	let adoptedTrees: AdoptedTree[] = [];
 	let loading = true;

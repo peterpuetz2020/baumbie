@@ -1,17 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import EmailField from '$components/input/EmailField.svelte';
-	import PasswordField from '$components/input/PasswordField.svelte';
+	import { EmailField, PasswordField } from '$components/ui';
 	import { supabase } from '../../supabase';
 	import { goto } from '$app/navigation';
-	import { Button } from '$components/button';
+	import { Button } from '$components/ui';
 
 	let email: string = '';
 	let password: string = '';
 	let errorCode: string | undefined = undefined;
 	$: email, password, errorCode;
-
-	let loading: boolean = false;
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -37,7 +34,6 @@
 	const handleLogin = async (e: any) => {
 		e.preventDefault();
 
-		loading = true;
 		const { data, error } = await supabase.auth.signInWithPassword({
 			email,
 			password
