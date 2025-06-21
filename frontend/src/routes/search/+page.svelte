@@ -1,23 +1,10 @@
 <script lang="ts">
-	import { Card } from '$components/card';
-	import { Heading } from '$components/typography';
-	import { Button } from '$components/button';
-	import { goto } from '$app/navigation';
+	import Card from '$components/card/Card.svelte';
+	import FilterTrees from '../../features/search/FilterTrees.svelte';
 </script>
 
-<Card title={'search'} open={true}>
-	<Heading level={1}>Bäume filtern</Heading>
-	<div>Standort filtern</div>
-	<div>Nach Alter filtern</div>
-	<div>Nach Wasserbedarf filtern</div>
-	<div>
-		Button Testing
-		<Heading level={2}>Deine adoptierten Bäume</Heading>
-		<Button variant="secondary" onClick={() => goto('/login')}>Link</Button>
-		<Button>
-			label <img src={'/icons/tree.svg'} alt={'Baum'} />
-		</Button>
-		<Button variant="primary">primary</Button>
-		<Button variant="secondary">secondary</Button>
+<Card title={'Nach Baumarten filtern'} open={true}>
+	<div class="pt-2 pb-6 space-y-4">
+		<FilterTrees />
 	</div>
 </Card>

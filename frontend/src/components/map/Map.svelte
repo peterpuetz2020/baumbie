@@ -4,6 +4,7 @@
 	import L from 'leaflet';
 	import 'leaflet/dist/leaflet.css';
 	import { goto } from '$app/navigation';
+	import { selectedSpecies } from '$lib/map/treeFilter';
 
 	// 📦 Komponenten & externe Module
 	import MapControls from './MapControls.svelte';
@@ -14,15 +15,16 @@
 	// 📦 Projektinterne Logik
 	import findMatchingSegments from '../../businessLogic/findSegments';
 
-	// 🗺️ Initialisierung
+	// 🆔 zufällige ID für Karten-Div
 	const id = 'map-' + Math.random().toString(36).substring(2, 9);
+
+	// 🌍 Leaflet Map & State
 	let map: L.Map;
-	let visibleSegments = new Set();
+	let loadedSegmentFiles = new Set<string>();
+	let allMarkerGroups: L.MarkerClusterGroup[] = [];
+	let lastClickedMarker: unknown = null;
+	let lastFilter: string[] = [];
 
-	// 📍 Zustand für Click-Highlight
-	let last_clicked: unknown = null;
-
-	// 🌳 Baum-Marker
 	const greenIcon = L.icon({
 		iconUrl: '/map/markers/marker-tree.svg',
 		iconSize: [15, 15],
@@ -30,73 +32,96 @@
 		popupAnchor: [0, -10]
 	});
 
-	// 📦 Segment-Nachladen bei Bewegung
+	const MAX_CLUSTER_ZOOM = 20;
+	const loadDelayMs = 50;
+	const verticalOffsetFactor = 2.35;
+
+	$: if (map && JSON.stringify($selectedSpecies) !== JSON.stringify(lastFilter)) {
+		lastFilter = [...$selectedSpecies];
+		console.log('🔄 Filter geändert:', $selectedSpecies);
+
+		// 🧹 Alte Marker-Gruppen entfernen
+		allMarkerGroups.forEach((group) => group.remove());
+		allMarkerGroups = [];
+		loadedSegmentFiles.clear();
+
+		// 📍 Karte mit neuem Filter aktualisieren
+		onMove({ target: map });
+	}
+
 	const onMove = (e: any) => {
-		setTimeout(() => {
+		setTimeout(async () => {
 			const bounds = e.target.getBounds();
-			const maxY = bounds._northEast.lat;
-			const maxX = bounds._northEast.lng;
-			const minY = bounds._southWest.lat;
-			const minX = bounds._southWest.lng;
+			const ne = bounds.getNorthEast();
+			const sw = bounds.getSouthWest();
 
-			findMatchingSegments(minX, maxX, minY, maxY).then((segmentFiles) => {
-				segmentFiles
-					.filter((file) => !visibleSegments.has(file))
-					.forEach((file) => {
-						fetch(`/segments/${file}`)
-							.then((res) => res.json())
-							.then((segment) => {
-								visibleSegments.add(file);
+			const segmentFiles = await findMatchingSegments(sw.lng, ne.lng, sw.lat, ne.lat);
 
-								const markers = new MarkerClusterGroup({
-									spiderfyOnMaxZoom: false,
-									showCoverageOnHover: false,
-									zoomToBoundsOnClick: true,
-									disableClusteringAtZoom: 20,
-									iconCreateFunction: (cluster: any) => {
-										const count = cluster.getChildCount();
-										const size = count > 1000 ? 100 : count > 500 ? 50 : count > 100 ? 10 : 20;
-										return L.divIcon({
-											html: '',
-											className: 'marker-cluster',
-											iconSize: L.point(size, size)
-										});
-									}
-								}).addTo(map);
+			for (const file of segmentFiles.filter((f) => !loadedSegmentFiles.has(f))) {
+				const res = await fetch(`/segments/${file}`);
+				const segment = await res.json();
+				loadedSegmentFiles.add(file);
 
-								L.geoJSON(segment, {
-									pointToLayer: (feature, latlng) => {
-										return L.marker(latlng, { icon: greenIcon }).on('click', (e) => {
-											// Marker-Zustand aktualisieren
-											if (last_clicked && (last_clicked as any)._icon) {
-												(last_clicked as any)._icon.src = '/map/markers/marker-tree.svg';
-											}
-											e.target._icon.src = '/map/markers/marker-tree-clicked.svg';
-											const treeId = e.sourceTarget.feature.properties.uuid;
-											goto(`/trees/${treeId}`);
-											if (e.target._icon) {
-												last_clicked = e.target;
-											}
+				const filteredFeatures =
+					$selectedSpecies.length === 0
+						? segment.features
+						: segment.features.filter((feature: any) =>
+								$selectedSpecies.includes(feature.properties.tree_type_german)
+							);
 
-											// Marker etwas höher zentrieren (wegen Infocard)
-											const lat1 = map.getBounds()._northEast.lat;
-											const lat2 = map.getBounds()._southWest.lat;
-											const latb = e.latlng.lat;
-											const latn = latb - Math.abs(lat1 - lat2) / 2.35;
-											map.flyTo({ lat: latn, lng: e.latlng.lng }, map.getZoom(), {
-												animate: true,
-												duration: 0.75
-											});
-										});
-									}
-								}).addTo(markers);
+				if (filteredFeatures.length === 0) continue;
+
+				const markers = new MarkerClusterGroup({
+					spiderfyOnMaxZoom: false,
+					showCoverageOnHover: false,
+					zoomToBoundsOnClick: true,
+					disableClusteringAtZoom: MAX_CLUSTER_ZOOM,
+					iconCreateFunction: (cluster: any) => {
+						const count = cluster.getChildCount();
+						const size = count > 1000 ? 100 : count > 500 ? 50 : count > 100 ? 10 : 20;
+						return L.divIcon({
+							html: '',
+							className: 'marker-cluster',
+							iconSize: L.point(size, size)
+						});
+					}
+				}).addTo(map);
+
+				allMarkerGroups.push(markers);
+
+				L.geoJSON(
+					{ ...segment, features: filteredFeatures },
+					{
+						pointToLayer: (feature, latlng) => {
+							return L.marker(latlng, { icon: greenIcon }).on('click', (e) => {
+								if (lastClickedMarker && (lastClickedMarker as any)._icon) {
+									(lastClickedMarker as any)._icon.src = '/map/markers/marker-tree.svg';
+								}
+								e.target._icon.src = '/map/markers/marker-tree-clicked.svg';
+
+								const treeId = e.sourceTarget.feature.properties.uuid;
+								goto(`/trees/${treeId}`);
+
+								if (e.target._icon) {
+									lastClickedMarker = e.target;
+								}
+
+								const lat1 = map.getBounds().getNorthEast().lat;
+								const lat2 = map.getBounds().getSouthWest().lat;
+								const latb = e.latlng.lat;
+								const latn = latb - Math.abs(lat1 - lat2) / verticalOffsetFactor;
+								map.flyTo({ lat: latn, lng: e.latlng.lng }, map.getZoom(), {
+									animate: true,
+									duration: 0.75
+								});
 							});
-					});
-			});
-		}, 50);
+						}
+					}
+				).addTo(markers);
+			}
+		}, loadDelayMs);
 	};
 
-	// 🗺️ Leaflet-Initialisierung
 	onMount(() => {
 		const tileURL =
 			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/light_all/{z}/{x}/{y}.png';
@@ -119,7 +144,6 @@
 
 		onMove({ target: map });
 
-		// 🖱️ Klick außerhalb von Markern
 		document.getElementById(id)?.addEventListener('click', (e: any) => {
 			if (e.target && !e.target.className.includes('leaflet-marker-icon')) {
 				goto('/');
