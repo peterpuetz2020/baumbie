@@ -39,7 +39,7 @@ function intersects(segment: MapDataSegmentType, viewport: ViewportType) {
  * @param {number} maxY - Die maximale Y-Koordinate des Bildausschnitts.
  * @returns {Array} - Ein Array von Dateinamen der Segmente, die sich mit dem Bildausschnitt überschneiden.
  */
-async function findMatchingSegments(minX: number, maxX: number, minY: number, maxY: number) {
+export async function findMatchingSegments(minX: number, maxX: number, minY: number, maxY: number) {
 	// Synchrones Einlesen der map.json, um die Liste der Segmente zu erhalten.
 	if (mapData.length === 0) {
 		await fetch('/segments/segments_index.json')

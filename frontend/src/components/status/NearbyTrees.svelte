@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getCurrentPosition, getBoundingBox, extractTreeCandidates } from '$lib/geo';
+	import { getCurrentPosition, getBoundingBox, findMatchingSegments } from '$lib/geo';
+	import { extractTreeCandidates } from '$lib/trees';
 	import { goto } from '$app/navigation';
-	import findMatchingSegments from '../../businessLogic/findSegments';
 	import { Button, Heading } from '$components/ui';
 
 	let treesNearby: {
