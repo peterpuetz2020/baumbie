@@ -25,6 +25,19 @@ export interface TreeData {
 	geocoordinates: string;
 }
 
+export type TreeFeature = {
+	type: 'Feature';
+	properties: {
+		uuid: string;
+		tree_type_german: string;
+		[key: string]: unknown; 
+	};
+	geometry: {
+		type: 'Point';
+		coordinates: [number, number];
+	};
+};
+
 export type TreeMeta = {
 	id: string;
 	name: string;

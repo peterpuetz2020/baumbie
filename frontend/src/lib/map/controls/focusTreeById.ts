@@ -1,8 +1,8 @@
 import type L from 'leaflet';
 import { goto } from '$app/navigation';
-import { getTreeMarker } from './treeMarkerRegistry';
+import { getTreeMarker } from '../markers/treeMarkerRegistry';
 import { focusTree } from './focusTree';
-import { clickedIcon } from './icons';
+import { clickedIcon } from '../markers/icons';
 
 /**
  * Fokussiert einen Baum anhand seiner ID.

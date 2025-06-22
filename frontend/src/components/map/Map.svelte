@@ -1,114 +1,97 @@
 <script lang="ts">
-	// 📦 Core Imports
-	import { onMount } from 'svelte';
+	// ——————————————————————————————————————————————————————————
+	// 🌐 Externe Bibliotheken
+	// ——————————————————————————————————————————————————————————
 	import L from 'leaflet';
 	import 'leaflet/dist/leaflet.css';
-	import { goto } from '$app/navigation';
-	import { selectedSpecies } from '$lib/trees/filters';
-	import { focusTree } from '$lib/map';
-	import { mapStore } from '$lib/map/mapStore';
-	import { registerTreeMarker, clearTreeMarkers } from '$lib/map/treeMarkerRegistry';
-	import { greenIcon, clickedIcon } from '$lib/map';
-
-	// 📦 Komponenten & externe Module
-	import MapControls from './MapControls.svelte';
 	import { MarkerClusterGroup } from '@tronscanteam/leaflet.markercluster/dist/leaflet.markercluster-src';
 	import '@tronscanteam/leaflet.markercluster/dist/MarkerCluster.css';
-	import './Map.css';
 
-	// 📦 Projektinterne Logik
+	// ——————————————————————————————————————————————————————————
+	// 🧱 Svelte & App-Framework
+	// ——————————————————————————————————————————————————————————
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+
+	// ——————————————————————————————————————————————————————————
+	// 🧭 Kartenlogik
+	// ——————————————————————————————————————————————————————————
+	import { mapStore, renderSegmentFile } from '$lib/map';
+	import { unregisterTreeMarker } from '$lib/map/markers/treeMarkerRegistry';
+
+	// ——————————————————————————————————————————————————————————
+	// 🌳 Baumspezifisch
+	// ——————————————————————————————————————————————————————————
+	import { selectedSpecies } from '$lib/trees';
 	import { findMatchingSegments } from '$lib/geo';
 
-	// 🆔 zufällige ID für Karten-Div
-	const id = 'map-' + Math.random().toString(36).substring(2, 9);
+	// ——————————————————————————————————————————————————————————
+	// 🧩 Komponenten & Styles
+	// ——————————————————————————————————————————————————————————
+	import MapControls from './MapControls.svelte';
+	import './Map.css';
 
-	// 🌍 Leaflet Map & State
+	// ——————————————————————————————————————————————————————————
+	// ⚙️ Initialisierung & Status
+	// ——————————————————————————————————————————————————————————
+	const id = 'map-' + Math.random().toString(36).substring(2, 9);
+	const markerGroupRegistry = new Map<MarkerClusterGroup, string[]>();
 	let map: L.Map;
 	let loadedSegmentFiles = new Set<string>();
-	let allMarkerGroups: L.MarkerClusterGroup[] = [];
+	let allMarkerGroups: MarkerClusterGroup[] = [];
 	let lastFilter: string[] = [];
-
-	const MAX_CLUSTER_ZOOM = 20;
 	const loadDelayMs = 50;
 
+	// ——————————————————————————————————————————————————————————
+	// 🔄 Reaktion auf Filteränderung
+	// ——————————————————————————————————————————————————————————
 	$: if (map && JSON.stringify($selectedSpecies) !== JSON.stringify(lastFilter)) {
 		lastFilter = [...$selectedSpecies];
 		console.log('🔄 Filter geändert:', $selectedSpecies);
 
-		// 🧹 Alte Marker-Gruppen entfernen
-		allMarkerGroups.forEach((group) => group.remove());
+		allMarkerGroups.forEach((group) => {
+			group.remove();
+			const ids = markerGroupRegistry.get(group);
+			if (ids) {
+				for (const id of ids) {
+					unregisterTreeMarker(id);
+				}
+				markerGroupRegistry.delete(group);
+			}
+		});
+
 		allMarkerGroups = [];
-
-		// 👉 Tree-Marker-Registry leeren
-		clearTreeMarkers();
-
 		loadedSegmentFiles.clear();
-
-		// 📍 Karte mit neuem Filter aktualisieren
-		onMove({ target: map });
+		onMove();
 	}
 
-	const onMove = (e: any) => {
+	// ——————————————————————————————————————————————————————————
+	// 📍 Sichtbare Segmente laden & Marker anzeigen
+	// ——————————————————————————————————————————————————————————
+	const onMove = async () => {
 		setTimeout(async () => {
-			const bounds = e.target.getBounds();
+			const bounds = map.getBounds();
 			const ne = bounds.getNorthEast();
 			const sw = bounds.getSouthWest();
 
 			const segmentFiles = await findMatchingSegments(sw.lng, ne.lng, sw.lat, ne.lat);
 
 			for (const file of segmentFiles.filter((f) => !loadedSegmentFiles.has(f))) {
-				const res = await fetch(`/segments/${file}`);
-				const segment = await res.json();
-				loadedSegmentFiles.add(file);
-
-				const filteredFeatures =
-					$selectedSpecies.length === 0
-						? segment.features
-						: segment.features.filter((feature: any) =>
-								$selectedSpecies.includes(feature.properties.tree_type_german)
-							);
-
-				if (filteredFeatures.length === 0) continue;
-
-				const markers = new MarkerClusterGroup({
-					spiderfyOnMaxZoom: false,
-					showCoverageOnHover: false,
-					zoomToBoundsOnClick: true,
-					disableClusteringAtZoom: MAX_CLUSTER_ZOOM,
-					iconCreateFunction: (cluster: any) => {
-						const count = cluster.getChildCount();
-						const size = count > 1000 ? 100 : count > 500 ? 50 : count > 100 ? 10 : 20;
-						return L.divIcon({
-							html: '',
-							className: 'marker-cluster',
-							iconSize: L.point(size, size)
-						});
-					}
-				}).addTo(map);
-
-				allMarkerGroups.push(markers);
-
-				L.geoJSON(
-					{ ...segment, features: filteredFeatures },
-					{
-						pointToLayer: (feature, latlng) => {
-							const marker = L.marker(latlng, { icon: greenIcon });
-							const treeId = feature.properties.uuid;
-
-							marker.on('click', () => {
-								focusTree(map, treeId, latlng, marker, clickedIcon);
-							});
-
-							registerTreeMarker(treeId, marker);
-
-							return marker;
-						}
-					}
-				).addTo(markers);
+				await renderSegmentFile(
+					file,
+					map,
+					$selectedSpecies,
+					loadedSegmentFiles,
+					markerGroupRegistry,
+					allMarkerGroups
+				);
 			}
 		}, loadDelayMs);
 	};
 
+	// ——————————————————————————————————————————————————————————
+	// 🗺️ Karteninitialisierung
+	// ——————————————————————————————————————————————————————————
 	onMount(() => {
 		const tileURL =
 			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/light_all/{z}/{x}/{y}.png';
@@ -131,10 +114,10 @@
 
 		mapStore.set(map);
 
-		onMove({ target: map });
+		onMove();
 
-		document.getElementById(id)?.addEventListener('click', (e: any) => {
-			if (e.target && !e.target.className.includes('leaflet-marker-icon')) {
+		document.getElementById(id)?.addEventListener('click', (e: MouseEvent) => {
+			if (e.target instanceof HTMLElement && !e.target.className.includes('leaflet-marker-icon')) {
 				goto('/');
 			}
 		});

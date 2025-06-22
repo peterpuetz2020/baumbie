@@ -10,10 +10,6 @@ export function getTreeMarker(treeId: string): L.Marker | undefined {
 	return registry.get(treeId);
 }
 
-export function clearTreeMarkers() {
-	registry.clear();
-}
-
-export function __debug_getRegistry() {
-	return registry;
+export function unregisterTreeMarker(treeId: string) {
+	registry.delete(treeId);
 }
