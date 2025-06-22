@@ -41,4 +41,5 @@ export type TreeFeature = {
 export type TreeMeta = {
 	id: string;
 	name: string;
+	tree_type_german: string;
 };
