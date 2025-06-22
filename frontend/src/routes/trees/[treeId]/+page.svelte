@@ -1,39 +1,37 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-
 	import { supabase } from '../../../supabase';
 
-	import type { Tree as TreeType } from '$types/tree';
+	import type { TreeData } from '$types/tree';
 
 	import { Accordion } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
 	import { AdoptTreeButton, TreeMetric, WaterColumn } from '$components/trees';
 
-	export let activeTabIndex: number = 0;
-
-	function handleTabChange(tab: number) {
-		activeTabIndex = tab;
-	}
+	export let activeTabIndex = 0;
+	const handleTabChange = (tab: number) => (activeTabIndex = tab);
 
 	let openAbout = true;
 	let openWater = false;
 	let openHistory = false;
 
-	$: showInfo = true;
-	$: showChat = false;
+	$: showInfo = activeTabIndex === 0;
+	$: showChat = activeTabIndex === 1;
 
-	let tree: TreeType;
+	let tree: TreeData;
 
-	onMount(async () => {
-		const { data, error } = await supabase
-			.from('trees')
-			.select()
-			.eq('uuid', $page.params.treeId)
-			.maybeSingle();
-		tree = data;
-	});
+	// Lädt den Baum neu, sobald sich die treeId in der URL ändert
+	$: if ($page.params.treeId) {
+		(async () => {
+			const { data } = await supabase
+				.from('trees')
+				.select()
+				.eq('uuid', $page.params.treeId)
+				.maybeSingle();
+			tree = data;
+		})();
+	}
 </script>
 
 {#if tree}

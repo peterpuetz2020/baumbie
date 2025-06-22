@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import Heading from '$components/ui/Heading.svelte';
 	import { onMount } from 'svelte';
+	import { resetHighlight } from '$lib/map';
 
 	export let title;
 	export let closeable: boolean | undefined = true;
@@ -16,6 +17,8 @@
 	});
 
 	const close = () => {
+		resetHighlight();
+
 		open = false;
 		goto('/');
 	};

@@ -1,5 +1,5 @@
 import { supabase } from '../../supabase';
-import type { AdoptedTree } from '$types/tree';
+import type { TreeMeta } from '$types/tree';
 
 export async function loadAdoptedTrees() {
 	const { data: userData } = await supabase.auth.getUser();
@@ -33,6 +33,6 @@ export async function loadAdoptedTrees() {
 		})
 	);
 
-	return trees.filter((tree): tree is AdoptedTree => tree !== null);
+	return trees.filter((tree): tree is TreeMeta => tree !== null);
 
 }
