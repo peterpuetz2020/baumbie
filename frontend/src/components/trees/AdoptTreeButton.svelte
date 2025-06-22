@@ -2,15 +2,15 @@
 	import { onMount } from 'svelte';
 	import { supabase } from '$lib/supabase';
 	import type { TreeData } from '$types/tree';
-	import { Button } from '$components/ui';
+	import { Button, Notice } from '$components/ui';
 
 	export let tree: TreeData;
 
 	let adopted = false;
-	let label = '';
-	let errorMessage = '';
-	let successMessage = '';
 	let authorized = false;
+	let label = '';
+	let message: string | null = null;
+	let messageTone: 'success' | 'warning' | 'info' | undefined = undefined;
 
 	$: label = adopted ? 'Adoption aufheben' : 'Adoptiere diesen Baum';
 
@@ -29,6 +29,7 @@
 			.select('*')
 			.eq('tree_uuid', tree.uuid)
 			.eq('user_uuid', user.id);
+
 		adopted = Array.isArray(adoptedData) && adoptedData.length > 0;
 	});
 
@@ -38,15 +39,14 @@
 
 		if (!user) {
 			authorized = false;
-			errorMessage = '';
-			successMessage = '';
+			message = null;
 			return;
 		}
 		authorized = true;
 
 		if (error) {
-			errorMessage = error.message;
-			successMessage = '';
+			message = error.message;
+			messageTone = 'warning';
 			return;
 		}
 
@@ -60,15 +60,17 @@
 		const { error: opError } = await op;
 
 		if (opError) {
-			errorMessage =
+			message =
 				'Beim Adoptieren des Baumes ist ein Fehler aufgetreten. Hast du ihn vielleicht bereits adoptiert?';
-			successMessage = '';
+			messageTone = 'warning';
 			return;
 		}
 
 		adopted = !adopted;
-		successMessage = adopted ? 'Du hast diesen Baum erfolgreich adoptiert!' : 'Adoption aufgehoben';
-		errorMessage = '';
+		message = adopted
+			? 'Du hast diesen Baum erfolgreich adoptiert!'
+			: 'Die Adoption wurde aufgehoben.';
+		messageTone = 'success';
 	};
 </script>
 
@@ -87,19 +89,12 @@
 		</Button>
 
 		{#if !authorized}
-			<p class="text-center text-orange-500">
-				Bitte <a href="/login" class="text-blue-600 underline">einloggen</a>, um diese Funktion zu
-				nutzen.
-			</p>
-		{:else if errorMessage}
-			<p class="text-center text-orange-500">{errorMessage}</p>
+			<Notice tone="warning">"Bitte einloggen, um diese Funktion zu nutzen."</Notice>
+		{:else if message}
+			<Notice tone={messageTone}>{message}</Notice>
 		{/if}
 
-		{#if successMessage}
-			<p class="text-center text-green-600">{successMessage}</p>
-		{/if}
-
-		<p>
+		<p class="mt-2">
 			Mit einer Adoption dieses Baums zeigst du deine Verbundenheit mit diesem Baum und mit
 			Bielefeld. Denn Bäume helfen uns bei einem lebenswerten und gesunden Leben.
 		</p>

@@ -57,9 +57,9 @@
 				>Account löschen</Button
 			>
 			{#if deleteSuccess}
-				<Notice message="Dein Account wurde gelöscht. Du wirst weitergeleitet..." tone="success" />
+				<Notice tone="success">Dein Account wurde gelöscht. Du wirst weitergeleitet...</Notice>
 			{:else if deleteError}
-				<Notice message={deleteError} tone="warning" />
+				<Notice tone="warning">{deleteError}</Notice>
 			{/if}
 		{:else}
 			<p>Logge dich ein, um BaumBie mit allen Funktionen nutzen zu können.</p>

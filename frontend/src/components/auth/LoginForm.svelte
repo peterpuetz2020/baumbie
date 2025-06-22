@@ -43,7 +43,7 @@
 	</div>
 
 	{#if errorMessage}
-		<Notice message={errorMessage} tone="warning" />
+		<Notice tone="warning">{errorMessage}</Notice>
 	{/if}
 
 	<div class="flex flex-col gap-y-2">
