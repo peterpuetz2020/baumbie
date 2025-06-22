@@ -1,14 +1,19 @@
 <script lang="ts">
+	// 🔁 Svelte
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
-	import { goto } from '$app/navigation';
-	import { loadAdoptedTrees } from '$lib/trees/loadAdoptedTrees';
+	// 🗺️ Map
+	import { mapStore, focusTreeById } from '$lib/map';
 
+	// 🌱 Tree-Logik
+	import { loadAdoptedTrees } from '$lib/trees';
+	import type { TreeMeta } from '$types/tree';
+
+	// 🧱 UI
 	import { Button, Heading } from '$components/ui';
 
-	import type { AdoptedTree } from '$types/tree';
-
-	let adoptedTrees: AdoptedTree[] = [];
+	let adoptedTrees: TreeMeta[] = [];
 	let loading = true;
 
 	onMount(async () => {
@@ -20,6 +25,13 @@
 			loading = false;
 		}
 	});
+
+	function handleClick(tree: AdoptedTree) {
+		const map = get(mapStore);
+		if (map) {
+			focusTreeById(map, tree.id);
+		}
+	}
 </script>
 
 <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-3">
@@ -30,7 +42,7 @@
 	{:else if adoptedTrees.length > 0}
 		<div class="flex flex-wrap gap-2">
 			{#each adoptedTrees as tree}
-				<Button onClick={() => goto(`/trees/${tree.id}`)}>
+				<Button onClick={() => handleClick(tree)}>
 					{tree.name}
 					<img src="/icons/tree.svg" alt="Baum" class="inline-block w-4 h-4 ml-1" />
 				</Button>

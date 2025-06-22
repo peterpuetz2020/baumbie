@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { getCurrentPosition, getBoundingBox, findMatchingSegments } from '$lib/geo';
 	import { extractTreeCandidates } from '$lib/trees';
-	import { goto } from '$app/navigation';
 	import { Button, Heading } from '$components/ui';
+	import { get } from 'svelte/store';
+	import { mapStore, focusTreeById } from '$lib/map';
+	import type { TreeMeta } from '$types/tree';
 
 	let treesNearby: {
 		id: string;
@@ -50,6 +52,13 @@
 			errorMessage = '❌ Dein Standort konnte nicht ermittelt werden.';
 		}
 	}
+
+	function handleClick(tree: TreeMeta) {
+		const map = get(mapStore);
+		if (map) {
+			focusTreeById(map, tree.id);
+		}
+	}
 </script>
 
 <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-3">
@@ -70,7 +79,7 @@
 						<img src="/icons/tree.svg" alt="Baum" class="w-4 h-4" />
 					</div>
 
-					<Button onClick={() => goto(`/trees/${tree.id}`)}>
+					<Button onClick={() => handleClick(tree)}>
 						{tree.distance.toFixed(1)} m →
 					</Button>
 				</li>

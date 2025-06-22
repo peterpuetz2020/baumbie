@@ -6,6 +6,9 @@
 	import { goto } from '$app/navigation';
 	import { selectedSpecies } from '$lib/trees/filters';
 	import { focusTree } from '$lib/map';
+	import { mapStore } from '$lib/map/mapStore';
+	import { registerTreeMarker, clearTreeMarkers } from '$lib/map/treeMarkerRegistry';
+	import { greenIcon, clickedIcon } from '$lib/map';
 
 	// 📦 Komponenten & externe Module
 	import MapControls from './MapControls.svelte';
@@ -25,20 +28,6 @@
 	let allMarkerGroups: L.MarkerClusterGroup[] = [];
 	let lastFilter: string[] = [];
 
-	const greenIcon = L.icon({
-		iconUrl: '/map/markers/marker-tree.svg',
-		iconSize: [15, 15],
-		iconAnchor: [10, 10],
-		popupAnchor: [0, -10]
-	});
-
-	const clickedIcon = L.icon({
-		iconUrl: '/map/markers/marker-tree-clicked.svg',
-		iconSize: [15, 15],
-		iconAnchor: [10, 10],
-		popupAnchor: [0, -10]
-	});
-
 	const MAX_CLUSTER_ZOOM = 20;
 	const loadDelayMs = 50;
 
@@ -49,6 +38,10 @@
 		// 🧹 Alte Marker-Gruppen entfernen
 		allMarkerGroups.forEach((group) => group.remove());
 		allMarkerGroups = [];
+
+		// 👉 Tree-Marker-Registry leeren
+		clearTreeMarkers();
+
 		loadedSegmentFiles.clear();
 
 		// 📍 Karte mit neuem Filter aktualisieren
@@ -100,11 +93,13 @@
 					{
 						pointToLayer: (feature, latlng) => {
 							const marker = L.marker(latlng, { icon: greenIcon });
+							const treeId = feature.properties.uuid;
 
-							marker.on('click', (e) => {
-								const treeId = feature.properties.uuid;
+							marker.on('click', () => {
 								focusTree(map, treeId, latlng, marker, clickedIcon);
 							});
+
+							registerTreeMarker(treeId, marker);
 
 							return marker;
 						}
@@ -133,6 +128,8 @@
 		})
 			.addLayer(layer)
 			.on('moveend', onMove);
+
+		mapStore.set(map);
 
 		onMove({ target: map });
 

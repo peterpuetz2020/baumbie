@@ -1,4 +1,4 @@
-export interface Tree {
+export interface TreeData {
 	uuid: string;
 	provider_id: string;
 	source_id: string;
@@ -25,10 +25,7 @@ export interface Tree {
 	geocoordinates: string;
 }
 
-type AdoptedTree = {
+export type TreeMeta = {
 	id: string;
 	name: string;
 };
-
-
-export type { Tree as TreeInterface, AdoptedTree };

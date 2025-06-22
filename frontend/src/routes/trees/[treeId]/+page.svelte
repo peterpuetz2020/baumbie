@@ -4,7 +4,7 @@
 
 	import { supabase } from '../../../supabase';
 
-	import type { Tree as TreeType } from '$types/tree';
+	import type { TreeData } from '$types/tree';
 
 	import { Accordion } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
@@ -24,7 +24,7 @@
 	$: showInfo = true;
 	$: showChat = false;
 
-	let tree: TreeType;
+	let tree: TreeData;
 
 	onMount(async () => {
 		const { data, error } = await supabase
