@@ -5,6 +5,7 @@
 	import 'leaflet/dist/leaflet.css';
 	import { goto } from '$app/navigation';
 	import { selectedSpecies } from '$lib/trees/filters';
+	import { goToTree } from '$lib/map';
 
 	// 📦 Komponenten & externe Module
 	import MapControls from './MapControls.svelte';
@@ -106,14 +107,7 @@
 									lastClickedMarker = e.target;
 								}
 
-								const lat1 = map.getBounds().getNorthEast().lat;
-								const lat2 = map.getBounds().getSouthWest().lat;
-								const latb = e.latlng.lat;
-								const latn = latb - Math.abs(lat1 - lat2) / verticalOffsetFactor;
-								map.flyTo({ lat: latn, lng: e.latlng.lng }, map.getZoom(), {
-									animate: true,
-									duration: 0.75
-								});
+								goToTree(map, e.latlng);
 							});
 						}
 					}
