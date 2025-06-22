@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { supabase } from '../../supabase';
+	import { supabase } from '$lib/supabase/client';
 	import { Button, Heading } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
 

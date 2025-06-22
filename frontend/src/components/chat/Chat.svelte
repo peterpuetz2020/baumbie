@@ -1,24 +1,22 @@
 <script lang="ts">
 	// === Imports ===
 	import { onMount } from 'svelte';
-	import { supabase } from '../../supabase';
+	import { supabase } from '$lib/supabase';
 	import Message from './Message.svelte';
-	import type { Message as MessageType, RawMessage } from '../../types/chat';
+	import type { Message as MessageType, RawMessage } from '$types/chat';
 
 	// === Props ===
 	export let treeId: string = '';
 	$: treeId;
 	console.log('Chat got Tree ID: ', treeId);
-	
+
 	// === State ===
 	let sessionId: string = '';
 	let messages: MessageType[] = [];
 	let newMessage: string = '';
 	let chatAvailable: boolean = true;
-	
 
 	let endRef: HTMLDivElement;
-
 
 	// === Lifecycle ===
 	onMount(() => {
@@ -119,18 +117,17 @@
 		}
 	}
 
-
 	$: console.log('↪ newMessage:', JSON.stringify(newMessage));
 </script>
 
 <!-- Chat innerhalb der Card -->
 <div id="chat-container" class="flex flex-col h-full min-h-0">
-	 <!--
+	<!--
 	TODO für später: transparenten Verlauf umsetzen
 	<div class="sticky top-0 min-h-12 h-12 w-100 bg-gradient-to-b from-red-800 z-[9999999]"></div>
 	-->
 	<!-- Nachrichtenbereich -->
-	
+
 	<div class="flex flex-col grow overflow-y-auto gap-y-1 min-h-0">
 		{#each messages as message}
 			<Message {message} {sendMessage} />

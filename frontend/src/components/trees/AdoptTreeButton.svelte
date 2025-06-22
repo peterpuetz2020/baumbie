@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { supabase } from '../../supabase';
+	import { supabase } from '$lib/supabase';
 	import type { TreeData } from '$types/tree';
 	import { Button } from '$components/ui';
 

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { DialogPanel } from '$components/overlay';
-	import { supabase } from '../../supabase';
+	import { supabase } from '$lib/supabase/client';
 
 	let userEmail: string | undefined = '';
 
