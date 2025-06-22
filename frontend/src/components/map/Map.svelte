@@ -5,7 +5,7 @@
 	import 'leaflet/dist/leaflet.css';
 	import { goto } from '$app/navigation';
 	import { selectedSpecies } from '$lib/trees/filters';
-	import { goToTree } from '$lib/map';
+	import { focusTree } from '$lib/map';
 
 	// 📦 Komponenten & externe Module
 	import MapControls from './MapControls.svelte';
@@ -23,7 +23,6 @@
 	let map: L.Map;
 	let loadedSegmentFiles = new Set<string>();
 	let allMarkerGroups: L.MarkerClusterGroup[] = [];
-	let lastClickedMarker: unknown = null;
 	let lastFilter: string[] = [];
 
 	const greenIcon = L.icon({
@@ -33,9 +32,15 @@
 		popupAnchor: [0, -10]
 	});
 
+	const clickedIcon = L.icon({
+		iconUrl: '/map/markers/marker-tree-clicked.svg',
+		iconSize: [15, 15],
+		iconAnchor: [10, 10],
+		popupAnchor: [0, -10]
+	});
+
 	const MAX_CLUSTER_ZOOM = 20;
 	const loadDelayMs = 50;
-	const verticalOffsetFactor = 2.35;
 
 	$: if (map && JSON.stringify($selectedSpecies) !== JSON.stringify(lastFilter)) {
 		lastFilter = [...$selectedSpecies];
@@ -94,21 +99,14 @@
 					{ ...segment, features: filteredFeatures },
 					{
 						pointToLayer: (feature, latlng) => {
-							return L.marker(latlng, { icon: greenIcon }).on('click', (e) => {
-								if (lastClickedMarker && (lastClickedMarker as any)._icon) {
-									(lastClickedMarker as any)._icon.src = '/map/markers/marker-tree.svg';
-								}
-								e.target._icon.src = '/map/markers/marker-tree-clicked.svg';
+							const marker = L.marker(latlng, { icon: greenIcon });
 
-								const treeId = e.sourceTarget.feature.properties.uuid;
-								goto(`/trees/${treeId}`);
-
-								if (e.target._icon) {
-									lastClickedMarker = e.target;
-								}
-
-								goToTree(map, e.latlng);
+							marker.on('click', (e) => {
+								const treeId = feature.properties.uuid;
+								focusTree(map, treeId, latlng, marker, clickedIcon);
 							});
+
+							return marker;
 						}
 					}
 				).addTo(markers);

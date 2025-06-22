@@ -1,6 +1,6 @@
 import type L from 'leaflet';
 
-export function goToTree(
+export function flyToTree(
 	map: L.Map,
 	latlng: L.LatLngExpression,
 	verticalOffsetFactor = 2.35,

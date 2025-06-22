@@ -1,2 +1,4 @@
 export * from './userMarker';
-export * from './goToTree';
+export * from './flyToTree';
+export * from './highlightMarker';
+export * from './focusTree';
