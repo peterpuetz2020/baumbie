@@ -10,6 +10,27 @@ export async function getCurrentUser(): Promise<{ email?: string } | null> {
 	return data.user ?? null;
 }
 
+export async function registerWithEmailPassword(email: string, password: string): Promise<void> {
+	const { error } = await supabase.auth.signUp({ email, password });
+
+	if (error) {
+		const knownErrors: Record<string, string> = {
+			'User already registered': 'Diese E-Mail-Adresse ist bereits registriert.',
+			'Invalid email': 'Die eingegebene E-Mail-Adresse ist ungültig.',
+			'Password should be at least 6 characters.': 'Das Passwort ist zu schwach.'
+		};
+		throw new Error(knownErrors[error.message] ?? error.message);
+	}
+}
+
+export async function loginWithEmailPassword(email: string, password: string) {
+	const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+	if (error || !data?.user) {
+		throw new Error('Die Anmeldung mit diesen Zugangsdaten ist fehlgeschlagen!');
+	}
+	return data.user;
+}
+
 export async function logout(): Promise<void> {
 	await supabase.auth.signOut();
 }

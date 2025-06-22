@@ -1,26 +1,22 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { DialogPanel } from '$components/overlay';
-	import { supabase } from '$lib/supabase/client';
+	import { getCurrentUser } from '$lib/supabase';
 
 	let userEmail: string | undefined = '';
 
 	onMount(async () => {
-		const { data } = await supabase.auth.getUser();
-		userEmail = data.user?.email;
-	});
+		const urlParams = new URLSearchParams(window.location.search);
+		const emailFromParam = urlParams.get('email');
 
-	const handleLogout = () => {
-		supabase.auth.signOut().then(() => {
-			goto('/');
-		});
-	};
+		const user = await getCurrentUser();
+		userEmail = user?.email ?? emailFromParam ?? 'Unbekannt';
+	});
 </script>
 
-<DialogPanel title="Authenticated Page" closeable={false}>
-	<p>Deine Mail-Adresse: {userEmail}</p>
-	<button class="px-4 py-2 border border-red-500 rounded-full" on:click={handleLogout}
-		>Logout</button
-	>
+<DialogPanel title="Registrierung erfolgreich">
+	<p>
+		Wir haben eine Bestätigungsmail an <strong>{userEmail}</strong> gesendet. <br />
+		Bitte klicke auf den Link darin, um dein Benutzerkonto zu aktivieren.
+	</p>
 </DialogPanel>
