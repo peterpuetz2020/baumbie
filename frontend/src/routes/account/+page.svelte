@@ -1,56 +1,36 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { supabase } from '$lib/supabase';
-	import { Button, Heading, Notice } from '$components/ui';
+	import { Button, Notice } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
+	import { logout, getCurrentUser, deleteCurrentUser } from '$lib/supabase';
 
 	let user: { email?: string } | null = null;
 
 	let deleteSuccess: boolean = false;
 	let deleteError: string | null = null;
 
-	const DELETE_USER_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`;
-
 	onMount(async () => {
-		const { data } = await supabase.auth.getUser();
-		user = data.user ?? null;
+		user = await getCurrentUser();
 	});
 
 	const handleLogout = async () => {
-		await supabase.auth.signOut();
+		await logout();
 		goto('/login');
 	};
 
 	const handleDelete = async () => {
-		const sessionResult = await supabase.auth.getSession();
-		const accessToken = sessionResult.data.session?.access_token;
-
-		if (!accessToken) {
-			deleteError = 'Authentifizierungsfehler: Kein Zugriffstoken gefunden.';
-			return;
-		}
-
-		const res = await fetch(DELETE_USER_URL, {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-
-		if (res.status === 200) {
+		const result = await deleteCurrentUser();
+		if (result.ok) {
 			deleteSuccess = true;
-			setTimeout(() => {
-				goto('/');
-			}, 2000);
+			setTimeout(() => goto('/'), 2000);
 		} else {
-			deleteError = 'Verbindungsfehler: Account konnte nicht gelöscht werden.';
+			deleteError = result.error ?? 'Unbekannter Fehler';
 		}
 	};
 </script>
 
-<DialogPanel title={''} open={true}>
-	<Heading level={1}>Mein Account</Heading>
+<DialogPanel title={'Mein Benutzerkonto'} open={true}>
 	<div>
 		{#if user}
 			<p>
@@ -77,7 +57,7 @@
 				>Account löschen</Button
 			>
 			{#if deleteSuccess}
-				<Notice message="Dein Account wurde gelöscht. Du wirst weitergeleitet …" tone="success" />
+				<Notice message="Dein Account wurde gelöscht. Du wirst weitergeleitet..." tone="success" />
 			{:else if deleteError}
 				<Notice message={deleteError} tone="warning" />
 			{/if}

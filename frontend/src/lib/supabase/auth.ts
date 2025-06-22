@@ -1,13 +1,39 @@
-import { supabase } from './client';
+import { supabase } from "./client";
 
-export async function deleteCurrentUser(): Promise<{ error?: string }> {
-	const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-	if (sessionError || !sessionData.session?.access_token) {
-		return { error: 'Nicht eingeloggt oder Session abgelaufen' };
+
+export async function getCurrentUser(): Promise<{ email?: string } | null> {
+	const { data, error } = await supabase.auth.getUser();
+	if (error) {
+		console.warn('getCurrentUser() failed:', error.message);
+		return null;
+	}
+	return data.user ?? null;
+}
+
+export async function logout(): Promise<void> {
+	await supabase.auth.signOut();
+}
+
+export async function deleteCurrentUser(): Promise<{ ok: boolean; error?: string }> {
+	const sessionResult = await supabase.auth.getSession();
+	const accessToken = sessionResult.data.session?.access_token;
+
+	if (!accessToken) {
+		return { ok: false, error: 'Authentifizierungsfehler: Kein Zugriffstoken gefunden.' };
 	}
 
-	const accessToken = sessionData.session.access_token;
+	const DELETE_USER_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`;
 
-	const { error: deleteError } = await supabase.auth.admin.deleteUser(accessToken);
-	return deleteError ? { error: deleteError.message } : {};
+	const res = await fetch(DELETE_USER_URL, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${accessToken}`
+		}
+	});
+
+	if (res.status === 200) {
+		return { ok: true };
+	} else {
+		return { ok: false, error: 'Verbindungsfehler: Account konnte nicht gelöscht werden.' };
+	}
 }
