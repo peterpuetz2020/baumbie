@@ -26,7 +26,7 @@
 		}
 	});
 
-	function handleClick(tree: AdoptedTree) {
+	function handleClick(tree: TreeMeta) {
 		const map = get(mapStore);
 		if (map) {
 			focusTreeById(map, tree.id);
