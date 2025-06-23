@@ -15,7 +15,7 @@
 			<img
 				src={open ? "/trees/accordion-close.svg" : "/trees/accordion-open.svg"}
 				alt={open ? "Schließen" : "Öffnen"}
-				class="w-4 h-4"
+				class="w-4 h-4 m-4"
 			/>
 		</button>
 	</div>
@@ -49,7 +49,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.25rem;
+		padding-right: 0.75rem;
+		padding-left: 0.75rem;
+		padding-bottom: 0.2rem;
+		padding-top: 0.2rem;
+		margin-left: auto;
 	}
 	
 	.details {

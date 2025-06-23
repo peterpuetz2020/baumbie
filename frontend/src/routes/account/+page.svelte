@@ -63,6 +63,7 @@
 
 		<p class="mt-8">
 			<a class="underline" href="/imprint">Impressum</a> |
+			<a class="underline" href="/data">Datenschutz</a> |
 			<a class="underline" href="https://codefor.de/bielefeld/">Code for Bielefeld e.V.</a>
 		</p>
 	</div>
