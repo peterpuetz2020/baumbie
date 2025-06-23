@@ -1,14 +1,5 @@
 import { supabase } from "./client";
-
-
-export async function getCurrentUser(): Promise<{ email?: string } | null> {
-	const { data, error } = await supabase.auth.getUser();
-	if (error) {
-		console.warn('getCurrentUser() failed:', error.message);
-		return null;
-	}
-	return data.user ?? null;
-}
+import type { User } from '@supabase/supabase-js';
 
 export async function registerWithEmailPassword(email: string, password: string): Promise<void> {
 	const { error } = await supabase.auth.signUp({ email, password });
@@ -33,6 +24,15 @@ export async function loginWithEmailPassword(email: string, password: string) {
 
 export async function logout(): Promise<void> {
 	await supabase.auth.signOut();
+}
+
+export async function getCurrentUser(): Promise<User | null> {
+	const { data, error } = await supabase.auth.getUser();
+	if (error) {
+		console.warn('getCurrentUser() failed:', error.message);
+		return null;
+	}
+	return data.user ?? null;
 }
 
 export async function deleteCurrentUser(): Promise<{ ok: boolean; error?: string }> {

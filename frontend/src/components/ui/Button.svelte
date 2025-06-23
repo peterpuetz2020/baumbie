@@ -5,6 +5,8 @@
 	export let variant: ButtonVariant = 'default';
 	export let className: string = '';
 	export let type: ButtonType = 'button';
+	export let disabled: boolean = false;
+
 	export let onClick: (e: MouseEvent) => void = () => {};
 
 	const variantClasses: Record<ButtonVariant, string> = {
@@ -16,8 +18,12 @@
 
 <button
 	{type}
-	class={`border-2 rounded-full px-4 py-2 flex items-center justify-center transition duration-150 ease-in-out ${variantClasses[variant]} ${className}`}
-	on:click={onClick}
+	{disabled}
+	class={`border-2 rounded-full px-4 py-2 flex items-center justify-center transition duration-150 ease-in-out
+		${variantClasses[variant]}
+		${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+		${className}`}
+	on:click={!disabled ? onClick : undefined}
 >
 	<slot />
 </button>
