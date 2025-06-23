@@ -4,8 +4,7 @@
 
 	export let title: string = '';
 
-	const onClickBackdrop = (e: any) => {
-		console.log('onClickBackdrop');
+	const onClickBackdrop = () => {
 		goto('/');
 	};
 </script>

@@ -50,7 +50,6 @@
 	// ——————————————————————————————————————————————————————————
 	$: if (map && JSON.stringify($selectedTreeFilters) !== JSON.stringify(lastFilter)) {
 		lastFilter = structuredClone($selectedTreeFilters);
-		console.log('🔄 Filter geändert:', $selectedTreeFilters);
 
 		allMarkerGroups.forEach((group) => {
 			group.remove();
