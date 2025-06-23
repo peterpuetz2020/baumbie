@@ -44,7 +44,7 @@
 				Benutzer bei unserem Authentifizierungsdienst supabase.com wird sofort und unwiderruflich gelöscht.
 			</p>
 			<Button
-				variant="secondary"
+				variant="danger"
 				className="justify-center w-full mt-4"
 				onClick={() => goto('/account/delete')}
 			>
