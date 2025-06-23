@@ -1,5 +1,5 @@
 <script lang="ts">
-	type ButtonVariant = 'default' | 'primary' | 'secondary';
+	type ButtonVariant = 'default' | 'primary' | 'secondary' | 'danger';
 	type ButtonType = 'submit' | 'button' | 'reset';
 
 	export let variant: ButtonVariant = 'default';
@@ -12,7 +12,8 @@
 	const variantClasses: Record<ButtonVariant, string> = {
 		default: 'border-black text-black hover:bg-green-800 hover:text-white',
 		primary: 'border-green-600 bg-green-600 text-white hover:bg-green-800',
-		secondary: 'border-green-500 text-black hover:bg-green-100'
+		secondary: 'border-green-500 text-black hover:bg-green-100',
+		danger: 'border-red-600 bg-red-600 text-white hover:bg-red-800'
 	};
 </script>
 

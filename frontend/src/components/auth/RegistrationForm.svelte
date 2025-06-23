@@ -7,6 +7,7 @@
 	let password = '';
 	let passwordConfirmation = '';
 	let errorMessage: string | null = null;
+	let registering: boolean = false;
 
 	const handleRegistration = async (e: SubmitEvent) => {
 		e.preventDefault();
@@ -17,9 +18,11 @@
 			return;
 		}
 
+		registering = true;
+
 		try {
 			await registerWithEmailPassword(email, password);
-			goto('/authenticated?email=' + encodeURIComponent(email));
+			goto('/confirm-registration?email=' + encodeURIComponent(email));
 		} catch (err) {
 			if (err instanceof Error) {
 				errorMessage = err.message;
@@ -58,6 +61,8 @@
 
 	{#if errorMessage}
 		<Notice tone="warning">{errorMessage}</Notice>
+	{:else if registering}
+		<Notice tone="success">Registrierung erfolgreich! Du wirst gleich weitergeleitet...</Notice>
 	{/if}
 
 	<div class="flex flex-col gap-y-2">

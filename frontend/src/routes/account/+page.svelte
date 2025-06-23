@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { Button, Notice } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
-	import { logout, getCurrentUser, deleteCurrentUser } from '$lib/supabase';
+	import { logout, getCurrentUser } from '$lib/supabase';
 
 	let user: { email?: string } | null = null;
 
@@ -17,16 +17,6 @@
 	const handleLogout = async () => {
 		await logout();
 		goto('/login');
-	};
-
-	const handleDelete = async () => {
-		const result = await deleteCurrentUser();
-		if (result.ok) {
-			deleteSuccess = true;
-			setTimeout(() => goto('/'), 2000);
-		} else {
-			deleteError = result.error ?? 'Unbekannter Fehler';
-		}
 	};
 </script>
 
@@ -53,9 +43,13 @@
 				einem anonymen Benutzer zugeordnet. Dein Benutzer bei unserem Authentifizierungsdienst supabase.com
 				wird sofort und unwideruflich gelöscht.
 			</p>
-			<Button variant="secondary" className="justify-center w-full mt-4" onClick={handleDelete}
-				>Account löschen</Button
+			<Button
+				variant="secondary"
+				className="justify-center w-full mt-4"
+				onClick={() => goto('/account/delete')}
 			>
+				Account löschen
+			</Button>
 			{#if deleteSuccess}
 				<Notice tone="success">Dein Account wurde gelöscht. Du wirst weitergeleitet...</Notice>
 			{:else if deleteError}
