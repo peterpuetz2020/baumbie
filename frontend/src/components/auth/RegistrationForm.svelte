@@ -1,86 +1,43 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { supabase } from '../../supabase';
-	import EmailField from '$components/ui/input/EmailField.svelte';
-	import { PasswordField } from '$components/ui';
 	import { goto } from '$app/navigation';
-	import { Button } from '$components/ui';
+	import { registerWithEmailPassword } from '$lib/supabase';
+	import { EmailField, PasswordField, Button, Notice } from '$components/ui';
 
-	let email: string = '';
-	let password: string = '';
-	let passwordConfirmation: string = '';
-	let emailErrorCode: string = '';
-	let passwordErrorCode: string = '';
-	$: email, password, passwordConfirmation, emailErrorCode, passwordErrorCode;
+	let email = '';
+	let password = '';
+	let passwordConfirmation = '';
+	let errorMessage: string | null = null;
 
-	let loading: boolean = false;
-
-	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((event, session) => {
-			if (event === 'INITIAL_SESSION') {
-				// handle initial session
-			} else if (event === 'SIGNED_IN') {
-				// handle sign in event
-			} else if (event === 'SIGNED_OUT') {
-				// handle sign out event
-			} else if (event === 'PASSWORD_RECOVERY') {
-				// handle password recovery event
-			} else if (event === 'TOKEN_REFRESHED') {
-				// handle token refreshed event
-			} else if (event === 'USER_UPDATED') {
-				// handle user updated event
-			}
-		});
-
-		// call unsubscribe to remove the callback
-		data.subscription.unsubscribe();
-	});
-
-	const handleRegistration = async (e: any) => {
+	const handleRegistration = async (e: SubmitEvent) => {
 		e.preventDefault();
 
 		if (password !== passwordConfirmation) {
-			passwordErrorCode = 'Die Passwörter stimmen nicht überein!';
+			errorMessage = 'Die Passwörter stimmen nicht überein!';
+			setTimeout(() => (errorMessage = null), 5000);
 			return;
 		}
 
-		loading = true;
-		supabase.auth
-			.signUp({
-				email,
-				password
-			})
-			.then(({ data, error }) => {
-				if (error) {
-					switch (error.code) {
-						case 'user_already_exists':
-							emailErrorCode = 'Es ist ein Fehler bei der Registrierung aufgetreten.';
-							break;
-						case 'validation_failed':
-							emailErrorCode = 'Die eingegebene E-Mail-Adresse ist ungültig.';
-							break;
-						case 'weak_password':
-							passwordErrorCode = 'Das Passwort ist zu schwach.';
-							break;
-						default:
-							emailErrorCode = error.code || 'unknown error';
-							break;
-					}
-				} else {
-					goto('/authenticated');
-				}
-			});
+		try {
+			await registerWithEmailPassword(email, password);
+			goto('/authenticated?email=' + encodeURIComponent(email));
+		} catch (err) {
+			if (err instanceof Error) {
+				errorMessage = err.message;
+			} else {
+				errorMessage = 'Unbekannter Fehler bei der Registrierung.';
+			}
+			setTimeout(() => (errorMessage = null), 5000);
+		}
 	};
 </script>
 
-<form class="flex flex-col gap-y-4">
+<form on:submit={handleRegistration} class="flex flex-col gap-y-4">
 	<div class="flex flex-col gap-y-2">
 		<EmailField
 			id="email"
 			label="E-Mail:"
 			inputClass="w-full"
-			placeholder="jdoe@example.com"
-			error={emailErrorCode}
+			placeholder="lebensbaum@baumbie.de"
 			bind:value={email}
 		/>
 		<PasswordField
@@ -88,7 +45,6 @@
 			label="Passwort:"
 			inputClass="w-full"
 			placeholder="Passwort"
-			error={passwordErrorCode}
 			bind:value={password}
 		/>
 		<PasswordField
@@ -96,14 +52,18 @@
 			label="Passwort (Wiederholung):"
 			inputClass="w-full"
 			placeholder="Passwort"
-			error={passwordErrorCode}
 			bind:value={passwordConfirmation}
 		/>
 	</div>
+
+	{#if errorMessage}
+		<Notice tone="warning">{errorMessage}</Notice>
+	{/if}
+
 	<div class="flex flex-col gap-y-2">
-		<Button variant="primary" type="submit" className="w-full" onClick={handleRegistration}
-			>Registrieren</Button
-		>
-		<Button variant="secondary" onClick={() => goto('/login')} className="w-full">Anmelden</Button>
+		<Button variant="primary" type="submit" className="w-full">Registrieren</Button>
+		<Button variant="secondary" type="button" onClick={() => goto('/login')} className="w-full">
+			Anmelden
+		</Button>
 	</div>
 </form>

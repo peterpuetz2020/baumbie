@@ -1,25 +1,36 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { supabase } from '../../supabase';
-	import { Button, Heading } from '$components/ui';
+	import { Button, Notice } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
+	import { logout, getCurrentUser, deleteCurrentUser } from '$lib/supabase';
 
 	let user: { email?: string } | null = null;
 
+	let deleteSuccess: boolean = false;
+	let deleteError: string | null = null;
+
 	onMount(async () => {
-		const { data } = await supabase.auth.getUser();
-		user = data.user ?? null;
+		user = await getCurrentUser();
 	});
 
 	const handleLogout = async () => {
-		await supabase.auth.signOut();
+		await logout();
 		goto('/login');
+	};
+
+	const handleDelete = async () => {
+		const result = await deleteCurrentUser();
+		if (result.ok) {
+			deleteSuccess = true;
+			setTimeout(() => goto('/'), 2000);
+		} else {
+			deleteError = result.error ?? 'Unbekannter Fehler';
+		}
 	};
 </script>
 
-<DialogPanel title={''} open={true}>
-	<Heading level={1}>Mein Account</Heading>
+<DialogPanel title={'Mein Benutzerkonto'} open={true}>
 	<div>
 		{#if user}
 			<p>
@@ -42,11 +53,14 @@
 				einem anonymen Benutzer zugeordnet. Dein Benutzer bei unserem Authentifizierungsdienst supabase.com
 				wird sofort und unwideruflich gelöscht.
 			</p>
-			<Button
-				variant="secondary"
-				className="justify-center w-full mt-4"
-				onClick={() => goto('/login')}>Account löschen</Button
+			<Button variant="secondary" className="justify-center w-full mt-4" onClick={handleDelete}
+				>Account löschen</Button
 			>
+			{#if deleteSuccess}
+				<Notice tone="success">Dein Account wurde gelöscht. Du wirst weitergeleitet...</Notice>
+			{:else if deleteError}
+				<Notice tone="warning">{deleteError}</Notice>
+			{/if}
 		{:else}
 			<p>Logge dich ein, um BaumBie mit allen Funktionen nutzen zu können.</p>
 			<Button

@@ -13,13 +13,19 @@
 	// 🧱 UI
 	import { Button, Heading, Notice } from '$components/ui';
 
+	import { getCurrentUser } from '$lib/supabase';
+
 	let adoptedTrees: TreeMeta[] = [];
 	let loading = true;
 	let infoMessage = 'Du hast noch keine Bäume adoptiert.';
 	let warningMessage = '';
+	let loggedIn = false;
 
 	onMount(async () => {
 		try {
+			const user = await getCurrentUser();
+			loggedIn = !!user;
+
 			adoptedTrees = await loadAdoptedTrees();
 		} catch (err) {
 			console.error(err);
@@ -57,9 +63,14 @@
 			{/each}
 		</div>
 	{:else}
-		<Notice message={infoMessage} tone="info" />
+		<Notice tone="info">
+			Du hast noch keine Bäume adoptiert.
+			{#if !loggedIn}
+				<a href="/login" class="text-green-600 underline">Jetzt einloggen</a> und loslegen!
+			{/if}
+		</Notice>
 	{/if}
 	{#if infoMessage}
-		<Notice message={warningMessage} tone="warning" />
+		<Notice tone="warning">{warningMessage}</Notice>
 	{/if}
 </div>

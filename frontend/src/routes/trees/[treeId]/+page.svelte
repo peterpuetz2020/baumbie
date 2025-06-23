@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { supabase } from '../../../supabase';
+	import { supabase } from '$lib/supabase';
 
 	import type { TreeData } from '$types/tree';
 
