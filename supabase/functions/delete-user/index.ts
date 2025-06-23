@@ -1,14 +1,14 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7'
 
-const allowedOrigin = 'https://baumbie.org'
+const allowedOrigins = ['https://baumbie.org', 'http://localhost:5173'];
 
 serve(async (req) => {
   const origin = req.headers.get('origin')
 
   // Globale Origin-Check – sofort blockieren, wenn nicht erlaubt
-  if (origin !== allowedOrigin) {
-    return new Response('Forbidden – invalid origin', { status: 403 })
+  if (!origin || !allowedOrigins.includes(origin)) {
+    return new Response('Forbidden', { status: 403 });
   }
 
   // CORS Preflight
@@ -16,7 +16,7 @@ serve(async (req) => {
     return new Response(null, {
       status: 204,
       headers: {
-        'Access-Control-Allow-Origin': allowedOrigin,
+        'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Authorization, Content-Type',
       },
@@ -29,7 +29,7 @@ serve(async (req) => {
   if (!token) {
     return new Response('Unauthorized – no token', {
       status: 401,
-      headers: { 'Access-Control-Allow-Origin': allowedOrigin },
+      headers: { 'Access-Control-Allow-Origin': origin },
     })
   }
 
@@ -41,14 +41,14 @@ serve(async (req) => {
   } catch (e) {
     return new Response('Invalid token', {
       status: 401,
-      headers: { 'Access-Control-Allow-Origin': allowedOrigin },
+      headers: { 'Access-Control-Allow-Origin': origin },
     })
   }
 
   if (!userId) {
     return new Response('Unauthorized – no user ID', {
       status: 401,
-      headers: { 'Access-Control-Allow-Origin': allowedOrigin },
+      headers: { 'Access-Control-Allow-Origin': origin },
     })
   }
 
@@ -63,12 +63,12 @@ serve(async (req) => {
   if (error) {
     return new Response(error.message, {
       status: 400,
-      headers: { 'Access-Control-Allow-Origin': allowedOrigin },
+      headers: { 'Access-Control-Allow-Origin': origin },
     })
   }
 
   return new Response('User deleted', {
     status: 200,
-    headers: { 'Access-Control-Allow-Origin': allowedOrigin },
+    headers: { 'Access-Control-Allow-Origin': origin },
   })
 })
