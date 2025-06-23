@@ -13,9 +13,10 @@
 	const handleRegistration = async (e: SubmitEvent) => {
 		e.preventDefault();
 
+		// 🔍 Früher Exit bei Client-Validierung
 		if (password !== passwordConfirmation) {
 			errorMessage = 'Die Passwörter stimmen nicht überein!';
-			setTimeout(() => (errorMessage = null), 5000);
+			resetErrorAfterDelay();
 			return;
 		}
 
@@ -23,20 +24,20 @@
 		errorMessage = null;
 
 		try {
-			await registerWithEmailPassword(email, password);
+			const result = await registerWithEmailPassword(email, password);
 
-			// kurze Pause zur Anzeige der Notice
-			await new Promise((r) => setTimeout(r, 5000));
+			if (result.emailConfirmationRequired) {
+				await new Promise((r) => setTimeout(r, 3000));
+			}
+
 			goto('/confirm-registration?email=' + encodeURIComponent(email));
 		} catch (err) {
-			if (errorTimeout) clearTimeout(errorTimeout);
-
 			if (err instanceof Error) {
 				errorMessage = err.message;
 
-				// Weiterleitung zur Login-Seite, wenn User existiert
+				// Spezieller Fall: "bereits registriert"
 				if (err.message.includes('bereits registriert')) {
-					errorTimeout = setTimeout(() => {
+					setTimeout(() => {
 						errorMessage = null;
 						goto('/login');
 					}, 3000);
@@ -46,14 +47,19 @@
 				errorMessage = 'Unbekannter Fehler bei der Registrierung.';
 			}
 
+			resetErrorAfterDelay();
+		} finally {
 			isSubmitting = false;
-
-			errorTimeout = setTimeout(() => {
-				errorMessage = null;
-				errorTimeout = null;
-			}, 5000);
 		}
 	};
+
+	function resetErrorAfterDelay() {
+		if (errorTimeout) clearTimeout(errorTimeout);
+		errorTimeout = setTimeout(() => {
+			errorMessage = null;
+			errorTimeout = null;
+		}, 5000);
+	}
 </script>
 
 <form on:submit={handleRegistration} class="flex flex-col gap-y-4">
