@@ -65,9 +65,10 @@
 			<Notice tone={messageTone}>{message}</Notice>
 		{/if}
 
-		<p class="mt-2">
-			Mit einer Adoption dieses Baums zeigst du deine Verbundenheit mit diesem Baum und mit
-			Bielefeld. Denn Bäume helfen uns bei einem lebenswerten und gesunden Leben.
-		</p>
+
+		<Notice tone="info">
+			Wenn du diesen Baum adoptierst, wird er in deinem Profil gespeichert und du findest ihn jederzeit wieder.
+			Aktuell ist das nur eine symbolische Geste, es ist keine Verpflichtung damit verbunden. Wir arbeiten an weiteren Features. 
+		</Notice>
 	</div>
 {/if}

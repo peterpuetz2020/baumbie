@@ -2,6 +2,7 @@
 	import { Button } from '$components/ui';
 	import { selectedTreeFilters, loadTopSpecies } from '$lib/trees';
 	import { onMount } from 'svelte';
+	import {Notice} from '$components/ui';
 
 	let topSpecies: { label: string; count: number }[] = [];
 
@@ -24,12 +25,13 @@
 <div class="w-full max-w-screen-lg mx-auto space-y-10 pt-2">
 	<!-- Beschreibung -->
 	<div class="space-y-2 text-lg text-gray-800 leading-relaxed">
-		<p>Hier kannst du gezielt nach bestimmten Baumarten filtern.</p>
-		<p>
+		<Notice tone="info">
+			Hier kannst du gezielt nach bestimmten Baumarten filtern.
 			Zur Auswahl stehen die <strong>30 häufigsten</strong> Arten in Bielefeld, die gemeinsam rund
 			<strong>85 % aller Stadtbäume</strong> ausmachen.
-		</p>
-		<p>Wähle eine oder mehrere Arten aus – die Karte zeigt anschließend nur diese an.</p>
+			Wähle eine oder mehrere Arten aus – die Karte zeigt anschließend nur diese an.
+		</Notice>
+
 	</div>
 
 	<!-- Graue Box -->

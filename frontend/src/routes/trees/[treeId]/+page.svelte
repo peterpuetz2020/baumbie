@@ -8,6 +8,7 @@
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
 	import { AdoptTreeButton, TreeMetric, WaterColumn } from '$components/trees';
+	import Notice from '$components/ui/Notice.svelte';
 
 	export let activeTabIndex = 0;
 	const handleTabChange = (tab: number) => (activeTabIndex = tab);
@@ -80,7 +81,7 @@
 				{#if activeTabIndex === 0}
 					<Accordion bind:open={openAbout}>
 						<div slot="head">
-							<p class="text-black font-bold">Über mich</p>
+							<p class="text-black font-bold">Über diesen Baum</p>
 						</div>
 						<div slot="details">
 							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
@@ -108,10 +109,9 @@
 							<p class="text-black font-bold">Wasserbedarf</p>
 						</div>
 						<div slot="details">
-							<p class="text-sm text-gray-800">
-								Das ist eine Beispielansicht. Wir sind noch dabei, alle nötigen Daten einzusammeln.
-							</p>
-							<WaterColumn />
+							<Notice tone="info">
+								Hier wird künftig sichtbar, wie viel Wasser dieser Baum braucht und ob der Regen in letzter Zeit gereicht hat.
+							</Notice>
 						</div>
 					</Accordion>
 					<hr />
@@ -120,7 +120,7 @@
 							<p class="text-black font-bold">Wer wann gegossen hat</p>
 						</div>
 						<div slot="details">
-							<p class="text-sm text-gray-800">Hier werden die letzten 10 Gießungen angezeigt.</p>
+							<Notice tone="info">Hier wird künftig sichtbar, welche Nutzer:innen diesen Baum wie oft gegossen haben.</Notice>
 						</div>
 					</Accordion>
 					<hr />

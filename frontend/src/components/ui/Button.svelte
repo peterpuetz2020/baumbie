@@ -13,7 +13,7 @@
 		default: 'border-black text-black hover:bg-green-800 hover:text-white',
 		primary: 'border-green-600 bg-green-600 text-white hover:bg-green-800',
 		secondary: 'border-green-500 text-black hover:bg-green-100',
-		danger: 'border-red-600 bg-red-600 text-white hover:bg-red-800'
+		danger: 'border-red-600 text-black hover:bg-red-800 hover:text-white',
 	};
 </script>
 
