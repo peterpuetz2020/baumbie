@@ -1,27 +1,36 @@
 import { supabase } from "./client";
 
 
-export async function getCurrentUser(): Promise<{ email?: string } | null> {
-	const { data, error } = await supabase.auth.getUser();
-	if (error) {
-		console.warn('getCurrentUser() failed:', error.message);
-		return null;
-	}
-	return data.user ?? null;
-}
-
-export async function registerWithEmailPassword(email: string, password: string): Promise<void> {
-	const { error } = await supabase.auth.signUp({ email, password });
+export async function registerWithEmailPassword(email: string, password: string) {
+	const { data, error } = await supabase.auth.signUp({ email, password });
 
 	if (error) {
-		const knownErrors: Record<string, string> = {
-			'User already registered': 'Diese E-Mail-Adresse ist bereits registriert.',
-			'Invalid email': 'Die eingegebene E-Mail-Adresse ist ungültig.',
-			'Password should be at least 6 characters.': 'Das Passwort ist zu schwach.'
-		};
-		throw new Error(knownErrors[error.message] ?? error.message);
+		// Bekannter Fehler: Passwort zu kurz
+		if (error.message.toLowerCase().includes('password should be at least')) {
+			throw new Error('Passwort muss mindestens 6 Zeichen lang sein.');
+		}
+
+		// E-Mail bereits vergeben
+		if (error.message.toLowerCase().includes('user already registered')) {
+			throw new Error('Diese E-Mail-Adresse ist bereits registriert.');
+		}
+
+		throw error; // Unbekannter Fehler
 	}
+
+	if (data.user && !data.session) {
+		throw new Error('Diese E-Mail-Adresse ist bereits registriert.');
+	}
+
+	if (!data.user?.id) {
+		throw new Error('Registrierung fehlgeschlagen. Bitte versuche es erneut.');
+	}
+
+	return data;
 }
+
+
+
 
 export async function loginWithEmailPassword(email: string, password: string) {
 	const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -34,6 +43,22 @@ export async function loginWithEmailPassword(email: string, password: string) {
 export async function logout(): Promise<void> {
 	await supabase.auth.signOut();
 }
+
+
+export async function getCurrentUser() {
+	const sessionResult = await supabase.auth.getSession();
+	if (sessionResult.error || !sessionResult.data.session) {
+		return null;
+	}
+
+	const userResult = await supabase.auth.getUser();
+	if (userResult.error || !userResult.data.user) {
+		return null;
+	}
+
+	return userResult.data.user;
+}
+
 
 export async function deleteCurrentUser(): Promise<{ ok: boolean; error?: string }> {
 	const sessionResult = await supabase.auth.getSession();

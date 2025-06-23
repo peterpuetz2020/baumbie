@@ -1,4 +1,5 @@
-import { getDistanceInMeters } from '$lib/geo/distance';
+import { getDistanceInMeters } from '$lib/geo';
+import type { TreeNearby } from '$types/tree';
 
 export async function extractTreeCandidates(
 	files: string[],
@@ -8,15 +9,9 @@ export async function extractTreeCandidates(
 	maxY: number,
 	centerLat: number,
 	centerLng: number
-) {
-	const candidates: {
-		id: string;
-		name: string;
-		distance: number;
-		lat: number;
-		lng: number;
-		crown?: number;
-	}[] = [];
+): Promise<TreeNearby[]> {
+	const candidates: TreeNearby[] = [];
+
 
 	for (const file of files) {
 		const res = await fetch(`/segments/${file}`);
@@ -30,7 +25,17 @@ export async function extractTreeCandidates(
 				const name = feature.properties.tree_type_german ?? 'Unbekannter Baum';
 				const crown = feature.properties.crown_diameter;
 				const distance = Math.round(getDistanceInMeters(centerLat, centerLng, lat, lon));
-				candidates.push({ id: uuid, name, distance, lat, lng: lon, crown });
+				const tree: TreeNearby = {
+					id: uuid,
+					name,
+					distance,
+					lat,
+					lng: lon,
+					crown,
+					tree_type_german: feature.properties.tree_type_german ?? 'Unbekannt'
+				};
+
+				candidates.push(tree);
 			}
 		}
 	}

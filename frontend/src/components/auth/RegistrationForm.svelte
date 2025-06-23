@@ -7,6 +7,8 @@
 	let password = '';
 	let passwordConfirmation = '';
 	let errorMessage: string | null = null;
+	let isSubmitting = false;
+	let errorTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const handleRegistration = async (e: SubmitEvent) => {
 		e.preventDefault();
@@ -17,16 +19,39 @@
 			return;
 		}
 
+		isSubmitting = true;
+		errorMessage = null;
+
 		try {
 			await registerWithEmailPassword(email, password);
-			goto('/authenticated?email=' + encodeURIComponent(email));
+
+			// kurze Pause zur Anzeige der Notice
+			await new Promise((r) => setTimeout(r, 5000));
+			goto('/confirm-registration?email=' + encodeURIComponent(email));
 		} catch (err) {
+			if (errorTimeout) clearTimeout(errorTimeout);
+
 			if (err instanceof Error) {
 				errorMessage = err.message;
+
+				// Weiterleitung zur Login-Seite, wenn User existiert
+				if (err.message.includes('bereits registriert')) {
+					errorTimeout = setTimeout(() => {
+						errorMessage = null;
+						goto('/login');
+					}, 3000);
+					return;
+				}
 			} else {
 				errorMessage = 'Unbekannter Fehler bei der Registrierung.';
 			}
-			setTimeout(() => (errorMessage = null), 5000);
+
+			isSubmitting = false;
+
+			errorTimeout = setTimeout(() => {
+				errorMessage = null;
+				errorTimeout = null;
+			}, 5000);
 		}
 	};
 </script>
@@ -61,7 +86,9 @@
 	{/if}
 
 	<div class="flex flex-col gap-y-2">
-		<Button variant="primary" type="submit" className="w-full">Registrieren</Button>
+		<Button variant="primary" type="submit" disabled={isSubmitting} className="w-full">
+			{isSubmitting ? 'Wird gesendet...' : 'Registrieren'}
+		</Button>
 		<Button variant="secondary" type="button" onClick={() => goto('/login')} className="w-full">
 			Anmelden
 		</Button>

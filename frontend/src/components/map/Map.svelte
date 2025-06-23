@@ -22,7 +22,9 @@
 	// ——————————————————————————————————————————————————————————
 	// 🌳 Baumspezifisch
 	// ——————————————————————————————————————————————————————————
-	import { selectedSpecies } from '$lib/trees';
+	import { selectedTreeFilters } from '$lib/trees';
+	import type { TreeFilter } from '$types/tree';
+
 	import { findMatchingSegments } from '$lib/geo';
 
 	// ——————————————————————————————————————————————————————————
@@ -39,15 +41,15 @@
 	let map: L.Map;
 	let loadedSegmentFiles = new Set<string>();
 	let allMarkerGroups: MarkerClusterGroup[] = [];
-	let lastFilter: string[] = [];
+	let lastFilter: TreeFilter = { species: [] };
+
 	const loadDelayMs = 50;
 
 	// ——————————————————————————————————————————————————————————
 	// 🔄 Reaktion auf Filteränderung
 	// ——————————————————————————————————————————————————————————
-	$: if (map && JSON.stringify($selectedSpecies) !== JSON.stringify(lastFilter)) {
-		lastFilter = [...$selectedSpecies];
-		console.log('🔄 Filter geändert:', $selectedSpecies);
+	$: if (map && JSON.stringify($selectedTreeFilters) !== JSON.stringify(lastFilter)) {
+		lastFilter = structuredClone($selectedTreeFilters);
 
 		allMarkerGroups.forEach((group) => {
 			group.remove();
@@ -80,7 +82,7 @@
 				await renderSegmentFile(
 					file,
 					map,
-					$selectedSpecies,
+					$selectedTreeFilters,
 					loadedSegmentFiles,
 					markerGroupRegistry,
 					allMarkerGroups
