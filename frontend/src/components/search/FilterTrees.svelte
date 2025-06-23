@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Button } from '$components/ui';
-	import { selectedSpecies, loadTopSpecies } from '$lib/trees';
-	import {} from '$lib/trees/topSpecies';
+	import { selectedTreeFilters, loadTopSpecies } from '$lib/trees';
 	import { onMount } from 'svelte';
 
 	let topSpecies: { label: string; count: number }[] = [];
@@ -10,7 +9,16 @@
 		topSpecies = await loadTopSpecies();
 	});
 
-	$: current = $selectedSpecies;
+	function toggleSpecies(species: string) {
+		const currentSpecies = $selectedTreeFilters.species ?? [];
+		const updated = currentSpecies.includes(species)
+			? currentSpecies.filter((s) => s !== species)
+			: [...currentSpecies, species];
+
+		selectedTreeFilters.set({ species: updated });
+	}
+
+	$: current = $selectedTreeFilters.species ?? [];
 </script>
 
 <div class="w-full max-w-screen-lg mx-auto space-y-10 pt-2">
@@ -28,7 +36,7 @@
 	<div class="bg-gray-50 border border-gray-200 rounded-2xl px-6 py-6 space-y-4 w-full">
 		<!-- ✅ "Alle anzeigen"-Button oben -->
 		<div>
-			<Button variant="primary" onClick={() => selectedSpecies.reset()}>
+			<Button variant="primary" onClick={() => selectedTreeFilters.set({ species: [] })}>
 				Alle Baumarten anzeigen
 			</Button>
 		</div>
@@ -37,7 +45,7 @@
 		<div class="flex flex-wrap gap-x-4 gap-y-3">
 			{#each topSpecies as species}
 				<Button
-					onClick={() => selectedSpecies.toggle(species.label)}
+					onClick={() => toggleSpecies(species.label)}
 					variant={current.includes(species.label) ? 'primary' : 'default'}
 				>
 					<strong>{species.label}</strong>&nbsp;({species.count})

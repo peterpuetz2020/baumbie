@@ -43,3 +43,26 @@ export type TreeMeta = {
 	name: string;
 	tree_type_german: string;
 };
+
+/** 
+ * Lightweight tree info used for display of trees near user's location.
+ * Includes only spatial and display-relevant data.
+ */
+export type TreeNearby = {
+	id: string;
+	name: string;
+	distance: number;
+	lat: number;
+	lng: number;
+	tree_type_german: string;
+	crown?: number;
+}
+
+export type TreeFilter = {
+	species?: string[];       // Baumarten
+	minCrown?: number;        // Mindest-Kronendurchmesser
+	maxCrown?: number;        // Maximaler Kronendurchmesser
+	minHeight?: number;
+	maxHeight?: number;
+};
+

@@ -4,10 +4,13 @@ import type { MarkerClusterGroup } from '@tronscanteam/leaflet.markercluster/dis
 import { createClusterGroup } from './clusterGroup';
 import { greenIcon, clickedIcon, focusTree, registerTreeMarker } from '$lib/map';
 
+import type { TreeFilter } from '$types/tree';
+
+
 export async function renderSegmentFile(
 	file: string,
 	map: L.Map,
-	selectedSpecies: string[],
+	filter: TreeFilter,
 	loadedSegmentFiles: Set<string>,
 	markerGroupRegistry: Map<MarkerClusterGroup, string[]>,
 	allMarkerGroups: MarkerClusterGroup[]
@@ -16,12 +19,15 @@ export async function renderSegmentFile(
 	const segment = await res.json();
 	loadedSegmentFiles.add(file);
 
+	const speciesFilter = filter.species ?? [];
+
 	const filteredFeatures: TreeFeature[] =
-		selectedSpecies.length === 0
+		speciesFilter.length === 0
 			? segment.features
 			: segment.features.filter((f: TreeFeature) =>
-					selectedSpecies.includes(f.properties.tree_type_german)
-			  );
+					speciesFilter.includes(f.properties.tree_type_german)
+			);
+
 
 	if (filteredFeatures.length === 0) return;
 

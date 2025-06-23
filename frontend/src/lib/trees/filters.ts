@@ -1,27 +1,29 @@
 import { writable } from 'svelte/store';
+import type { TreeFilter } from '$types/tree';
 
-function createSelectedSpecies() {
-	const { subscribe, set, update } = writable<string[]>([]); // leeres Array = alle sichtbar
+function createSelectedTreeFilters() {
+	const { subscribe, set, update } = writable<TreeFilter>({});
 
 	return {
 		subscribe,
 		set,
-		reset: () => set([]),
-		toggle: (species: string) =>
-			update((list) =>
-				list.includes(species)
-					? list.filter((s) => s !== species)
-					: [...list, species]
-			),
-		has: (species: string) =>
-			// zum Lesen in der Komponente
-			{
-				let value: string[] = [];
-				const unsub = subscribe((v) => (value = v));
-				unsub();
-				return value.includes(species);
-			}
+		update,
+		reset: () => set({}),
+		toggleSpecies: (species: string) =>
+			update((filters) => {
+				const current = filters.species ?? [];
+				const newList = current.includes(species)
+					? current.filter((s) => s !== species)
+					: [...current, species];
+				return { ...filters, species: newList };
+			}),
+		hasSpecies: (species: string) => {
+			let value: TreeFilter = {};
+			const unsub = subscribe((v) => (value = v));
+			unsub();
+			return value.species?.includes(species) ?? false;
+		}
 	};
 }
 
-export const selectedSpecies = createSelectedSpecies();
+export const selectedTreeFilters = createSelectedTreeFilters();
