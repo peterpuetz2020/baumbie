@@ -33,14 +33,7 @@
 	</div>
 
 	<!-- Graue Box -->
-	<div class="bg-gray-50 border border-gray-200 rounded-2xl px-6 py-6 space-y-4 w-full">
-		<!-- ✅ "Alle anzeigen"-Button oben -->
-		<div>
-			<Button variant="primary" onClick={() => selectedTreeFilters.set({ species: [] })}>
-				Alle Baumarten anzeigen
-			</Button>
-		</div>
-
+	<div class="bg-gray-50 border border-gray-200 rounded-2xl px-6 py-6 space-y-6 w-full">
 		<!-- Baumarten-Buttons -->
 		<div class="flex flex-wrap gap-x-4 gap-y-3">
 			{#each topSpecies as species}
@@ -51,6 +44,17 @@
 					<strong>{species.label}</strong>&nbsp;({species.count})
 				</Button>
 			{/each}
+		</div>
+
+		<!-- 🔁 Alle anzeigen unten -->
+		<div>
+			<Button
+				variant={current.length === 0 ? 'primary' : 'default'}
+				onClick={() => selectedTreeFilters.set({ species: [] })}
+				className="w-full justify-center"
+			>
+				<strong>Alle Baumarten anzeigen</strong>
+			</Button>
 		</div>
 	</div>
 </div>
