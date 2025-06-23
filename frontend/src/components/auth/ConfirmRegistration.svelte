@@ -14,6 +14,8 @@
 </script>
 
 <p>
-	Wir haben eine Bestätigungsmail an <strong>{userEmail}</strong> gesendet. <br />
+	Wir haben über unseren Authentifizierungsdienst <strong>Supabase</strong> eine Bestätigungsmail an
+	<strong>{userEmail}</strong>
+	gesendet. <br />
 	Bitte klicke auf den Link darin, um dein Benutzerkonto zu aktivieren.
 </p>

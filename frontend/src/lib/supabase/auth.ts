@@ -10,27 +10,23 @@ export async function registerWithEmailPassword(email: string, password: string)
 			throw new Error('Passwort muss mindestens 6 Zeichen lang sein.');
 		}
 
-		// E-Mail bereits vergeben
-		if (error.message.toLowerCase().includes('user already registered')) {
-			throw new Error('Diese E-Mail-Adresse ist bereits registriert.');
-		}
-
 		throw error; // Unbekannter Fehler
-	}
-
-	if (data.user && !data.session) {
-		throw new Error('Diese E-Mail-Adresse ist bereits registriert.');
 	}
 
 	if (!data.user?.id) {
 		throw new Error('Registrierung fehlgeschlagen. Bitte versuche es erneut.');
 	}
 
-	return data;
+	if (data.user.identities?.length === 0) {
+		throw new Error('Diese E-Mail-Adresse ist bereits registriert.');
+	}
+
+	return {
+		user: data.user,
+		emailConfirmationRequired: !data.session,
+	};
+
 }
-
-
-
 
 export async function loginWithEmailPassword(email: string, password: string) {
 	const { data, error } = await supabase.auth.signInWithPassword({ email, password });
