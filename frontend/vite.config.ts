@@ -10,6 +10,7 @@ export default defineConfig({
 	envDir: '..',
 	resolve: {
 		alias: {
+			$lib: path.resolve('./src/lib'),
 			$components: path.resolve(__dirname, 'src/components'),
 			$types: path.resolve(__dirname, 'src/types')
 		}
