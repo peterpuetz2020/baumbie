@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Message } from '../../types/chat';
+	import type { ChatMessage } from '$types/chat';
 	import parseMarkdown from '$lib/utils/parseMarkdown';
 
-	export let message: Message;
+	export let message: ChatMessage;
 
 	// console.log('BotMessage received:', message);
 

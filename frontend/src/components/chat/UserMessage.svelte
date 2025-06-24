@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Message as MessageType } from '../../types/chat';
+	import type { ChatMessage } from '$types/chat';
 
-	export let message: MessageType;
+	export let message: ChatMessage;
 </script>
 
 <div class="flex gap-1.5 flex-row w-full flex-end">
@@ -11,6 +11,6 @@
 		</div>
 	</div>
 	<div class="pt-2">
-		<img src="/chat/user.svg" alt="Bot" class="min-w-8 min-h-8" />	
+		<img src="/chat/user.svg" alt="Bot" class="min-w-8 min-h-8" />
 	</div>
 </div>

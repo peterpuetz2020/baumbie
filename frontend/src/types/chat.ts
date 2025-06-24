@@ -8,7 +8,7 @@ export interface ChatButton {
 	};
 }
 
-export interface Message {
+export interface ChatMessage {
 	text: string;
 	label: string;
 	type: 'text' | 'choice';
@@ -22,6 +22,14 @@ export interface RawMessage {
 	type: string;
 	payload: any;
 }
+
+export type ChatApiResponse = {
+	data: {
+		sessionId: string;
+		messages: RawMessage[];
+	};
+	error: null | { message: string }; // je nach API ggf. `string | null`
+};
 
 // /**
 //  * RawMessage entspricht exakt dem Nachrichtenformat,
