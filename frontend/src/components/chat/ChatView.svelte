@@ -1,83 +1,46 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Message from './Message.svelte';
-	import type { Message as MessageType, RawMessage } from '$types/chat';
-	import { startChat, sendMessage } from '$lib/chat/api';
+	import type { Message as MessageType } from '$types/chat';
+	import { createChatController } from '$lib/chat';
 
 	export let treeId: string = '';
 	$: treeId;
 
-	let sessionId: string = '';
 	let messages: MessageType[] = [];
 	let newMessage: string = '';
 	let chatAvailable: boolean = true;
 
 	let endRef: HTMLDivElement;
+	let controller: ReturnType<typeof createChatController>;
 
 	onMount(() => {
 		if (!treeId) {
 			console.error('No treeId provided');
 			return;
 		}
-		startChat(treeId, handleNewChatMessages);
+
+		controller = createChatController(treeId, (newMessages) => {
+			messages = [...messages, ...newMessages];
+		});
+
+		controller.init();
 	});
 
-	const handleNewChatMessages = (response: unknown) => {
-		if (
-			typeof response !== 'object' ||
-			response === null ||
-			!('data' in response) ||
-			!('error' in response)
-		) {
-			console.error('Invalid response structure:', response);
-			return;
-		}
+	function handleSendMessage(text: string) {
+		if (text.trim() === '') return;
 
-		const { data, error } = response as { data: any; error: any };
-
-		if (error !== null) {
-			console.error('Error fetching chat messages:', error);
-			return;
-		}
-
-		sessionId = data.sessionId;
 		messages = [
 			...messages,
-			...data.messages
-				.filter((msg: RawMessage) => !['no-reply', 'path'].includes(msg.type))
-				.map((msg: RawMessage): MessageType => {
-					const buttons = Array.isArray(msg.payload?.buttons)
-						? msg.payload!.buttons!.map((btn: { name: string; request: any }) => ({
-								label: btn.name,
-								request: btn.request
-							}))
-						: [];
-
-					return {
-						text: msg.payload?.message ?? '',
-						label: '',
-						type: msg.payload?.type ?? msg.type,
-						sender: 'bot',
-						buttons,
-						ai: msg.payload?.ai === true
-					};
-				})
+			{
+				text,
+				label: '',
+				type: 'text',
+				sender: 'user'
+			}
 		];
-	};
 
-	function handleSendMessage(text: string) {
-		if (text === '') return;
-
-		const newUserMessage: MessageType = {
-			text,
-			label: '',
-			type: 'text',
-			sender: 'user'
-		};
-
-		messages = [...messages, newUserMessage];
-
-		sendMessage(text, sessionId, handleNewChatMessages);
+		controller.send(text);
 		newMessage = '';
 	}
 
@@ -96,7 +59,6 @@
 	}
 </script>
 
-<!-- UI bleibt 1:1 wie gehabt -->
 <div id="chat-container" class="flex flex-col h-full min-h-0">
 	<div class="flex flex-col grow overflow-y-auto gap-y-1 min-h-0">
 		{#each messages as message}

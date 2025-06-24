@@ -6,7 +6,7 @@
 
 	import { Accordion } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
-	import { Chat } from '$components/chat';
+	import { ChatView } from '$components/chat';
 	import { AdoptTreeButton, TreeMetric } from '$components/trees';
 	import Notice from '$components/ui/Notice.svelte';
 
@@ -130,7 +130,7 @@
 
 					<AdoptTreeButton {tree} />
 				{:else}
-					<Chat treeId={tree.uuid} />
+					<ChatView treeId={tree.uuid} />
 				{/if}
 			</div>
 		</div>
