@@ -1,16 +1,12 @@
 <script lang="ts">
-	// === Imports ===
 	import { onMount } from 'svelte';
-	import { supabase } from '$lib/supabase';
 	import Message from './Message.svelte';
 	import type { Message as MessageType, RawMessage } from '$types/chat';
+	import { startChat, sendMessage } from '$lib/chat/api';
 
-	// === Props ===
 	export let treeId: string = '';
 	$: treeId;
-	console.log('Chat got Tree ID: ', treeId);
 
-	// === State ===
 	let sessionId: string = '';
 	let messages: MessageType[] = [];
 	let newMessage: string = '';
@@ -18,24 +14,15 @@
 
 	let endRef: HTMLDivElement;
 
-	// === Lifecycle ===
 	onMount(() => {
 		if (!treeId) {
 			console.error('No treeId provided');
 			return;
 		}
-		supabase.functions
-			.invoke('chat', {
-				body: {
-					treeId
-				}
-			})
-			.then(handleNewChatMessages);
+		startChat(treeId, handleNewChatMessages);
 	});
 
-	// === Helpers ===
 	const handleNewChatMessages = (response: unknown) => {
-		// console.log("📦 RAW Voiceflow Response:", JSON.stringify(response, null, 2));
 		if (
 			typeof response !== 'object' ||
 			response === null ||
@@ -78,10 +65,9 @@
 		];
 	};
 
-	function sendMessage(text: string) {
-		if (text === '') {
-			return;
-		}
+	function handleSendMessage(text: string) {
+		if (text === '') return;
+
 		const newUserMessage: MessageType = {
 			text,
 			label: '',
@@ -91,21 +77,13 @@
 
 		messages = [...messages, newUserMessage];
 
-		supabase.functions
-			.invoke('chat', {
-				body: {
-					sessionId,
-					text
-				}
-			})
-			.then(handleNewChatMessages);
-
+		sendMessage(text, sessionId, handleNewChatMessages);
 		newMessage = '';
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Enter' && newMessage !== '') {
-			sendMessage(newMessage);
+			handleSendMessage(newMessage);
 		}
 	}
 
@@ -116,26 +94,17 @@
 			});
 		}
 	}
-
-	$: console.log('↪ newMessage:', JSON.stringify(newMessage));
 </script>
 
-<!-- Chat innerhalb der Card -->
+<!-- UI bleibt 1:1 wie gehabt -->
 <div id="chat-container" class="flex flex-col h-full min-h-0">
-	<!--
-	TODO für später: transparenten Verlauf umsetzen
-	<div class="sticky top-0 min-h-12 h-12 w-100 bg-gradient-to-b from-red-800 z-[9999999]"></div>
-	-->
-	<!-- Nachrichtenbereich -->
-
 	<div class="flex flex-col grow overflow-y-auto gap-y-1 min-h-0">
 		{#each messages as message}
-			<Message {message} {sendMessage} />
+			<Message {message} sendMessage={handleSendMessage} />
 		{/each}
 		<div bind:this={endRef} class="min-h-3"></div>
 	</div>
 
-	<!-- Eingabe -->
 	<div class="sticky bottom-0 bg-white p-3 border-t z-[10] border-t-gray-500">
 		<div class="flex flex-row gap-2">
 			<input
@@ -148,7 +117,7 @@
 			/>
 			<button
 				class="shrink"
-				on:click={() => newMessage && sendMessage(newMessage)}
+				on:click={() => newMessage && handleSendMessage(newMessage)}
 				disabled={!chatAvailable}
 			>
 				<img src="/chat/send.svg" class="w-8 h-8" alt="senden" />
