@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import MessageView from './MessageView.svelte';
 	import InputArea from './InputArea.svelte';
-	import { useChatController } from '$lib/chat';
+	import { createChatController } from '$lib/chat/controller';
 	import type { ChatMessage } from '$types/chat';
 
 	// --- Props ---
@@ -15,7 +15,7 @@
 	let newMessage: string = '';
 	let chatAvailable: boolean = true;
 	let endRef: HTMLDivElement;
-	let controller: { init: () => void; sendMessage: (text: string) => void };
+	let controller: ReturnType<typeof createChatController>;
 
 	const fallbackMessage: ChatMessage = {
 		text: '',
@@ -25,27 +25,26 @@
 		ai: false
 	};
 
+	const handleUpdate = (newMessages: ChatMessage[]) => {
+		messages = [...messages, ...newMessages];
+	};
+
+	const handleError = (errorMessage: string) => {
+		messages = [...messages, { ...fallbackMessage, text: errorMessage }];
+		chatAvailable = false;
+	};
+
 	onMount(() => {
 		if (!treeId) {
 			console.error('No treeId provided');
 			return;
 		}
 
-		controller = useChatController(
-			treeId,
-			(newMessages) => {
-				messages = [...messages, ...newMessages];
-			},
-			(errorMessage) => {
-				messages = [...messages, { ...fallbackMessage, text: errorMessage }];
-				chatAvailable = false;
-			}
-		);
-
+		controller = createChatController(treeId, handleUpdate, handleError);
 		controller.init();
 	});
 
-	function handleSendMessage(text: string) {
+	function handleUserReply(text: string) {
 		if (text.trim() === '') return;
 
 		messages = [
@@ -58,7 +57,7 @@
 			}
 		];
 
-		controller.sendMessage(text);
+		controller.send(text);
 		newMessage = '';
 	}
 
@@ -74,10 +73,10 @@
 <div id="chat-container" class="flex flex-col h-full min-h-0">
 	<div class="flex flex-col grow overflow-y-auto gap-y-1 min-h-0">
 		{#each messages as message}
-			<MessageView {message} sendMessage={handleSendMessage} />
+			<MessageView {message} onUserReply={handleUserReply} />
 		{/each}
 		<div bind:this={endRef} class="min-h-3"></div>
 	</div>
 </div>
 
-<InputArea bind:value={newMessage} disabled={!chatAvailable} onSend={handleSendMessage} />
+<InputArea bind:value={newMessage} disabled={!chatAvailable} onSend={handleUserReply} />

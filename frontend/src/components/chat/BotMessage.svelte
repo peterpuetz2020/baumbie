@@ -20,7 +20,7 @@
 	message = debugMessage; // zum Aktivieren auskommentieren
 	*/
 
-	export let sendMessage: (text: string) => void;
+	export let onUserReply: (text: string) => void;
 
 	let htmlText: string | null = null;
 	let lastMessageText = '';
@@ -35,10 +35,12 @@
 		});
 	}
 
-	function handleClick(label: string) {
+	function handleUserChoice(label: string) {
 		if (selectedLabel !== null || message.type !== 'choice') return;
 		selectedLabel = label;
-		sendMessage(label);
+
+		// Interpret the selected label as a user reply to a bot choice
+		onUserReply(label);
 	}
 </script>
 
@@ -75,7 +77,7 @@
 						class:opacity-50={selectedLabel !== null && selectedLabel !== button.label}
 						class:hover:bg-green-400={selectedLabel === null}
 						disabled={selectedLabel !== null}
-						on:click={() => handleClick(button.label)}
+						on:click={() => handleUserChoice(button.label)}
 					>
 						{button.label}
 					</button>

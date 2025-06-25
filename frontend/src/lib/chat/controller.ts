@@ -1,7 +1,6 @@
-import { startChat, sendMessage } from '../api';
+import { startChat, sendMessage } from './api';
 import type { ChatMessage, RawMessage, ChatApiResponse } from '$types/chat';
 
-// --- Internal Controller Logic ---
 export function createChatController(
 	treeId: string,
 	onUpdate: (msgs: ChatMessage[], sessionId: string) => void,
