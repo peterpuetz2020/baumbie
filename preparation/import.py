@@ -21,8 +21,6 @@ else:
 
 
 projection = pyproj.Proj(proj='utm', zone=32, ellps='WGS84')
-def unproject(x, y):
-    return projection(x, y, inverse=True)
 
 
 def create_insert_data(feature, provider_id):
