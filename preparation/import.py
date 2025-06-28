@@ -66,5 +66,4 @@ with open(path_to_geojson) as f:
 
     rows = [create_insert_data(feature, city_uuid) for feature in data["features"]]
     rows = [row for row in rows if row is not None]
-    for row in tqdm(rows):
-        supabase.table("trees").insert(row).execute()
+    supabase.table("trees").insert(rows).execute()
