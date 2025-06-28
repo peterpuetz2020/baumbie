@@ -1,12 +1,9 @@
 import os
 import json
 from dotenv import load_dotenv
-from tqdm import tqdm
 from supabase import create_client, Client
-from shapely import wkt, Point
 import pyproj
 import sys
-from tqdm import tqdm
 
 load_dotenv("../.env")
 
