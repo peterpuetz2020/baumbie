@@ -54,11 +54,11 @@ def create_insert_data(feature, provider_id):
 with open(path_to_geojson) as f:
     data = json.load(f)
 
-    city = supabase.table("providers").insert({
-        "name": "Stadt Bielefeld",
-    }).execute()
-    city_uuid = city.data[0]["uuid"]
+city = supabase.table("providers").insert({
+    "name": "Stadt Bielefeld",
+}).execute()
+city_uuid = city.data[0]["uuid"]
 
-    rows = [create_insert_data(feature, city_uuid) for feature in data["features"]]
-    rows = [row for row in rows if row is not None]
-    supabase.table("trees").insert(rows).execute()
+rows = [create_insert_data(feature, city_uuid) for feature in data["features"]]
+rows = [row for row in rows if row is not None]
+supabase.table("trees").insert(rows).execute()
