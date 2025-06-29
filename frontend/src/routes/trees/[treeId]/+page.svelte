@@ -7,7 +7,7 @@
 	import { Accordion } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
-	import { AdoptTreeButton, TreeMetric, WaterColumn } from '$components/trees';
+	import { AdoptTreeButton, WaterTreeButton, TreeMetric, WaterColumn, WaterForm } from '$components/trees';
 	import Notice from '$components/ui/Notice.svelte';
 
 	export let activeTabIndex = 0;
@@ -109,6 +109,7 @@
 							<p class="text-black font-bold">Wasserbedarf</p>
 						</div>
 						<div slot="details">
+						
 							<Notice tone="info">
 								Hier wird künftig sichtbar, wie viel Wasser dieser Baum braucht und ob der Regen in letzter Zeit gereicht hat.
 							</Notice>
@@ -124,7 +125,7 @@
 						</div>
 					</Accordion>
 					<hr />
-
+					<WaterTreeButton tree={tree} />
 					<AdoptTreeButton {tree} />
 				{:else}
 					<Chat treeId={tree.uuid} />
