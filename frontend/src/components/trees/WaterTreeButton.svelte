@@ -8,9 +8,6 @@
 	export let tree: TreeData;
 
 	let authorized = false;
-	let message: string | null = null;
-	let messageTone: 'success' | 'warning' | 'info' | undefined = undefined;
-
 	$: label = 'Gieße diesen Baum';
 
 	onMount(async () => {
@@ -22,7 +19,7 @@
 	});
 
 	const handleWaterTree = async () => {
-
+        //backend verknüpfung ergänzen
 	};
 </script>
 

@@ -5,4 +5,5 @@ export { default as InputField } from './input/InputField.svelte';
 export { default as EmailField } from './input/EmailField.svelte';
 export { default as PasswordField } from './input/PasswordField.svelte';
 export { default as WaterField } from './input/WaterField.svelte';
+export { default as DateField } from './input/DateField.svelte';
 export { default as Notice } from './Notice.svelte';
