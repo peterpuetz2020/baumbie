@@ -3,7 +3,8 @@ name: Deploy to zugriff.eu
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -14,8 +15,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Install Python requirements
         run: pip install -r preparation/requirements.txt
 
@@ -24,7 +25,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      
+
       - name: Move generated segments into frontend/static
         run: |
           mkdir -p frontend/static/segments
