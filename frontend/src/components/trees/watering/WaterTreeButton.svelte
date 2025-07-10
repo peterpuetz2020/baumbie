@@ -15,22 +15,13 @@
 		if (!user) return;
 
 		authorized = true;
-
 	});
-
-	const handleWaterTree = async () => {
-        //backend verknüpfung ergänzen
-	};
 </script>
 
 {#if tree}
 	<div class="flex flex-col gap-2">
-		<Button
-			variant={'primary'}
-			onClick={() => goto(`/trees/${tree.uuid}/water`)}
-		>
+		<Button variant={'primary'} onClick={() => goto(`/trees/${tree.uuid}/water`)}>
 			{label}
 		</Button>
-
 	</div>
 {/if}

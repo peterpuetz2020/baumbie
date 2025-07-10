@@ -1,28 +1,12 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { getWateringsForTree, deleteWatering as deleteWateringFromDB } from '$lib/supabase';
+	import { createEventDispatcher } from 'svelte';
+	import { deleteWatering as deleteWateringFromDB } from '$lib/supabase';
 	import Notice from '$components/ui/Notice.svelte';
 
-	export let treeId: string;
+	export let waterings: { uuid: string; watered_at: string; amount_liters: number }[] = [];
 
-	let waterings: { uuid: string; watered_at: string; amount_liters: number }[] = [];
+	const dispatch = createEventDispatcher();
 	let error: string | null = null;
-	let loading = true;
-
-	async function loadWaterings() {
-		loading = true;
-		error = null;
-
-		try {
-			const result = await getWateringsForTree(treeId);
-			waterings = result;
-		} catch (err) {
-			error = 'Fehler beim Laden der Gießungen.';
-			console.error(err);
-		} finally {
-			loading = false;
-		}
-	}
 
 	async function deleteWatering(index: number) {
 		const toDelete = waterings[index];
@@ -30,21 +14,20 @@
 
 		try {
 			await deleteWateringFromDB(toDelete.uuid);
-			await loadWaterings(); // Liste aktualisieren
+			dispatch('reload');
+			dispatch('contentChanged');
 		} catch (err) {
 			error = 'Fehler beim Löschen.';
 			console.error(err);
 		}
 	}
-
-	onMount(loadWaterings);
 </script>
 
-{#if loading}
-	<Notice tone="info">Lade Gießdaten …</Notice>
-{:else if error}
+{#if error}
 	<Notice tone="warning">{error}</Notice>
-{:else if waterings.length === 0}
+{/if}
+
+{#if waterings.length === 0}
 	<Notice tone="info">Bisher keine Gießvorgänge für diesen Baum.</Notice>
 {:else}
 	<table class="w-full text-sm text-left text-gray-700 border-t border-gray-200 mt-2">
@@ -64,7 +47,7 @@
 						<button
 							on:click={() => deleteWatering(index)}
 							class="text-red-600 hover:underline text-sm"
-							title="Eintrag löschen (noch ohne Funktion)"
+							title="Eintrag löschen"
 						>
 							Löschen
 						</button>

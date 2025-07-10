@@ -5,13 +5,17 @@
 	import type { TreeData } from '$types/tree';
 
 	import { Accordion } from '$components/ui';
+	import type AccordionType from '$components/ui/Accordion.svelte';
+
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
-	import { AdoptTreeButton, WaterTreeButton, TreeMetric, WateringHistory } from '$components/trees';
+	import { AdoptTreeButton, WaterTreeButton, TreeMetric, WateringSection } from '$components/trees';
 	import Notice from '$components/ui/Notice.svelte';
 
 	export let activeTabIndex = 0;
 	const handleTabChange = (tab: number) => (activeTabIndex = tab);
+
+	let historyAccordionRef: AccordionType;
 
 	let openAbout = true;
 	let openWater = false;
@@ -116,14 +120,18 @@
 						</div>
 					</Accordion>
 					<hr />
-					<Accordion bind:open={openHistory}>
+					<Accordion bind:open={openHistory} bind:this={historyAccordionRef}>
 						<div slot="head">
 							<p class="text-black font-bold">Wer wann gegossen hat</p>
 						</div>
 						<div slot="details">
-							<WateringHistory treeId={tree.uuid} />
+							<WateringSection
+								treeId={tree.uuid}
+								on:contentChanged={() => historyAccordionRef?.updateHeightExternally()}
+							/>
 						</div>
 					</Accordion>
+
 					<hr />
 					<WaterTreeButton {tree} />
 					<AdoptTreeButton {tree} />
