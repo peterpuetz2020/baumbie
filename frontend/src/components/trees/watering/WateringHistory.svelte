@@ -28,7 +28,7 @@
 {/if}
 
 {#if waterings.length === 0}
-	<Notice tone="info">Bisher keine Gießvorgänge für diesen Baum.</Notice>
+	<Notice tone="info">Bisher wurden noch keine Gießungen für diesen Baum eingetragen.</Notice>
 {:else}
 	<table class="w-full text-sm text-left text-gray-700 border-t border-gray-200 mt-2">
 		<thead>

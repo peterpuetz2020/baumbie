@@ -85,7 +85,7 @@
 				{#if activeTabIndex === 0}
 					<Accordion bind:open={openAbout}>
 						<div slot="head">
-							<p class="text-black font-bold">Über diesen Baum</p>
+							<p class="text-black font-bold">🌳 Über diesen Baum</p>
 						</div>
 						<div slot="details">
 							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
@@ -110,7 +110,7 @@
 					<hr />
 					<Accordion bind:open={openWater}>
 						<div slot="head">
-							<p class="text-black font-bold">Wasserbedarf</p>
+							<p class="text-black font-bold">💦 Wasserbedarf</p>
 						</div>
 						<div slot="details">
 							<Notice tone="info">
@@ -122,7 +122,7 @@
 					<hr />
 					<Accordion bind:open={openHistory} bind:this={historyAccordionRef}>
 						<div slot="head">
-							<p class="text-black font-bold">Wer wann gegossen hat</p>
+							<p class="text-black font-bold">🚿 Gießungen</p>
 						</div>
 						<div slot="details">
 							<WateringSection

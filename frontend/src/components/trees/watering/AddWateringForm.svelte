@@ -3,11 +3,15 @@
 	import { createWatering } from '$lib/supabase';
 	import { page } from '$app/stores';
 	import { get } from 'svelte/store';
+	import { onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	let liter: number = 0;
 	let wateredAt: string = '';
 	let errorMessage: string | null = null;
 	let noticeMessage: string | null = null;
+
+	const dispatch = createEventDispatcher();
 
 	const handleWater = async (e: SubmitEvent) => {
 		e.preventDefault();
@@ -30,14 +34,17 @@
 				watered_at: wateredAt
 			});
 
-			noticeMessage = 'Eintrag erfolgreich gespeichert ✅';
-			liter = 0;
-			wateredAt = '';
+			dispatch('success');
 		} catch (err) {
 			errorMessage = 'Fehler beim Speichern des Gieß-Eintrags.';
 			console.error(err);
 		}
 	};
+
+	onMount(() => {
+		const today = new Date().toISOString().slice(0, 10); // "2025-07-11"
+		wateredAt = today;
+	});
 </script>
 
 <form on:submit={handleWater} class="flex flex-col gap-y-4">
@@ -71,6 +78,6 @@
 	</div>
 
 	<div class="flex flex-col gap-y-2">
-		<Button variant="primary" type="submit" className="w-full">Speichern</Button>
+		<Button variant="watering" type="submit" className="w-full">Gießung eintragen</Button>
 	</div>
 </form>
