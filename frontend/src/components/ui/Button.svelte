@@ -1,5 +1,5 @@
 <script lang="ts">
-	type ButtonVariant = 'default' | 'primary' | 'secondary' | 'danger';
+	type ButtonVariant = 'default' | 'primary' | 'secondary' | 'danger' | 'watering';
 	type ButtonType = 'submit' | 'button' | 'reset';
 
 	export let variant: ButtonVariant = 'default';
@@ -14,6 +14,7 @@
 		primary: 'border-green-600 bg-green-600 text-white hover:bg-green-800',
 		secondary: 'border-green-500 text-black hover:bg-green-100',
 		danger: 'border-red-600 text-black hover:bg-red-800 hover:text-white',
+		watering: 'border-[#7C98B2] bg-[#7C98B2] text-white hover:brightness-110'
 	};
 </script>
 
