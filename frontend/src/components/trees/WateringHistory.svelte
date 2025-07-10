@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getWateringsForTree } from '$lib/supabase';
+	import { getWateringsForTree, deleteWatering as deleteWateringFromDB } from '$lib/supabase';
 	import Notice from '$components/ui/Notice.svelte';
 
 	export let treeId: string;
 
-	let waterings: { watered_at: string; amount_liters: number }[] = [];
+	let waterings: { uuid: string; watered_at: string; amount_liters: number }[] = [];
 	let error: string | null = null;
 	let loading = true;
 
-	onMount(async () => {
+	async function loadWaterings() {
+		loading = true;
+		error = null;
+
 		try {
 			const result = await getWateringsForTree(treeId);
 			waterings = result;
@@ -19,12 +22,22 @@
 		} finally {
 			loading = false;
 		}
-	});
+	}
 
 	async function deleteWatering(index: number) {
-		// Später implementieren (wenn ID vorhanden)
-		waterings.splice(index, 1);
+		const toDelete = waterings[index];
+		if (!toDelete?.uuid) return;
+
+		try {
+			await deleteWateringFromDB(toDelete.uuid);
+			await loadWaterings(); // Liste aktualisieren
+		} catch (err) {
+			error = 'Fehler beim Löschen.';
+			console.error(err);
+		}
 	}
+
+	onMount(loadWaterings);
 </script>
 
 {#if loading}

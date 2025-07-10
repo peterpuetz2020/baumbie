@@ -24,11 +24,11 @@ export async function createWatering(input: WateringInput): Promise<void> {
 }
 
 export async function getWateringsForTree(tree_uuid: string): Promise<
-	{ watered_at: string; amount_liters: number }[]
+	{ uuid: string; watered_at: string; amount_liters: number }[]
 > {
 	const { data, error } = await supabase
 		.from('waterings')
-		.select('watered_at, amount_liters')
+		.select('uuid, watered_at, amount_liters')
 		.eq('tree_uuid', tree_uuid)
 		.order('watered_at', { ascending: false });
 
@@ -37,4 +37,12 @@ export async function getWateringsForTree(tree_uuid: string): Promise<
 	}
 
 	return data ?? [];
+}
+
+export async function deleteWatering(uuid: string): Promise<void> {
+	const { error } = await supabase.from('waterings').delete().eq('uuid', uuid);
+
+	if (error) {
+		throw new Error(`Fehler beim Löschen: ${error.message}`);
+	}
 }
