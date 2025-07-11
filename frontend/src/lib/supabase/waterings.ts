@@ -24,13 +24,19 @@ export async function createWatering(input: WateringInput): Promise<void> {
 }
 
 export async function getWateringsForTree(tree_uuid: string): Promise<
-	{ uuid: string; watered_at: string; amount_liters: number }[]
+	{
+		uuid: string;
+		watered_at: string;
+		amount_liters: number;
+		user_uuid: string | null;
+		created_at: string;
+	}[]
 > {
 	const { data, error } = await supabase
 		.from('waterings')
-		.select('uuid, watered_at, amount_liters')
+		.select('uuid, watered_at, amount_liters, user_uuid, created_at')
 		.eq('tree_uuid', tree_uuid)
-		.order('watered_at', { ascending: false });
+		.order('created_at', { ascending: false });
 
 	if (error) {
 		throw new Error(`Fehler beim Abrufen der Gießungen: ${error.message}`);

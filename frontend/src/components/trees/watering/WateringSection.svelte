@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getWateringsForTree } from '$lib/supabase';
+	import { getWateringsForTree, getCurrentUser } from '$lib/supabase';
 	import WateringHistory from './WateringHistory.svelte';
 	import Notice from '$components/ui/Notice.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -8,9 +8,17 @@
 
 	export let treeId: string;
 
+	let currentUserId: string | null = null;
+
 	let loading = true;
 	let error: string | null = null;
-	let waterings: { uuid: string; watered_at: string; amount_liters: number }[] = [];
+	let waterings: {
+		uuid: string;
+		watered_at: string;
+		amount_liters: number;
+		user_uuid: string | null;
+		created_at: string; // brauchen wir aktuell (noch) nicht
+	}[] = [];
 
 	async function loadWaterings() {
 		try {
@@ -27,7 +35,11 @@
 		}
 	}
 
-	onMount(loadWaterings);
+	onMount(async () => {
+		const user = await getCurrentUser();
+		currentUserId = user?.id ?? null;
+		await loadWaterings();
+	});
 </script>
 
 {#if error}
@@ -35,9 +47,5 @@
 {:else if loading}
 	<Notice tone="info">Wird geladen...</Notice>
 {:else}
-	<WateringHistory
-		{waterings}
-		on:reload={loadWaterings}
-		on:contentChanged={() => dispatch('contentChanged')}
-	/>
+	<WateringHistory {waterings} {currentUserId} on:reload={loadWaterings} />
 {/if}

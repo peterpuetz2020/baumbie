@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { WaterField, DateField, Button, Notice } from '$components/ui';
-	import { createWatering } from '$lib/supabase';
+	import { createWatering, getCurrentUser } from '$lib/supabase';
 	import { page } from '$app/stores';
 	import { get } from 'svelte/store';
 	import { onMount } from 'svelte';
@@ -28,10 +28,13 @@
 		}
 
 		try {
+			const user = await getCurrentUser();
+
 			await createWatering({
 				tree_uuid: treeId,
 				amount_liters: liter,
-				watered_at: wateredAt
+				watered_at: wateredAt,
+				user_uuid: user?.id ?? null
 			});
 
 			dispatch('success');
