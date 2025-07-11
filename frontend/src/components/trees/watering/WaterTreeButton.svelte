@@ -9,7 +9,7 @@
 {#if tree}
 	<div class="flex flex-col gap-2">
 		<Button variant="watering" onClick={() => goto(`/trees/${tree.uuid}/water`)}>
-			Gieße diesen Baum 🚿
+			Gieße diesen Baum
 		</Button>
 	</div>
 {/if}

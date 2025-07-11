@@ -30,13 +30,13 @@
 			startEmojiRain();
 			showParticles = true;
 
-			// Nach Sickern → PHASE 3
+			// Sickern läuft ca. 3.8s, dann Phase 3
 			setTimeout(() => {
 				showParticles = false;
 				showTree = true;
 				showText = true;
-			}, 5500);
-		}, 1000);
+			}, 3800);
+		}, 1600);
 	});
 
 	function startEmojiRain() {
@@ -64,7 +64,7 @@
 				style="
 					left: {drop.left}%;
 					animation-delay: {drop.delay}s;
-					animation-duration: {drop.duration}s;
+					animation-duration: 2.2s;
 					transform: scale({drop.scale});
 				"
 			>
@@ -78,7 +78,7 @@
 	{/if}
 
 	{#if showText}
-		<div class="success-text">Gießung erfolgreich abgespeichert</div>
+		<div class="success-text">Gießung erfolgreich abgespeichert ✅</div>
 	{/if}
 </div>
 
@@ -97,7 +97,7 @@
 		top: 0;
 		left: 50%;
 		transform: translateX(-50%);
-		animation: dropThrough 1s ease-in forwards;
+		animation: dropThrough 1.6s ease-in forwards;
 		z-index: 5;
 	}
 
@@ -118,7 +118,7 @@
 	/* 🌱 Phase 2: Sickereffekt (sanft & länger) */
 	.emoji-particle {
 		position: absolute;
-		top: 40%;
+		top: 33%; /* vorher 40% → höherer Start */
 		font-size: 1.2rem;
 		opacity: 0;
 		animation-timing-function: ease-in-out;
@@ -140,20 +140,17 @@
 			transform: translateY(0) translateX(0) rotate(0deg);
 			opacity: 0;
 		}
-		10% {
-			opacity: 0.3;
+		20% {
+			opacity: 0.5;
 		}
-		30% {
-			opacity: 0.8;
-		}
-		60% {
+		40% {
 			opacity: 1;
 		}
-		90% {
-			opacity: 0.7;
+		60% {
+			opacity: 0.8;
 		}
 		100% {
-			transform: translateY(200px) translateX(-20px) rotate(-15deg);
+			transform: translateY(100px) translateX(-16px) rotate(-10deg); /* kürzerer Fall */
 			opacity: 0;
 		}
 	}
@@ -163,20 +160,17 @@
 			transform: translateY(0) translateX(0) rotate(0deg);
 			opacity: 0;
 		}
-		10% {
-			opacity: 0.3;
+		20% {
+			opacity: 0.5;
 		}
-		30% {
-			opacity: 0.8;
-		}
-		60% {
+		40% {
 			opacity: 1;
 		}
-		90% {
-			opacity: 0.7;
+		60% {
+			opacity: 0.8;
 		}
 		100% {
-			transform: translateY(200px) translateX(20px) rotate(15deg);
+			transform: translateY(100px) translateX(16px) rotate(10deg); /* kürzerer Fall */
 			opacity: 0;
 		}
 	}
