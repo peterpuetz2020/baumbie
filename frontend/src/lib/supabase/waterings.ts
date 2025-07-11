@@ -45,6 +45,50 @@ export async function getWateringsForTree(tree_uuid: string): Promise<
 	return data ?? [];
 }
 
+export async function getWateringsForUser(user_uuid: string): Promise<
+	{
+		uuid: string;
+		watered_at: string;
+		amount_liters: number;
+		user_uuid: string | null;
+		created_at: string;
+		tree?: {
+			uuid: string;
+			tree_type_german: string;
+		} | null;
+	}[]
+> {
+	const { data, error } = await supabase
+		.from('waterings')
+		.select(`
+			uuid,
+			watered_at,
+			amount_liters,
+			user_uuid,
+			created_at,
+			tree:tree_uuid (
+				uuid,
+				tree_type_german
+			)
+		`)
+		.eq('user_uuid', user_uuid)
+		.order('created_at', { ascending: false });
+
+	if (error) {
+		throw new Error(`Fehler beim Abrufen der Gießungen für User: ${error.message}`);
+	}
+
+	// 💡 fallback, falls Supabase doch als Array liefert:
+	const fixed = (data ?? []).map((w) => ({
+		...w,
+		tree: Array.isArray(w.tree) ? w.tree[0] ?? null : w.tree
+	}));
+
+	return fixed;
+}
+
+
+
 export async function deleteWatering(uuid: string): Promise<void> {
 	const { error } = await supabase.from('waterings').delete().eq('uuid', uuid);
 

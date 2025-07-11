@@ -3,7 +3,7 @@
 	import { get } from 'svelte/store';
 
 	// UI-Komponenten
-	import { Button, Heading, Notice } from '$components/ui';
+	import { Button, Notice } from '$components/ui';
 
 	// Kartenlogik
 	import { focusTreeById, mapStore } from '$lib/map';
@@ -43,38 +43,34 @@
 	}
 </script>
 
-<div class="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-3">
-	<Heading level={2}>Bäume in meiner Nähe</Heading>
+<Button variant="primary" onClick={findTreesNearby}>Jetzt Bäume finden</Button>
 
-	<Button variant="primary" onClick={findTreesNearby}>Jetzt Bäume finden</Button>
+{#if errorMessage}
+	<Notice tone="warning">{errorMessage}</Notice>
+{/if}
 
-	{#if errorMessage}
-		<Notice tone="warning">{errorMessage}</Notice>
-	{/if}
+{#if isFiltered}
+	<Notice tone="info">
+		Hinweis: Es werden nur Bäume der ausgewählten Arten berücksichtigt.<br />
+		<small>
+			Ausgewählt: {selectedSpecies.join(', ')}
+		</small>
+	</Notice>
+{/if}
 
-	{#if isFiltered}
-		<Notice tone="info">
-			Hinweis: Es werden nur Bäume der ausgewählten Arten berücksichtigt.<br />
-			<small>
-				Ausgewählt: {selectedSpecies.join(', ')}
-			</small>
-		</Notice>
-	{/if}
+{#if treesNearby.length}
+	<ul class="mt-4 divide-y divide-gray-200 text-sm">
+		{#each treesNearby as tree}
+			<li class="flex items-center justify-between py-2">
+				<div class="flex items-center gap-2">
+					<span>{tree.name}</span>
+					<img src="/icons/tree.svg" alt="Baum" class="w-4 h-4" />
+				</div>
 
-	{#if treesNearby.length}
-		<ul class="mt-4 divide-y divide-gray-200 text-sm">
-			{#each treesNearby as tree}
-				<li class="flex items-center justify-between py-2">
-					<div class="flex items-center gap-2">
-						<span>{tree.name}</span>
-						<img src="/icons/tree.svg" alt="Baum" class="w-4 h-4" />
-					</div>
-
-					<Button onClick={() => handleClick(tree)}>
-						{tree.distance.toFixed(1)} m →
-					</Button>
-				</li>
-			{/each}
-		</ul>
-	{/if}
-</div>
+				<Button onClick={() => handleClick(tree)}>
+					{tree.distance.toFixed(1)} m →
+				</Button>
+			</li>
+		{/each}
+	</ul>
+{/if}

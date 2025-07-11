@@ -2,6 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { deleteWatering as deleteWateringFromDB } from '$lib/supabase';
 	import { Button, Notice } from '$components/ui';
+	import { get } from 'svelte/store';
+	import { focusTreeById, mapStore } from '$lib/map';
 
 	// Eingehende Gießungen: uuid, Datum, Menge in Litern
 	export let waterings: {
@@ -10,8 +12,14 @@
 		amount_liters: number;
 		user_uuid: string | null;
 		created_at: string;
+		tree?: {
+			uuid: string;
+			tree_type_german?: string;
+		};
 	}[] = [];
 	export let currentUserId: string | null = null;
+
+	export let mode: 'tree' | 'user' = 'tree';
 
 	const dispatch = createEventDispatcher();
 
@@ -73,6 +81,13 @@
 			setTimeout(() => deleteWatering(index), 250);
 		}
 	}
+
+	function handleTreeClick(treeId: string) {
+		const map = get(mapStore);
+		if (map) {
+			focusTreeById(map, treeId);
+		}
+	}
 </script>
 
 {#if error}
@@ -82,14 +97,19 @@
 {#if waterings.length === 0}
 	<Notice tone="info">Bisher wurden noch keine Gießungen für diesen Baum eingetragen.</Notice>
 {:else}
-	<table class="w-full text-sm text-left border-separate border-spacing-y-1 mt-3">
+	<!-- 🔁 Desktop/Tabletdarstellung -->
+	<table class="w-full text-sm text-left border-separate border-spacing-y-1 mt-3 hidden md:table">
 		<thead class="text-gray-500 text-xs tracking-wider">
 			<tr>
 				<th class="px-3 py-2">Datum</th>
 				<th class="px-3 py-2">Liter</th>
 				<th class="px-3 py-2">Gießkraft</th>
-				<th class="px-3 py-2">Durch</th>
-				<th class="px-3 py-2 hidden md:table-cell">Aktion</th>
+				{#if mode === 'tree'}
+					<th class="px-3 py-2">Durch</th>
+				{:else}
+					<th class="px-3 py-2">Baum</th>
+				{/if}
+				<th class="px-3 py-2">Aktion</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -104,14 +124,24 @@
 					<td class="px-3 py-2">{formatDate(watering.watered_at)}</td>
 					<td class="px-3 py-2">{watering.amount_liters}</td>
 					<td class="px-3 py-2">{waterEmoji(watering.amount_liters)}</td>
-
-					<!-- Durch -->
 					<td class="px-3 py-2">
-						<em>{currentUserId && watering.user_uuid === currentUserId ? 'Du' : 'anonym'}</em>
+						{#if mode === 'tree'}
+							<em>{currentUserId && watering.user_uuid === currentUserId ? 'Du' : 'anonym'}</em>
+						{:else if watering.tree?.uuid}
+							<Button
+								variant="secondary"
+								onClick={() => watering.tree && handleTreeClick(watering.tree.uuid)}
+								className="gap-1 text-sm"
+							>
+								{watering.tree.tree_type_german ?? 'Baum'}
+								<img src="/icons/tree.svg" alt="Baum" class="w-4 h-4" />
+								<span>→</span>
+							</Button>
+						{:else}
+							<em>Unbekannter Baum</em>
+						{/if}
 					</td>
-
-					<!-- Entfernen (nur für eigene Gießungen sichtbar, ab md) -->
-					<td class="px-3 py-2 hidden md:table-cell">
+					<td class="px-3 py-2">
 						{#if currentUserId && watering.user_uuid === currentUserId}
 							<Button
 								variant="danger"
@@ -120,14 +150,57 @@
 							>
 								Entfernen
 							</Button>
-						{:else if currentUserId}
-							<Notice tone="warning">Nicht deine Gießung</Notice>
 						{:else}
-							<Notice tone="warning">Nicht eingeloggt</Notice>
+							<em>-</em>
 						{/if}
 					</td>
 				</tr>
 			{/each}
 		</tbody>
 	</table>
+
+	<!-- 📱 Mobile Cards -->
+	<div class="md:hidden mt-3 space-y-3">
+		{#each waterings as watering, index}
+			<div
+				class="bg-white rounded-lg shadow-sm p-4 text-sm"
+				on:touchstart={handleTouchStart}
+				on:touchend={(e) => handleSwipe(index, e)}
+			>
+				{#if mode === 'user' && watering.tree?.uuid}
+					<div class="flex justify-center mb-4">
+						<Button
+							variant="secondary"
+							onClick={() => watering.tree && handleTreeClick(watering.tree.uuid)}
+							className="gap-1 text-sm"
+						>
+							{watering.tree.tree_type_german ?? 'Baum'} →
+						</Button>
+					</div>
+				{/if}
+
+				<div class="flex justify-between text-gray-500 mb-2">
+					<span class="font-semibold">Datum</span>
+					<span class="text-black">{formatDate(watering.watered_at)}</span>
+				</div>
+				<div class="flex justify-between text-gray-500 mb-2">
+					<span class="font-semibold">Liter</span>
+					<span class="text-black">{watering.amount_liters}</span>
+				</div>
+				<div class="flex justify-between text-gray-500 mb-2">
+					<span class="font-semibold">Gießkraft</span>
+					<span class="text-black">{waterEmoji(watering.amount_liters)}</span>
+				</div>
+
+				{#if mode === 'tree'}
+					<div class="flex justify-between text-gray-500">
+						<span class="font-semibold">Durch</span>
+						<span class="text-black">
+							<em>{currentUserId && watering.user_uuid === currentUserId ? 'Du' : 'anonym'}</em>
+						</span>
+					</div>
+				{/if}
+			</div>
+		{/each}
+	</div>
 {/if}
