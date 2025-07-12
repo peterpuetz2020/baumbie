@@ -42,8 +42,12 @@
 {:else}
 	<!-- 💻 Desktop/Tabletdarstellung -->
 	<WateringTable {waterings} {currentUserId} {mode}>
-		<svelte:fragment slot="treeButton" let:w>
-			<FlyToTreeButton treeId={w.tree?.uuid} treeSpecies={w.tree?.tree_type_german ?? 'Baum'} />
+		<svelte:fragment slot="treeButton" let:w let:setWarning>
+			<FlyToTreeButton
+				treeId={w.tree?.uuid}
+				treeSpecies={w.tree?.tree_type_german ?? 'Baum'}
+				on:warning={(e) => setWarning?.(e.detail.message, w.uuid)}
+			/>
 		</svelte:fragment>
 
 		<svelte:fragment slot="deleteButton" let:w>

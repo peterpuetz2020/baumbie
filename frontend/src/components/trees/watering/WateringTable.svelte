@@ -6,6 +6,29 @@
 	export let waterings: WateringWithTree[] = [];
 	export let currentUserId: string | null = null;
 	export let mode: 'tree' | 'user' = 'tree';
+
+	import { onDestroy } from 'svelte';
+	import { Notice } from '$components/ui';
+
+	let warningMessage: string | null = null;
+	let activeWarningId: string | null = null;
+	let warningTimeout: ReturnType<typeof setTimeout> | null = null;
+
+	function setWarning(msg: string, id: string) {
+		warningMessage = msg;
+		activeWarningId = id;
+
+		if (warningTimeout) clearTimeout(warningTimeout);
+		warningTimeout = setTimeout(() => {
+			warningMessage = null;
+			activeWarningId = null;
+			warningTimeout = null;
+		}, 5000);
+	}
+
+	onDestroy(() => {
+		if (warningTimeout) clearTimeout(warningTimeout);
+	});
 </script>
 
 <table class="w-full text-sm text-left border-separate border-spacing-y-1 mt-3 hidden md:table">
@@ -36,7 +59,7 @@
 					{#if mode === 'tree'}
 						<em>{currentUserId && w.user_uuid === currentUserId ? 'Du' : 'anonym'}</em>
 					{:else if w.tree?.uuid}
-						<slot name="treeButton" {w} />
+						<slot name="treeButton" {w} {setWarning} />
 					{:else}
 						<em>Unbekannter Baum</em>
 					{/if}
@@ -50,6 +73,13 @@
 					{/if}
 				</td>
 			</tr>
+			{#if w.uuid === activeWarningId && warningMessage}
+				<tr>
+					<td colspan="5" class="px-3 py-2">
+						<Notice tone="warning">{warningMessage}</Notice>
+					</td>
+				</tr>
+			{/if}
 		{/each}
 	</tbody>
 </table>
