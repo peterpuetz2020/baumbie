@@ -23,11 +23,12 @@
 	<div class="mt-3 space-y-3">
 		{#each waterings as watering}
 			<WateringCard {watering} {mode} {currentUserId}>
-				<svelte:fragment slot="treeButton" let:watering>
+				<svelte:fragment slot="treeButton" let:watering let:setWarning>
 					{#if watering.tree?.uuid}
 						<FlyToTreeButton
 							treeId={watering.tree.uuid}
-							label={watering.tree.tree_type_german ?? 'Baum'}
+							treeSpecies={watering.tree.tree_type_german ?? 'Baum'}
+							on:warning={(e) => setWarning(e.detail.message)}
 						/>
 					{/if}
 				</svelte:fragment>
@@ -42,7 +43,7 @@
 	<!-- 💻 Desktop/Tabletdarstellung -->
 	<WateringTable {waterings} {currentUserId} {mode}>
 		<svelte:fragment slot="treeButton" let:w>
-			<FlyToTreeButton treeId={w.tree?.uuid} label={w.tree?.tree_type_german ?? 'Baum'} />
+			<FlyToTreeButton treeId={w.tree?.uuid} treeSpecies={w.tree?.tree_type_german ?? 'Baum'} />
 		</svelte:fragment>
 
 		<svelte:fragment slot="deleteButton" let:w>

@@ -1,18 +1,54 @@
 <script lang="ts">
+	// Svelte lifecycle
+	import { onDestroy } from 'svelte';
+
+	// UI & Utilities
+	import { Notice } from '$components/ui';
 	import { formatDate } from '$lib/utils/formatDate';
 	import { waterEmoji } from '$lib/waterings';
 
+	// Types
 	import type { WateringWithTree } from '$types/watering';
 
+	// Props
 	export let watering: WateringWithTree;
 	export let mode: 'tree' | 'user';
 	export let currentUserId: string | null;
+
+	// Local state for warning message
+	let warningMessage: string | null = null;
+	let warningTimeout: ReturnType<typeof setTimeout> | null = null;
+
+	function setWarning(msg: string) {
+		warningMessage = msg;
+
+		if (warningTimeout) {
+			clearTimeout(warningTimeout);
+		}
+
+		warningTimeout = setTimeout(() => {
+			warningMessage = null;
+			warningTimeout = null;
+		}, 5000);
+	}
+
+	// Cleanup on component destroy
+	onDestroy(() => {
+		if (warningTimeout) {
+			clearTimeout(warningTimeout);
+		}
+	});
 </script>
 
 <div class="bg-white border-2 border-[#7C98B2] rounded-xl shadow-sm p-4 text-sm">
 	{#if mode === 'user' && watering.tree?.uuid}
 		<div class="flex justify-left mb-4">
-			<slot name="treeButton" {watering} />
+			<slot name="treeButton" {watering} {setWarning} />
+		</div>
+	{/if}
+	{#if warningMessage}
+		<div class="mb-3 text-xs text-left leading-snug">
+			<Notice tone="warning">{warningMessage}</Notice>
 		</div>
 	{/if}
 
