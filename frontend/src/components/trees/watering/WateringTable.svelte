@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { formatDate, waterEmoji } from '$lib/utils/watering';
+	import { formatDate } from '$lib/utils/formatDate';
+	import { waterEmoji } from '$lib/waterings';
 	import type { WateringWithTree } from '$types/watering';
 
 	export let waterings: WateringWithTree[] = [];
@@ -8,17 +9,17 @@
 </script>
 
 <table class="w-full text-sm text-left border-separate border-spacing-y-1 mt-3 hidden md:table">
-	<thead class="text-gray-500 text-xs tracking-wider">
+	<thead class="text-gray-500 text-xs tracking-wide font-medium">
 		<tr>
-			<th class="px-3 py-2">Datum</th>
-			<th class="px-3 py-2">Liter</th>
-			<th class="px-3 py-2">Gießkraft</th>
+			<th class="px-3 py-2">🗓️ Datum</th>
+			<th class="px-3 py-2">🚰 Liter</th>
+			<th class="px-3 py-2">🚿 Gießkraft</th>
 			{#if mode === 'tree'}
-				<th class="px-3 py-2">Durch</th>
+				<th class="px-3 py-2">👤 Durch</th>
 			{:else}
-				<th class="px-3 py-2">Baum</th>
+				<th class="px-3 py-2">🌳 Baum</th>
 			{/if}
-			<th class="px-3 py-2">Aktion</th>
+			<th class="px-3 py-2">⚙ Aktion</th>
 		</tr>
 	</thead>
 

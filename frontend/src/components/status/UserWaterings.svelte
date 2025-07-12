@@ -46,7 +46,7 @@
 {#if error}
 	<Notice tone="warning">{error}</Notice>
 {:else if loading}
-	<p class="text-sm text-gray-500">Gießungen werden geladen …</p>
+	<Notice tone="info">Wird geladen...</Notice>
 {:else if waterings.length > 0}
 	<WateringHistory {waterings} {currentUserId} mode="user" on:reload={loadWaterings} />
 {:else}
