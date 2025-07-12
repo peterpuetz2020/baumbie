@@ -9,7 +9,7 @@
 
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
-	import { AdoptTreeButton, WaterTreeButton, TreeMetric, WateringSection } from '$components/trees';
+	import { AdoptTreeButton, WaterTreeButton, TreeMetric, TreeWaterings } from '$components/trees';
 	import Notice from '$components/ui/Notice.svelte';
 
 	export let activeTabIndex = 0;
@@ -125,7 +125,7 @@
 							<p class="text-black font-bold">🚿 Gießungen</p>
 						</div>
 						<div slot="details">
-							<WateringSection
+							<TreeWaterings
 								treeId={tree.uuid}
 								on:contentChanged={() => historyAccordionRef?.updateHeightExternally()}
 							/>

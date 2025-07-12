@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { getCurrentUser, getWateringsForUser } from '$lib/supabase';
 	import WateringHistory from '$components/trees/watering/WateringHistory.svelte';
+	import type { WateringWithTree } from '$types/watering';
+
 	import { Notice } from '$components/ui';
 
 	let currentUserId: string | null = null;
@@ -10,13 +12,7 @@
 	let loading = true;
 	let error: string | null = null;
 
-	let waterings: {
-		uuid: string;
-		watered_at: string;
-		amount_liters: number;
-		user_uuid: string | null;
-		created_at: string;
-	}[] = [];
+	let waterings: WateringWithTree[] = [];
 
 	async function loadWaterings() {
 		try {
@@ -52,7 +48,7 @@
 {:else if loading}
 	<p class="text-sm text-gray-500">Gießungen werden geladen …</p>
 {:else if waterings.length > 0}
-	<WateringHistory {waterings} {currentUserId} mode="user" />
+	<WateringHistory {waterings} {currentUserId} mode="user" on:reload={loadWaterings} />
 {:else}
 	<Notice tone="info">
 		Bisher hast du noch keine Gießungen eingetragen.

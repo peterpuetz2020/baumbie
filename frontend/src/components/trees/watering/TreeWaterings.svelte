@@ -4,6 +4,8 @@
 	import WateringHistory from './WateringHistory.svelte';
 	import Notice from '$components/ui/Notice.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import type { WateringWithTree } from '$types/watering';
+
 	const dispatch = createEventDispatcher();
 
 	export let treeId: string;
@@ -12,13 +14,7 @@
 
 	let loading = true;
 	let error: string | null = null;
-	let waterings: {
-		uuid: string;
-		watered_at: string;
-		amount_liters: number;
-		user_uuid: string | null;
-		created_at: string; // brauchen wir aktuell (noch) nicht
-	}[] = [];
+	let waterings: WateringWithTree[] = [];
 
 	async function loadWaterings() {
 		try {

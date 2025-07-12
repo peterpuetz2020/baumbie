@@ -1,5 +1,8 @@
+<script context="module" lang="ts">
+	export type ButtonVariant = 'default' | 'primary' | 'secondary' | 'danger' | 'watering';
+</script>
+
 <script lang="ts">
-	type ButtonVariant = 'default' | 'primary' | 'secondary' | 'danger' | 'watering';
 	type ButtonType = 'submit' | 'button' | 'reset';
 
 	export let variant: ButtonVariant = 'default';
