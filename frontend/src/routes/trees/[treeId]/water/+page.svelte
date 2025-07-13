@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Modal } from '$components/overlay';
-	import { AddWateringForm } from '$components/trees';
-	import WateringSuccess from '$components/trees//watering/WateringSuccess.svelte';
+	import { AddWateringForm, WateringSuccess } from '$components/trees';
 	import Notice from '$components/ui/Notice.svelte';
 
 	let modalOpen = true;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getCurrentUser, getWateringsForUser } from '$lib/supabase';
-	import { WateringHistory } from '$components/trees';
+	import { WateringHistory } from '$components/waterings';
 	import { Notice } from '$components/ui';
 
 	import type { Watering } from '$types/watering';

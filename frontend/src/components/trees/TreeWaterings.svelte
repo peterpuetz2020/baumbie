@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { getWateringsForTree, getCurrentUser } from '$lib/supabase';
-	import WateringHistory from './WateringHistory.svelte';
-	import Notice from '$components/ui/Notice.svelte';
+	import { WateringHistory } from '$components/waterings';
+	import { Notice } from '$components/ui';
 	import type { Watering } from '$types/watering';
 
 	export let treeId: string;
