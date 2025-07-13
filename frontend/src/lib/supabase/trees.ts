@@ -20,6 +20,10 @@ export async function fetchSpecies(tree_uuid: string): Promise<string | null> {
 
 /**
  * Holt die Baumarten für eine Liste von Tree-UUIDs und gibt eine Map zurück.
+ * 
+ * Diese Funktion wird aktuell nicht verwendet, kann aber nützlich sein,
+ * z.B. wenn wir die Baumart als Prop an Komponenten wie `WateringHistory`
+ * oder `FlyToTreeButton` durchreichen möchten. Daher bewusst noch nicht entfernt.
  */
 export async function loadSpeciesMap(treeIds: string[]): Promise<Map<string, string>> {
 	const speciesMap = new Map<string, string>();
