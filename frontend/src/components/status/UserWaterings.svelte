@@ -3,8 +3,10 @@
 	import { getCurrentUser, getWateringsForUser } from '$lib/supabase';
 	import { WateringHistory } from '$components/waterings';
 	import { Notice } from '$components/ui';
+	import { loadSpeciesMap } from '$lib/supabase/trees';
 
 	import type { Watering } from '$types/watering';
+	let labelsByTreeId: Map<string, string> = new Map();
 
 	let currentUserId: string | null = null;
 	let loggedIn = false;
@@ -22,6 +24,8 @@
 			if (!loggedIn) return;
 
 			waterings = await getWateringsForUser(currentUserId!);
+			const treeIds = [...new Set(waterings.map((w) => w.tree_uuid))];
+			labelsByTreeId = await loadSpeciesMap(treeIds);
 		} catch (err) {
 			error = 'Fehler beim Laden deiner Gießungen.';
 			console.error(err);
@@ -48,7 +52,13 @@
 {:else if loading}
 	<Notice tone="info">Wird geladen...</Notice>
 {:else if waterings.length > 0}
-	<WateringHistory {waterings} {currentUserId} mode="user" on:reload={loadWaterings} />
+	<WateringHistory
+		{waterings}
+		{currentUserId}
+		{labelsByTreeId}
+		mode="user"
+		on:reload={loadWaterings}
+	/>
 {:else}
 	<Notice tone="info">
 		Bisher hast du noch keine Gießungen eingetragen.
