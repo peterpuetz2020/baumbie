@@ -9,3 +9,9 @@
 >
 	<slot />
 </p>
+
+<style>
+	p :global(a) {
+		text-decoration: underline;
+	}
+</style>

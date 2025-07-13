@@ -64,7 +64,8 @@
 		<p class="mt-8">
 			<a class="underline" href="/imprint">Impressum</a> |
 			<a class="underline" href="/data">Datenschutz</a> |
-			<a class="underline" href="https://codefor.de/bielefeld/">Code for Bielefeld e.V.</a>
+			<a class="underline" href="/baumbie">Über BaumBie</a> |
+			<a class="underline" href="https://codefor.de/bielefeld/">Code for Bielefeld</a>
 		</p>
 	</div>
 </DialogPanel>
