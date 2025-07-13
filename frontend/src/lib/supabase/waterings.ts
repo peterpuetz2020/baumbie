@@ -1,11 +1,6 @@
 import { supabase } from './client';
+import type { Watering, WateringInput } from '$types/watering';
 
-export type WateringInput = {
-	tree_uuid: string;
-	amount_liters: number;
-	watered_at: string; // Format: "YYYY-MM-DD"
-	user_uuid?: string | null;
-};
 
 /**
  * Fügt einen neuen Gießvorgang in die Tabelle `waterings` ein.
@@ -23,15 +18,7 @@ export async function createWatering(input: WateringInput): Promise<void> {
 	}
 }
 
-export async function getWateringsForTree(tree_uuid: string): Promise<
-	{
-		uuid: string;
-		watered_at: string;
-		amount_liters: number;
-		user_uuid: string | null;
-		created_at: string;
-	}[]
-> {
+export async function getWateringsForTree(tree_uuid: string): Promise<Watering[]> {
 	const { data, error } = await supabase
 		.from('waterings')
 		.select('uuid, watered_at, amount_liters, user_uuid, created_at')
@@ -45,32 +32,10 @@ export async function getWateringsForTree(tree_uuid: string): Promise<
 	return data ?? [];
 }
 
-export async function getWateringsForUser(user_uuid: string): Promise<
-	{
-		uuid: string;
-		watered_at: string;
-		amount_liters: number;
-		user_uuid: string | null;
-		created_at: string;
-		tree?: {
-			uuid: string;
-			tree_type_german: string;
-		} | null;
-	}[]
-> {
+export async function getWateringsForUser(user_uuid: string): Promise<Watering[]> {
 	const { data, error } = await supabase
 		.from('waterings')
-		.select(`
-			uuid,
-			watered_at,
-			amount_liters,
-			user_uuid,
-			created_at,
-			tree:tree_uuid (
-				uuid,
-				tree_type_german
-			)
-		`)
+		.select('uuid, watered_at, amount_liters, user_uuid, created_at, tree_uuid')
 		.eq('user_uuid', user_uuid)
 		.order('created_at', { ascending: false });
 
@@ -78,13 +43,7 @@ export async function getWateringsForUser(user_uuid: string): Promise<
 		throw new Error(`Fehler beim Abrufen der Gießungen für User: ${error.message}`);
 	}
 
-	// 💡 fallback, falls Supabase doch als Array liefert:
-	const fixed = (data ?? []).map((w) => ({
-		...w,
-		tree: Array.isArray(w.tree) ? w.tree[0] ?? null : w.tree
-	}));
-
-	return fixed;
+	return data ?? [];
 }
 
 

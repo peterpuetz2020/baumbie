@@ -7,11 +7,12 @@
 	import { FlyToTreeButton } from '$components/actions';
 	import { isMobile } from '$lib/utils/media';
 
-	import type { WateringWithTree } from '$types/watering';
+	import type { Watering } from '$types/watering';
 
-	export let waterings: WateringWithTree[] = [];
+	export let waterings: Watering[] = [];
 	export let currentUserId: string | null = null;
 	export let mode: 'tree' | 'user' = 'tree';
+	export let treeSpecies: (treeId: string) => string = () => 'Baum';
 
 	const dispatch = createEventDispatcher();
 </script>
@@ -24,13 +25,11 @@
 		{#each waterings as watering}
 			<WateringCard {watering} {mode} {currentUserId}>
 				<svelte:fragment slot="treeButton" let:watering let:setWarning>
-					{#if watering.tree?.uuid}
-						<FlyToTreeButton
-							treeId={watering.tree.uuid}
-							treeSpecies={watering.tree.tree_type_german ?? 'Baum'}
-							on:warning={(e) => setWarning(e.detail.message)}
-						/>
-					{/if}
+					<FlyToTreeButton
+						treeId={watering.tree_uuid}
+						treeSpecies={treeSpecies(watering.tree_uuid)}
+						on:warning={(e) => setWarning(e.detail.message)}
+					/>
 				</svelte:fragment>
 
 				<svelte:fragment slot="deleteButton" let:watering>
@@ -42,16 +41,16 @@
 {:else}
 	<!-- 💻 Desktop/Tabletdarstellung -->
 	<WateringTable {waterings} {currentUserId} {mode}>
-		<svelte:fragment slot="treeButton" let:w let:setWarning>
+		<svelte:fragment slot="treeButton" let:watering let:setWarning>
 			<FlyToTreeButton
-				treeId={w.tree?.uuid}
-				treeSpecies={w.tree?.tree_type_german ?? 'Baum'}
-				on:warning={(e) => setWarning?.(e.detail.message, w.uuid)}
+				treeId={watering.tree_uuid}
+				treeSpecies={treeSpecies(watering.tree_uuid)}
+				on:warning={(e) => setWarning?.(e.detail.message, watering.uuid)}
 			/>
 		</svelte:fragment>
 
-		<svelte:fragment slot="deleteButton" let:w>
-			<DeleteWateringButton watering={w} on:reload={() => dispatch('reload')} />
+		<svelte:fragment slot="deleteButton" let:watering>
+			<DeleteWateringButton {watering} on:reload={() => dispatch('reload')} />
 		</svelte:fragment>
 	</WateringTable>
 {/if}

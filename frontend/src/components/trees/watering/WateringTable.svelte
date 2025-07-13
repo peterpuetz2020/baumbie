@@ -1,15 +1,23 @@
 <script lang="ts">
+	// Types
+	import type { Watering } from '$types/watering';
+
+	// Libs & Helpers
 	import { formatDate } from '$lib/utils/formatDate';
 	import { waterEmoji } from '$lib/waterings';
-	import type { WateringWithTree } from '$types/watering';
 
-	export let waterings: WateringWithTree[] = [];
+	// UI
+	import { Notice } from '$components/ui';
+
+	// Lifecycle
+	import { onDestroy } from 'svelte';
+
+	// Props
+	export let waterings: Watering[] = [];
 	export let currentUserId: string | null = null;
 	export let mode: 'tree' | 'user' = 'tree';
 
-	import { onDestroy } from 'svelte';
-	import { Notice } from '$components/ui';
-
+	// Warning logic
 	let warningMessage: string | null = null;
 	let activeWarningId: string | null = null;
 	let warningTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -58,16 +66,14 @@
 				<td class="px-3 py-2">
 					{#if mode === 'tree'}
 						<em>{currentUserId && w.user_uuid === currentUserId ? 'Du' : 'anonym'}</em>
-					{:else if w.tree?.uuid}
-						<slot name="treeButton" {w} {setWarning} />
 					{:else}
-						<em>Unbekannter Baum</em>
+						<slot name="treeButton" watering={w} {setWarning} />
 					{/if}
 				</td>
 
 				<td class="px-3 py-2">
 					{#if currentUserId && w.user_uuid === currentUserId}
-						<slot name="deleteButton" {w} />
+						<slot name="deleteButton" watering={w} />
 					{:else}
 						<em>-</em>
 					{/if}

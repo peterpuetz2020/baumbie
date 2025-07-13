@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Button, Notice } from '$components/ui';
 	import { deleteWatering as deleteWateringFromDB } from '$lib/supabase';
-	import type { WateringWithTree } from '$types/watering';
+	import type { Watering } from '$types/watering';
 	import { createEventDispatcher } from 'svelte';
 
-	export let watering: WateringWithTree;
+	export let watering: Watering;
 
 	const dispatch = createEventDispatcher();
 	let error: string | null = null;

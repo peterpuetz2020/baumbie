@@ -8,10 +8,10 @@
 	import { waterEmoji } from '$lib/waterings';
 
 	// Types
-	import type { WateringWithTree } from '$types/watering';
+	import type { Watering } from '$types/watering';
 
 	// Props
-	export let watering: WateringWithTree;
+	export let watering: Watering;
 	export let mode: 'tree' | 'user';
 	export let currentUserId: string | null;
 
@@ -32,7 +32,6 @@
 		}, 5000);
 	}
 
-	// Cleanup on component destroy
 	onDestroy(() => {
 		if (warningTimeout) {
 			clearTimeout(warningTimeout);
@@ -41,11 +40,12 @@
 </script>
 
 <div class="bg-white border-2 border-[#7C98B2] rounded-xl shadow-sm p-4 text-sm">
-	{#if mode === 'user' && watering.tree?.uuid}
+	{#if mode === 'user'}
 		<div class="flex justify-left mb-4">
 			<slot name="treeButton" {watering} {setWarning} />
 		</div>
 	{/if}
+
 	{#if warningMessage}
 		<div class="mb-3 text-xs text-left leading-snug">
 			<Notice tone="warning">{warningMessage}</Notice>

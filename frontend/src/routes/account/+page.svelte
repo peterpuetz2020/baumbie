@@ -53,7 +53,7 @@
 		{:else}
 			<p>Logge dich ein, um BaumBie mit allen Funktionen nutzen zu können.</p>
 			<Button
-				variant="secondary"
+				variant="primary"
 				className="justify-center w-full mt-4"
 				onClick={() => goto('/login')}
 			>

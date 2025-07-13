@@ -3,4 +3,5 @@ export { default as TreeMetric } from './TreeMetric.svelte';
 export { default as WaterColumn } from './WaterColumn.svelte';
 export { default as WaterTreeButton } from './watering/WaterTreeButton.svelte';
 export { default as TreeWaterings } from './watering/TreeWaterings.svelte';
-export {default as AddWateringForm} from './watering/AddWateringForm.svelte';
+export { default as AddWateringForm} from './watering/AddWateringForm.svelte';
+export { default as WateringHistory } from './watering/WateringHistory.svelte';

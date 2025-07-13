@@ -1,14 +1,15 @@
-export type BaseWatering = {
+export type Watering = {
 	uuid: string;
-	watered_at: string;
-	amount_liters: number;
+	tree_uuid: string;
 	user_uuid: string | null;
+	amount_liters: number;
+	watered_at: string;
 	created_at: string;
 };
 
-export type WateringWithTree = BaseWatering & {
-	tree?: {
-		uuid: string;
-		tree_type_german?: string;
-	};
+export type WateringInput = {
+	tree_uuid: string;
+	amount_liters: number;
+	watered_at: string;
+	user_uuid?: string | null;
 };
