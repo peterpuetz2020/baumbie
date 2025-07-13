@@ -61,7 +61,7 @@
 			{#each adoptedTrees as tree}
 				<FlyToTreeButton
 					treeId={tree.id}
-					treeSpecies={tree.name}
+					label={tree.name}
 					on:warning={(e) => showWarning(e.detail.message)}
 				/>
 			{/each}

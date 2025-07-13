@@ -27,7 +27,7 @@
 				<svelte:fragment slot="treeButton" let:watering let:setWarning>
 					<FlyToTreeButton
 						treeId={watering.tree_uuid}
-						treeSpecies={treeSpecies(watering.tree_uuid)}
+						label={treeSpecies(watering.tree_uuid)}
 						on:warning={(e) => setWarning(e.detail.message)}
 					/>
 				</svelte:fragment>
@@ -44,7 +44,7 @@
 		<svelte:fragment slot="treeButton" let:watering let:setWarning>
 			<FlyToTreeButton
 				treeId={watering.tree_uuid}
-				treeSpecies={treeSpecies(watering.tree_uuid)}
+				label={treeSpecies(watering.tree_uuid)}
 				on:warning={(e) => setWarning?.(e.detail.message, watering.uuid)}
 			/>
 		</svelte:fragment>

@@ -3,10 +3,13 @@
 	import { mapStore, focusTreeById } from '$lib/map';
 	import { selectedTreeFilters } from '$lib/trees';
 	import { Button } from '$components/ui';
-	import { createEventDispatcher } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
+	import { fetchSpecies } from '$lib/supabase/trees';
 
 	export let treeId: string;
-	export let treeSpecies: string | null = null;
+	export let label: string | null = null;
+
+	let species: string | null = null;
 
 	const dispatch = createEventDispatcher();
 
@@ -17,9 +20,9 @@
 		const speciesFilter = get(selectedTreeFilters).species ?? [];
 
 		// Falls die Baumart gefiltert ist → Warnung an übergeordnete Komponente senden
-		if (treeSpecies && speciesFilter.length > 0 && !speciesFilter.includes(treeSpecies)) {
+		if (species && speciesFilter.length > 0 && !speciesFilter.includes(species)) {
 			dispatch('warning', {
-				message: `${treeSpecies} ist durch deinen Filter ausgeblendet und kann daher gerade nicht angesteuert werden.`
+				message: `${label} ist durch deinen Filter ausgeblendet und kann daher gerade nicht angesteuert werden.`
 			});
 			return;
 		}
@@ -27,11 +30,15 @@
 		// Fokus auf Baum setzen
 		focusTreeById(map, treeId);
 	}
+
+	onMount(async () => {
+		species = await fetchSpecies(treeId);
+	});
 </script>
 
 <div class="flex items-center gap-1">
 	<Button onClick={handleClick} className="gap-1 text-sm" variant="secondary">
-		{treeSpecies}
+		{label ?? 'Baum'}
 		<img src="/icons/tree.svg" alt="Baum" class="w-4 h-4" />
 		<span>→</span>
 	</Button>
