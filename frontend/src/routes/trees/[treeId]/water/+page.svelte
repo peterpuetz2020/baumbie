@@ -26,8 +26,6 @@
 					durchlesen.
 				</Notice>
 
-				<Notice tone="info">Trage dann ein, wie viele Liter du ungefähr gegossen hast.</Notice>
-
 				<AddWateringForm on:success={() => (showSuccess = true)} />
 			</div>
 		{/if}

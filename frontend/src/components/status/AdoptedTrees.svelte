@@ -59,11 +59,7 @@
 	<div class="flex flex-col gap-2 items-start">
 		<div class="flex flex-wrap gap-2">
 			{#each adoptedTrees as tree}
-				<FlyToTreeButton
-					treeId={tree.id}
-					label={tree.name}
-					on:warning={(e) => showWarning(e.detail.message)}
-				/>
+				<FlyToTreeButton treeId={tree.id} on:warning={(e) => showWarning(e.detail.message)} />
 			{/each}
 		</div>
 

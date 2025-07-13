@@ -50,7 +50,7 @@
 		{#each treesNearby as tree}
 			<li class="flex items-center justify-between py-2">
 				<span class="text-gray-600">{tree.distance.toFixed(1)} m</span>
-				<FlyToTreeButton treeId={tree.id} label={tree.name} />
+				<FlyToTreeButton treeId={tree.id} />
 			</li>
 		{/each}
 	</ul>

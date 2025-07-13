@@ -61,7 +61,7 @@
 
 		<WaterField
 			id="wassermenge"
-			label="Gegossene Liter:"
+			label="🚰 Wie viele Liter ungefähr?"
 			type="number"
 			inputClass="w-full"
 			placeholder="5"
@@ -71,7 +71,7 @@
 
 		<DateField
 			id="giessdatum"
-			label="Gießdatum:"
+			label="🗓️ Wann war das?"
 			type="date"
 			inputClass="w-full"
 			placeholder="YYYY-MM-DD"

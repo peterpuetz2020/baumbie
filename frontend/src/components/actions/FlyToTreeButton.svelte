@@ -38,7 +38,7 @@
 
 <div class="flex items-center gap-1">
 	<Button onClick={handleClick} className="gap-1 text-sm" variant="secondary">
-		{label ?? 'Baum'}
+		{label ?? species ?? 'Baum'}
 		<img src="/icons/tree.svg" alt="Baum" class="w-4 h-4" />
 		<span>→</span>
 	</Button>
