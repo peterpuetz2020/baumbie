@@ -1,4 +1,4 @@
-# Giess Bielefeld
+# 🌳 BaumBie
 
 BaumBie bringt Menschen mit der Natur in Verbindung. Die interaktive Karte zeigt Bäume an und bringt sie zum Sprechen. Für jeden Baum zeigt die App grundlegende Informationen an, etwa Alter, Baumart oder Höhe. Außerdem ist der Wasserbedarf und die Regenmenge der letzten Zeit zu sehen. Vor allem können Nutzer:innen sich spielerisch in einem Chat mit dem Baum auseinandersetzen und ihm Fragen stellen. Eine weitere wichtige Funktion der App: Die Bäume können adoptiert werden. So erfahren Nutzer:innen live, wie es ihrem Baum geht und können beim Gießen des Baums helfen. Ein Baum kann mehrere Pat:innen haben. Das soll auch Nachbarschaften zusammenbringen.
 
@@ -22,9 +22,31 @@ Unsere Anwendung basiert auf einem schlanken Fullstack-Setup:
 
   Voiceflow ist eine Plattform zur Erstellung von Chatbots und Sprachassistenten über ein grafisches No-Code-Interface. Sie erlaubt es uns, die Chatdialoge mit einzelnen Bäumen visuell zu modellieren, ohne selbst Code schreiben zu müssen. Die Kommunikation mit Voiceflow erfolgt über einen per Edge Function angebundenen API-Endpunkt in Supabase.
 
-  > ⚠️ Da die Preisstruktur von Voiceflow derzeit unklar ist und die Plattform nicht selbst gehostet werden kann, evaluieren wir mittelfristig Alternativen – z.B. durch eigene LLM-Backends.
+  > 🚨 Da die Preisstruktur von Voiceflow derzeit unklar ist und die Plattform nicht selbst gehostet werden kann, evaluieren wir mittelfristig Alternativen – z.B. durch eigene LLM-Backends.
 
 ## 🔐 Umgebungsvariablen
+
+Die Anwendung benötigt eine `.env`-Datei im Projekt-Root, die dem Muster von [`.env.example`](./env.example) folgt. Sie enthält die Zugangsdaten für Supabase und Voiceflow.
+
+### 🗄️ Supabase
+
+| Variable                    | Beschreibung                                                                                                          |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `VITE_SUPABASE_URL`         | Supabase-Projekt-URL (Cloud-Instanz oder lokal), z. B. `https://xyzcompany.supabase.co` oder `http://localhost:54321` |
+| `VITE_SUPABASE_ANON_KEY`    | Öffentlicher Schlüssel für clientseitige Authentifizierung und Lesezugriff auf die Datenbank                          |
+| `SUPABASE_SERVICE_ROLE_KEY` | Geheimer Server-Schlüssel mit Schreibrechten (⚠️ nicht im Frontend verwenden ⚠️)                                      |
+
+In der zentralen [client.ts](./frontend/src/lib/supabase/client.ts) wird `VITE_SUPABASE_URL` gemeinsam mit dem öffentlichen `VITE_SUPABASE_ANON_KEY` verwendet, um den Supabase-Client im Frontend zu initialisieren.
+
+Der private `SUPABASE_SERVICE_ROLE_KEY` kommt vor allem in den Python-Skripten im Verzeichnis [`/preparation`](/preparation/) zum Einsatz – etwa beim Importieren von Baumdaten oder dem Anlegen von Tabellen. Darüber hinaus wird er in Supabase Edge Functions genutzt, z.B. zum Löschen von Nutzerkonten über die Admin-API.
+
+> 🚨 Für die Entwicklung empfiehlt es sich, zusätzlich eine `.env.local` anzulegen, die auf die lokale Supabase-Instanz verweist. Falls vorhanden, überschreibt sie standardmäßig die `.env`.
+
+### 💬 Voiceflow
+
+| Variable            | Beschreibung                                                                                                                |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `VOICEFLOW_API_KEY` | API-Schlüssel für die Voiceflow-Integration (nur in der Supabase Edge Function [`chat`](/supabase/functions/chat/index.ts)) |
 
 ## Lokales Dev-Setup
 

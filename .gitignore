@@ -13,7 +13,7 @@ preparation/input
 preparation/venv
 preparation/__pycache__
 
-.env
+.env*
 !env.example
 
 .vscode
