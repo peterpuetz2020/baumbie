@@ -8,11 +8,11 @@ Das Projekt ist inspiriert von "Gieß den Kiez" aus Berlin. Es wird entwickelt v
 
 ## 🧱 Tech Stack
 
-Unsere Anwendung basiert auf einem schlanken Fullstack-Setup:
+Unsere Anwendung basiert auf einem kompakten Fullstack-Setup:
 
 - **Frontend: Svelte**
 
-  Svelte ist ein komponentenbasiertes JavaScript-Framework, ähnlich wie React oder Vue.js. Im Gegensatz zu diesen nutzt Svelte kein virtuelles DOM, sondern kompiliert Komponenten bereits beim Build in effizienten, direkt ausführbaren JavaScript-Code. Das führt zu geringeren Ladezeiten und erleichtert die Umsetzung interaktiver Benutzeroberflächen.
+  Svelte ist ein komponentenbasiertes JavaScript-Framework, ähnlich wie React oder Vue.js. Im Gegensatz zu diesen nutzt Svelte kein virtuelles DOM, sondern kompiliert Komponenten bereits beim Build in effizienten, direkt ausführbaren JavaScript-Code. Das führt zu geringeren Ladezeiten und erleichtert die Umsetzung interaktiver Benutzeroberflächen - bei uns vollständig in TypeScript umgesetzt.
 
 - **Backend: Supabase**
 
@@ -34,7 +34,7 @@ Die Anwendung benötigt eine `.env`-Datei im Projekt-Root, die dem Muster von [`
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `VITE_SUPABASE_URL`         | Supabase-Projekt-URL (Cloud-Instanz oder lokal), z. B. `https://xyzabc12.supabase.co` oder `http://localhost:54321` |
 | `VITE_SUPABASE_ANON_KEY`    | Öffentlicher Schlüssel für clientseitige Authentifizierung und Lesezugriff auf die Datenbank                        |
-| `SUPABASE_SERVICE_ROLE_KEY` | Geheimer Server-Schlüssel mit Schreibrechten (⚠️ nicht im Frontend verwenden ⚠️)                                    |
+| `SUPABASE_SERVICE_ROLE_KEY` | Geheimer Server-Schlüssel mit Schreibrechten (⚠️ **Nicht im Frontend verwenden** ⚠️)                                    |
 
 `VITE_SUPABASE_URL` wird gemeinsam mit dem öffentlichen `VITE_SUPABASE_ANON_KEY` in der zentralen [client.ts](./frontend/src/lib/supabase/client.ts) verwendet, um den Supabase-Client im Frontend zu initialisieren.
 
@@ -64,10 +64,8 @@ Die Supabase CLI verwendet intern **Docker**, um Dienste wie PostgreSQL, Auth un
 
 Stelle also sicher, dass die Docker Engine auf deinem System installiert und aktiv ist:
 
-- **macOS/Windows**: Installiere [Docker Desktop](https://www.docker.com/products/docker-desktop/), starte es und lasse es im Hintergrund laufen.
+- **macOS/Windows**: Installiere [Docker Desktop](https://www.docker.com/products/docker-desktop/), starte es und lasse es im Hintergrund laufen. Der kostenlose Personal-Plan ist ausreichend.
 - **Linux**: Folge der [offiziellen Anleitung zur Docker-Installation](https://docs.docker.com/engine/install/) für deine Distribution.
-
-Für alle Plattformen reicht der kostenlose Personal-Plan von Docker Desktop.
 
 Wenn Supabase CLI und Docker eingerichtet sind, kannst du deine lokale Instanz im **Projekt-Root** starten:
 
@@ -75,21 +73,21 @@ Wenn Supabase CLI und Docker eingerichtet sind, kannst du deine lokale Instanz i
 supabase start
 ```
 
-Sobald die Instanz läuft, kannst du das Supabase Studio – die grafische Oberfläche zur Verwaltung deiner lokalen Datenbank – im Browser unter `http://127.0.0.1:54323/` aufrufen.
+Sobald die Instanz läuft, kannst du das Supabase Studio – die grafische Oberfläche zur Verwaltung deiner lokalen Datenbank – im Browser unter http://127.0.0.1:54323/ aufrufen.
 
-> 🚨 Beim ersten Start führt die Supabase CLI automatisch alle `.sql`-Migrations aus dem Ordner [supabase/migrations/](/supabase/migrations/) aus. Dadurch wird die im Projekt definierte Datenbankstruktur aufgebaut – also alle Tabellen, Views, Policies und weitere SQL-Objekte, die in den Migrationen enthalten sind. Die Tabellen sind aber zunächst leer, da in unserem Projekt kein Seed-Skript definiert ist.
+> 🚨 Beim ersten Start führt die Supabase CLI automatisch alle `.sql`-Migrations aus dem Ordner [supabase/migrations/](/supabase/migrations/) aus. Dadurch wird die im Projekt definierte Datenbankstruktur aufgebaut – also alle Tabellen, Views, Policies und weitere SQL-Objekte, die in den Migrationen enthalten sind. Die Tabellen bleiben aber zunächst leer, da in unserem Projekt kein Seed-Skript definiert ist.
 
 ### 🎛️ Umgebungsvariablen setzen
 
 Kopiere die Datei `.env.example` und benenne sie um in `.env.local`:
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
 Sobald du `supabase start` ausgeführt hast, zeigt dir das Terminal eine Liste mit Konfigurationswerten an – darunter die URL deiner lokalen Instanz sowie die API-Schlüssel.
 
-> 🚨 Die API URL bleibt immer `http://127.0.0.1:54321` (bzw. `http://localhsot:54321`). Kopiere dir den `anon key` und den `service_role key` aus dem Terminal-Output und notiere sie für die Konfiguration!
+> 🚨 Die API URL bleibt immer http://127.0.0.1:54321 (bzw. http://localhost:54321). Kopiere dir den `anon key` und den `service_role key` aus dem Terminal-Output und notiere sie für die Konfiguration!
 
 Trage die folgenden drei Werte (ohne Anführungszeichen!) in deine `.env.local`-Datei ein:
 
@@ -127,7 +125,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Die virtuelle Umgebung stellt sicher, dass alle benötigten Python-Pakete sauber und unabhängig vom restlichen System installiert werden.
+Die virtuelle Umgebung stellt sicher, dass alle benötigten Python-Pakete sauber und unabhängig vom restlichen System installiert werden können.
 
 Installiere anschließend alle benötigten Abhängigkeiten:
 
@@ -137,7 +135,7 @@ pip install -r requirements.txt
 
 #### 📥 Baumdaten importieren
 
-Lege deine `geojson`-Datei am besten im Verzeichnis `preparation/input/` ab. Führe dann das Importskript aus und gib dabei den Pfad zu deiner Datei an, z.B.:
+Lege deine GeoJSON-Datei am besten im Verzeichnis `preparation/input/` ab. Führe dann das Importskript aus und gib dabei den Pfad zu deiner Datei an, z.B.:
 
 ```bash
 python import.py input/trees.geojson
@@ -145,7 +143,7 @@ python import.py input/trees.geojson
 
 Das Skript verwendet automatisch die Umgebungsvariablen aus `.env.local` (falls vorhanden) oder `.env`, um sich mit Supabase zu verbinden.
 
-> 🚨 Nach diesem Schritt solltest du im Supabase Studio (`http://127.0.0.1:54323/`) sehen können, dass insbesondere die `trees`-Tabelle mit Baumdaten befüllt wurde.
+> 🚨 Nach diesem Schritt solltest du im Supabase Studio (http://127.0.0.1:54323/) sehen können, dass insbesondere die `trees`-Tabelle mit Baumdaten befüllt wurde.
 
 #### 🌍 Geo-Splitting der Baumdaten
 
@@ -186,7 +184,7 @@ Anschließend kannst du das mit Svelte entwickelte Frontend im Entwicklungsmodus
 npm run dev
 ```
 
-> 🚨 Das Projekt läuft nun standardmäßig unter `http://localhost:5173`. Du solltest jetzt eine Karte mit Bäumen sehen.
+> 🚨 Das Projekt läuft nun standardmäßig unter http://localhost:5173. Du solltest jetzt eine Karte mit Bäumen sehen.
 
 ### 🧹 Lokale Supabase zurücksetzen
 
@@ -285,15 +283,15 @@ Sobald dein Projekt verknüpft ist, kannst du alle vorhandenen Migrationen auf d
 supabase db push
 ```
 
-Dadurch wird die gesamte Datenbankstruktur – also Tabellen, Views, Policies etc. – wie lokal auch in der Supabase-Cloud aufgebaut.
+Dadurch werden alle Migrationsdateien angewendet, die lokal vorhanden, aber in der Supabase-Cloud noch nicht ausgeführt wurden – also etwa Tabellen, Views, Policies und andere SQL-Objekte.
 
 ### 🌱 Baumdaten importieren & segmentieren
 
 Sobald deine Supabase-Cloud-Instanz eingerichtet und mit Migrationen befüllt ist, kannst du wie im lokalen Setup die Baumdaten importieren und segmentieren.
 
-Folge dafür dem beschriebenen Ablauf im Abschnitt [**🌱 Baumdaten importieren & segmentieren**](#🌱-baumdaten-importieren--segmentieren).
+Folge dafür dem beschriebenen Ablauf im Abschnitt **🌱 Baumdaten importieren & segmentieren** weiter oben.
 
-Die dort beschriebenen Schritte zur Python-Umgebung, dem Import der `.geojson`-Datei sowie zur Segmentierung und Kopie ins Frontend bleiben unverändert – wichtig ist lediglich, dass deine `.env`-Datei auf die Supabase-**Cloud-Instanz** zeigt.
+Die dort beschriebenen Schritte zur Python-Umgebung, dem Import der GeoJSON-Datei sowie zur Segmentierung und Kopie ins Frontend bleiben unverändert – wichtig ist lediglich, dass deine `.env`-Datei auf die Supabase-**Cloud-Instanz** zeigt.
 
 ### 🛰️ Frontend bauen & deployen
 
