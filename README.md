@@ -173,7 +173,7 @@ cp -r preparation/segments frontend/static
 
 ### ▶️ App starten
 
-Wechsle in den frontend/-Ordner und installiere alle benötigten Abhängigkeiten:
+Wechsle in den `frontend/`-Ordner und installiere alle benötigten Abhängigkeiten:
 
 ```bash
 cd frontend
@@ -186,7 +186,7 @@ Anschließend kannst du das mit Svelte entwickelte Frontend im Entwicklungsmodus
 npm run dev
 ```
 
-> 🚨 Das Projekt läuft nun standardmäßig unter http://localhost:5173. Du solltest jetzt eine Karte mit Bäumen sehen.
+> 🚨 Das Projekt läuft nun standardmäßig unter `http://localhost:5173`. Du solltest jetzt eine Karte mit Bäumen sehen.
 
 ### 🧹 Lokale Supabase zurücksetzen
 
@@ -229,25 +229,80 @@ Wenn du alle Daten dauerhaft löschen und die lokale Instanz vollständig zurüc
 
 ## 🌐 Produktivbetrieb
 
-## 🚀 Nächste Schritte
+Um BaumBie produktiv zu betreiben, verwendest du eine gehostete Supabase-Instanz in der Cloud.
 
----
+### 🧾 Supabase-Projekt in der Cloud erstellen
 
-### Supabase Berechtigungen setzen
+Melde dich auf [https://app.supabase.com](https://app.supabase.com) an und erstelle ein neues Projekt. Folge den Anweisungen und wähle als Region einen Ort, der möglichst nah an deinen Nutzern liegt (z. B. Frankfurt für Deutschland).
 
-Um auf die Supabase-Instanz und die darin enthaltenen Daten zugreifen zu können, müssen die Berechtigungen für die Tabelle `trees` vergeben werden.
+### 🔑 Zugangsdaten abrufen
 
-Öffne das Supabase Studio: http://127.0.0.1:54323 solange die Supabase im Hintergrund läuft.
+Nach der Erstellung deines Projekts erhältst du alle notwendigen Zugangsdaten im Supabase Studio:
 
-Öffne den Table Editor in der linken Seitenleiste. Wähle dann die Tabelle `trees` aus.
-Wähle "RLS disabled" (Menüleiste oben) -> "Enable RLS for this table" -> "Enable RLS" -> "Add RLS policy" -> "Create a new policy"
+1. Öffne dein Projekt in [https://app.supabase.com](https://app.supabase.com)
+2. Klicke unten links auf **Project Settings**
+3. Wähle im Bereich **Configuration** den Punkt **Data API**
+4. Dort findest du:
+   - `Project URL` → verwende diesen Wert als `VITE_SUPABASE_URL`
+5. Klicke in diesem Bereich auf **"Go to API Keys"**, um zu den API-Schlüsseln zu gelangen:
 
-Wähle das Template "SELECT: Enable read access for all users"
+   - `anon public` → verwende als `VITE_SUPABASE_ANON_KEY`
+   - `service_role secret` → verwende als `SUPABASE_SERVICE_ROLE_KEY` **(nicht im Frontend verwenden!)**
 
+   Lege eine `.env`-Datei im Projekt-Root an (z. B. durch Kopieren von `.env.example`) und trage die Werte ein:
+
+```ini
+VITE_SUPABASE_URL=<Project URL>
+VITE_SUPABASE_ANON_KEY=<anon public>
+SUPABASE_SERVICE_ROLE_KEY=<service_role secret>
 ```
-create policy "Enable read access for all users" on "public"."trees" as permissive for select to public using (true);
+
+### 🛠️ Supabase CLI installieren & verbinden
+
+Installiere die Supabase CLI (falls noch nicht geschehen):
+
+```bash
+npm install -g supabase-cli
 ```
 
-Speichern mit Klick auf `Save policy`.
+Melde dich bei Supabase über die CLI an:
 
-Wird bereits durch `/supabase/migrations/20240316110547_create_trees_table` vollzogen
+```bash
+supabase login
+```
+
+Anschließend verknüpfst du dein Projekt mit deiner Cloud-Instanz per Project ID, die du in oben deinen Project Settings findest oder aus der Project URL extrahieren kannst:
+
+```bash
+supabase link --project-ref <dein-project-ref>
+```
+
+### ⬆️ Migrationen anwenden
+
+Sobald dein Projekt verknüpft ist, kannst du alle vorhandenen Migrationen auf deine Cloud-Datenbank anwenden:
+
+```bash
+supabase db push
+```
+
+Dadurch wird die gesamte Datenbankstruktur – also Tabellen, Views, Policies etc. – wie lokal auch in der Supabase-Cloud aufgebaut.
+
+### 🌱 Baumdaten importieren & segmentieren
+
+Sobald deine Supabase-Cloud-Instanz eingerichtet und mit Migrationen befüllt ist, kannst du wie im lokalen Setup die Baumdaten importieren und segmentieren.
+
+Folge dafür dem beschriebenen Ablauf im Abschnitt [**🌱 Baumdaten importieren & segmentieren**](#🌱-baumdaten-importieren--segmentieren).
+
+Die dort beschriebenen Schritte zur Python-Umgebung, dem Import der `.geojson`-Datei sowie zur Segmentierung und Kopie ins Frontend bleiben unverändert – wichtig ist lediglich, dass deine `.env`-Datei auf die Supabase-**Cloud-Instanz** zeigt.
+
+### 🛰️ Frontend bauen & deployen
+
+Erzeuge ein Produktions-Build deiner Svelte-App:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+Das erzeugte statische Frontend liegt unter `frontend/build/`. Du kannst es über beliebige Hoster (z. B. Zugriff.eu, Vercel, Netlify oder eigenes Hosting) ausliefern.
