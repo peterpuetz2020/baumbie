@@ -26,19 +26,19 @@ Unsere Anwendung basiert auf einem schlanken Fullstack-Setup:
 
 ## 🔐 Umgebungsvariablen
 
-Die Anwendung benötigt eine `.env`-Datei im Projekt-Root, die dem Muster von [`.env.example`](./env.example) folgt. Sie enthält die Zugangsdaten für Supabase und Voiceflow.
+Die Anwendung benötigt eine `.env`-Datei im Projekt-Root, die dem Muster von [`.env.example`](./.env.example) folgt. Sie enthält die Zugangsdaten für Supabase und Voiceflow.
 
 ### 🗄️ Supabase
 
-| Variable                    | Beschreibung                                                                                                          |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `VITE_SUPABASE_URL`         | Supabase-Projekt-URL (Cloud-Instanz oder lokal), z. B. `https://xyzcompany.supabase.co` oder `http://localhost:54321` |
-| `VITE_SUPABASE_ANON_KEY`    | Öffentlicher Schlüssel für clientseitige Authentifizierung und Lesezugriff auf die Datenbank                          |
-| `SUPABASE_SERVICE_ROLE_KEY` | Geheimer Server-Schlüssel mit Schreibrechten (⚠️ nicht im Frontend verwenden ⚠️)                                      |
+| Variable                    | Beschreibung                                                                                                        |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `VITE_SUPABASE_URL`         | Supabase-Projekt-URL (Cloud-Instanz oder lokal), z. B. `https://xyzabc12.supabase.co` oder `http://localhost:54321` |
+| `VITE_SUPABASE_ANON_KEY`    | Öffentlicher Schlüssel für clientseitige Authentifizierung und Lesezugriff auf die Datenbank                        |
+| `SUPABASE_SERVICE_ROLE_KEY` | Geheimer Server-Schlüssel mit Schreibrechten (⚠️ nicht im Frontend verwenden ⚠️)                                    |
 
-In der zentralen [client.ts](./frontend/src/lib/supabase/client.ts) wird `VITE_SUPABASE_URL` gemeinsam mit dem öffentlichen `VITE_SUPABASE_ANON_KEY` verwendet, um den Supabase-Client im Frontend zu initialisieren.
+`VITE_SUPABASE_URL` wird gemeinsam mit dem öffentlichen `VITE_SUPABASE_ANON_KEY` in der zentralen [client.ts](./frontend/src/lib/supabase/client.ts) verwendet, um den Supabase-Client im Frontend zu initialisieren.
 
-Der private `SUPABASE_SERVICE_ROLE_KEY` kommt vor allem in den Python-Skripten im Verzeichnis [`/preparation`](/preparation/) zum Einsatz – etwa beim Importieren von Baumdaten oder dem Anlegen von Tabellen. Darüber hinaus wird er in Supabase Edge Functions genutzt, z.B. zum Löschen von Nutzerkonten über die Admin-API.
+Der private `SUPABASE_SERVICE_ROLE_KEY` kommt vor allem in den Python-Skripten im Verzeichnis [`/preparation`](/preparation) zum Einsatz – etwa beim Importieren von Baumdaten oder dem Anlegen von Tabellen. Darüber hinaus wird er in Supabase Edge Functions genutzt, z.B. zum Löschen von Nutzerkonten über die Admin-API.
 
 > 🚨 Für die Entwicklung empfiehlt es sich, zusätzlich eine `.env.local` anzulegen, die auf die lokale Supabase-Instanz verweist. Falls vorhanden, überschreibt sie standardmäßig die `.env`.
 
