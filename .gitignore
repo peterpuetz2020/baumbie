@@ -11,9 +11,11 @@ frontend/static/segments/
 preparation/segments
 preparation/input
 preparation/venv
-preparation/__pycache__
+preparation/.venv
+__pycache__
 
-.env
+.env*
 !env.example
 
 .vscode
+
