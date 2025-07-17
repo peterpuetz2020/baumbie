@@ -4,11 +4,17 @@ from dotenv import load_dotenv
 import os
 from shapely import Point, box
 from supabase import create_client, Client
+from utils.env import load_env
 
-load_dotenv("../.env")
+# Lädt Umgebungsvariablen aus .env.local (wenn vorhanden) oder .env
+load_env()
 
 url: str = os.environ.get("VITE_SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+
+if not url or not key:
+    raise ValueError("VITE_SUPABASE_URL und SUPABASE_SERVICE_ROLE_KEY müssen in .env/.env.local gesetzt sein")
+
 supabase: Client = create_client(url, key)
 
 # Definiert Pfade für Eingabe- und Ausgabedaten sowie Basispfad der Ausführung
@@ -18,8 +24,6 @@ OUTPUT_DIR = os.path.join(BASE_DIR, "segments")
 
 # Definiert die Anzahl der Segmente pro Achse im Raster (GRID_SIZE x GRID_SIZE Raster)
 GRID_SIZE = 10
-
-
 
 def create_segments_and_index(gdf):
     """

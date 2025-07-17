@@ -1,17 +1,20 @@
 import os
 import json
-from dotenv import load_dotenv
-from tqdm import tqdm
-from supabase import create_client, Client
-from shapely import wkt, Point
-import pyproj
 import sys
 from tqdm import tqdm
+from supabase import create_client, Client
+import pyproj
+from utils.env import load_env
 
-load_dotenv("../.env")
+# Lädt Umgebungsvariablen aus .env.local (wenn vorhanden) oder .env
+load_env()
 
 url: str = os.environ.get("VITE_SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+
+if not url or not key:
+    raise ValueError("VITE_SUPABASE_URL und SUPABASE_SERVICE_ROLE_KEY müssen in .env/.env.local gesetzt sein")
+
 supabase: Client = create_client(url, key)
 
 if len(sys.argv) == 2:
@@ -21,7 +24,6 @@ else:
     No path to the geojson file was provided. Please provide the file path as an argument when starting the script:
     python3 import.py /tmp/my-super-geo-json-file.json
     """)
-
 
 projection = pyproj.Proj(proj='utm', zone=32, ellps='WGS84')
 def unproject(x, y):
