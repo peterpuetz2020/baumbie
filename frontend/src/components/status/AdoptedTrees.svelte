@@ -1,31 +1,30 @@
 <script lang="ts">
-	// 🔁 Svelte
-	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
+	// Svelte lifecycle
+	import { onMount, onDestroy } from 'svelte';
 
-	// 🗺️ Map
-	import { mapStore, focusTreeById } from '$lib/map';
+	// UI & Actions
+	import { Notice } from '$components/ui';
+	import { FlyToTreeButton } from '$components/actions';
 
-	// 🌱 Tree-Logik
-	import { loadAdoptedTrees, selectedTreeFilters } from '$lib/trees';
-	import type { TreeMeta } from '$types/tree';
-
-	// 🧱 UI
-	import { Button, Heading, Notice } from '$components/ui';
-
+	// Data loading
+	import { loadAdoptedTrees } from '$lib/trees';
 	import { getCurrentUser } from '$lib/supabase';
 
+	// Types
+	import type { TreeMeta } from '$types/tree';
+
+	// State
 	let adoptedTrees: TreeMeta[] = [];
 	let loading = true;
-	let infoMessage = 'Du hast noch keine Bäume adoptiert.';
-	let warningMessage = '';
 	let loggedIn = false;
+
+	let warningMessage: string | null = null;
+	let warningTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	onMount(async () => {
 		try {
 			const user = await getCurrentUser();
 			loggedIn = !!user;
-
 			adoptedTrees = await loadAdoptedTrees();
 		} catch (err) {
 			console.error(err);
@@ -34,45 +33,49 @@
 		}
 	});
 
-	function handleClick(tree: TreeMeta) {
-		const map = get(mapStore);
-		if (!map) return;
+	function showWarning(msg: string) {
+		warningMessage = msg;
 
-		const filter = get(selectedTreeFilters);
-		const speciesFilter = filter.species ?? [];
-
-		if (speciesFilter.length > 0 && !speciesFilter.includes(tree.tree_type_german)) {
-			warningMessage = `Bäume der Art "${tree.name}" sind aktuell durch deinen Filter ausgeblendet.\n\nBitte ändere deinen Filter, wenn du deine adoptierten Bäume wieder auf der Karte sehen willst.`;
-			return;
+		if (warningTimeout) {
+			clearTimeout(warningTimeout);
 		}
 
-		focusTreeById(map, tree.id);
+		warningTimeout = setTimeout(() => {
+			warningMessage = null;
+			warningTimeout = null;
+		}, 5000);
 	}
+
+	onDestroy(() => {
+		if (warningTimeout) {
+			clearTimeout(warningTimeout);
+		}
+	});
 </script>
 
-<div class="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-3">
-	<Heading level={2}>Meine adoptierten Bäume</Heading>
-
-	{#if loading}
-		<p class="text-sm text-gray-500">Bäume werden geladen …</p>
-	{:else if adoptedTrees.length > 0}
+{#if loading}
+	<p class="text-sm text-gray-500">Bäume werden geladen …</p>
+{:else if adoptedTrees.length > 0}
+	<div class="flex flex-col gap-2 items-start">
 		<div class="flex flex-wrap gap-2">
 			{#each adoptedTrees as tree}
-				<Button onClick={() => handleClick(tree)}>
-					{tree.name}
-					<img src="/icons/tree.svg" alt="Baum" class="inline-block w-4 h-4 ml-1" />
-				</Button>
+				<FlyToTreeButton treeId={tree.id} on:warning={(e) => showWarning(e.detail.message)} />
 			{/each}
 		</div>
-	{:else}
-		<Notice tone="info">
-			Du hast noch keine Bäume adoptiert.
-			{#if !loggedIn}
-				<a href="/login" class="text-green-600 underline">Jetzt einloggen</a> und loslegen!
-			{/if}
-		</Notice>
-	{/if}
-	{#if infoMessage}
-		<Notice tone="warning">{warningMessage}</Notice>
-	{/if}
-</div>
+
+		{#if warningMessage}
+			<div class="text-xs text-left leading-snug w-full">
+				<Notice tone="warning">
+					{warningMessage}
+				</Notice>
+			</div>
+		{/if}
+	</div>
+{:else}
+	<Notice tone="info">
+		Du hast noch keine Bäume adoptiert.
+		{#if !loggedIn}
+			<a href="/login" class="text-green-600 underline">Jetzt einloggen</a> und loslegen!
+		{/if}
+	</Notice>
+{/if}

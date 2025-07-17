@@ -5,13 +5,17 @@
 	import type { TreeData } from '$types/tree';
 
 	import { Accordion } from '$components/ui';
+	import type AccordionType from '$components/ui/Accordion.svelte';
+
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
-	import { AdoptTreeButton, TreeMetric, WaterColumn } from '$components/trees';
+	import { AdoptTreeButton, WaterTreeButton, TreeMetric, TreeWaterings } from '$components/trees';
 	import Notice from '$components/ui/Notice.svelte';
 
 	export let activeTabIndex = 0;
 	const handleTabChange = (tab: number) => (activeTabIndex = tab);
+
+	let historyAccordionRef: AccordionType;
 
 	let openAbout = true;
 	let openWater = false;
@@ -81,7 +85,7 @@
 				{#if activeTabIndex === 0}
 					<Accordion bind:open={openAbout}>
 						<div slot="head">
-							<p class="text-black font-bold">Über diesen Baum</p>
+							<p class="text-black font-bold">🌳 Über diesen Baum</p>
 						</div>
 						<div slot="details">
 							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
@@ -106,25 +110,30 @@
 					<hr />
 					<Accordion bind:open={openWater}>
 						<div slot="head">
-							<p class="text-black font-bold">Wasserbedarf</p>
+							<p class="text-black font-bold">💦 Wasserbedarf</p>
 						</div>
 						<div slot="details">
 							<Notice tone="info">
-								Hier wird künftig sichtbar, wie viel Wasser dieser Baum braucht und ob der Regen in letzter Zeit gereicht hat.
+								Hier wird künftig sichtbar, wie viel Wasser dieser Baum braucht und ob der Regen in
+								letzter Zeit gereicht hat.
 							</Notice>
 						</div>
 					</Accordion>
 					<hr />
-					<Accordion bind:open={openHistory}>
+					<Accordion bind:open={openHistory} bind:this={historyAccordionRef}>
 						<div slot="head">
-							<p class="text-black font-bold">Wer wann gegossen hat</p>
+							<p class="text-black font-bold">🚿 Gießungen</p>
 						</div>
 						<div slot="details">
-							<Notice tone="info">Hier wird künftig sichtbar, welche Nutzer:innen diesen Baum wie oft gegossen haben.</Notice>
+							<TreeWaterings
+								treeId={tree.uuid}
+								on:contentChanged={() => historyAccordionRef?.updateHeightExternally()}
+							/>
 						</div>
 					</Accordion>
-					<hr />
 
+					<hr />
+					<WaterTreeButton {tree} />
 					<AdoptTreeButton {tree} />
 				{:else}
 					<Chat treeId={tree.uuid} />
