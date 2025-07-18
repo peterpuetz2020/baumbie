@@ -1,5 +1,7 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
+
+const config: Config = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
@@ -41,5 +43,11 @@ export default {
 			}
 		}
 	},
-	plugins: []
+	plugins: [
+		plugin(({ addVariant }) => {
+			addVariant('supports-hover', '@media (hover: hover)');
+		})
+	]
 };
+
+export default config;
