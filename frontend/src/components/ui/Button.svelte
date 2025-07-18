@@ -13,11 +13,15 @@
 	export let onClick: (e: MouseEvent) => void = () => {};
 
 	const variantClasses: Record<ButtonVariant, string> = {
-		default: 'border-black text-black hover:bg-green-800 hover:text-white',
-		primary: 'border-green-600 bg-green-600 text-white hover:bg-green-800',
-		secondary: 'border-green-500 text-black hover:bg-green-100',
-		danger: 'border-red-600 text-black hover:bg-red-800 hover:text-white',
-		watering: 'border-[#7C98B2] bg-[#7C98B2] text-white hover:brightness-110'
+		default:
+			'border-black text-black bg-white active:bg-gray-200 active:text-black hover:bg-gray-100 hover:text-black supports-hover:hover:bg-green-800 supports-hover:hover:text-white',
+		primary:
+			'border-green-600 bg-green-600 text-white active:bg-green-700 supports-hover:hover:bg-green-800',
+		secondary: 'border-green-500 text-black active:bg-green-50 supports-hover:hover:bg-green-100',
+		danger:
+			'border-red-600 text-black active:bg-red-700 active:text-white supports-hover:hover:bg-red-800 supports-hover:hover:text-white',
+		watering:
+			'border-[#7C98B2] bg-[#7C98B2] text-white active:brightness-90 supports-hover:hover:brightness-110'
 	};
 </script>
 
