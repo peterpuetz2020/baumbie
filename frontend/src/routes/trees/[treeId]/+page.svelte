@@ -13,7 +13,13 @@
 	import { Accordion, Notice } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
-	import { AdoptTreeButton, WaterTreeButton, TreeMetric, TreeWaterings } from '$components/trees';
+	import {
+		AdoptTreeButton,
+		WaterTreeButton,
+		TreeMetricsView,
+		TreeWaterings,
+		TreeDescription
+	} from '$components/trees';
 
 	export let activeTabIndex = 0;
 	const handleTabChange = (tab: number) => (activeTabIndex = tab);
@@ -91,33 +97,22 @@
 				{#if activeTabIndex === 0}
 					<Accordion bind:open={openAbout}>
 						<div slot="head">
-							<p class="text-black font-bold">🌳 Über diesen Baum</p>
-						</div>
-						<div slot="details">
-							<p class="text-sm text-gray-800">
-								{treeDescription
-									? treeDescription
-									: 'Hej, wie mein Name schon verrät komme ich ursprünglich aus dem Norden von Europa. …'}
+							<p class="font-semibold text-black text-base sm:text-lg leading-snug">
+								🌳 Über diesen Baum
 							</p>
-							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
-								<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
-								<TreeMetric
-									label="Kronendurchmesser"
-									value={tree.crown_diameter}
-									unit="m"
-									max={29}
-									position="top"
-								/>
-								<TreeMetric
-									label="Stammdurchmesser"
-									value={tree.trunk_diameter}
-									unit="cm"
-									max={297}
-									position="bottom"
-								/>
-							</div>
+						</div>
+
+						<div slot="details" class="space-y-4">
+							<TreeDescription description={treeDescription} />
+
+							<TreeMetricsView
+								height={tree.height}
+								crown_diameter={tree.crown_diameter}
+								trunk_diameter={tree.trunk_diameter}
+							/>
 						</div>
 					</Accordion>
+
 					<hr />
 					<Accordion bind:open={openEnvironment}>
 						<div slot="head">
