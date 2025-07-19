@@ -38,3 +38,18 @@ export async function loadSpeciesMap(treeIds: string[]): Promise<Map<string, str
 
 	return speciesMap;
 }
+
+export async function getTreeSpeciesDescription(treeTypeBotanic: string) {
+	const { data, error } = await supabase
+		.from('tree_species')
+		.select('description')
+		.eq('tree_type_botanic', treeTypeBotanic)
+		.maybeSingle();
+
+	if (error) {
+		console.error('Failed to load species description:', error.message);
+		return null;
+	}
+
+	return data?.description ?? null;
+}

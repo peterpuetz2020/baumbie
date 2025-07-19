@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { supabase } from '$lib/supabase';
+	import { onMount } from 'svelte';
 
 	import type { TreeData } from '$types/tree';
+	import { getTreeSpeciesDescription } from '$lib/supabase';
 
 	import { Accordion } from '$components/ui';
 	import type AccordionType from '$components/ui/Accordion.svelte';
@@ -20,22 +22,35 @@
 	let openAbout = true;
 	let openWater = false;
 	let openHistory = false;
+	let treeDescription: string | null = null;
 
 	$: showInfo = activeTabIndex === 0;
 	$: showChat = activeTabIndex === 1;
 
 	let tree: TreeData;
 
+	async function loadTree(treeId: string) {
+		const { data: treeData, error } = await supabase
+			.from('trees')
+			.select()
+			.eq('uuid', treeId)
+			.maybeSingle();
+
+		if (error) {
+			console.error('Fehler beim Laden des Baums:', error.message);
+			return;
+		}
+
+		tree = treeData;
+
+		if (tree) {
+			treeDescription = await getTreeSpeciesDescription(tree.tree_type_botanic);
+		}
+	}
+
 	// Lädt den Baum neu, sobald sich die treeId in der URL ändert
 	$: if ($page.params.treeId) {
-		(async () => {
-			const { data } = await supabase
-				.from('trees')
-				.select()
-				.eq('uuid', $page.params.treeId)
-				.maybeSingle();
-			tree = data;
-		})();
+		loadTree($page.params.treeId);
 	}
 </script>
 
@@ -88,6 +103,11 @@
 							<p class="text-black font-bold">🌳 Über diesen Baum</p>
 						</div>
 						<div slot="details">
+							<p class="text-sm text-gray-800">
+								{treeDescription
+									? treeDescription
+									: 'Hej, wie mein Name schon verrät komme ich ursprünglich aus dem Norden von Europa. …'}
+							</p>
 							<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-800">
 								<TreeMetric label="Höhe" value={tree.height} unit="m" max={39} position="right" />
 								<TreeMetric
