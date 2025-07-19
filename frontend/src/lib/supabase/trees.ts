@@ -53,3 +53,21 @@ export async function getTreeSpeciesDescription(treeTypeBotanic: string) {
 
 	return data?.description ?? null;
 }
+
+/**
+ * Holt alle Baumdaten für eine bestimmte UUID aus der trees-Tabelle.
+ */
+export async function getTreeById(treeId: string) {
+	const { data, error } = await supabase
+		.from('trees')
+		.select()
+		.eq('uuid', treeId)
+		.maybeSingle();
+
+	if (error) {
+		console.error('Failed to load tree:', error.message);
+		return null;
+	}
+
+	return data;
+}

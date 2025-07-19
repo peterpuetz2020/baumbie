@@ -1,18 +1,19 @@
 <script lang="ts">
+	// SvelteKit stores
 	import { page } from '$app/stores';
-	import { supabase } from '$lib/supabase';
-	import { onMount } from 'svelte';
 
+	// Typen
 	import type { TreeData } from '$types/tree';
-	import { getTreeSpeciesDescription } from '$lib/supabase';
-
-	import { Accordion } from '$components/ui';
 	import type AccordionType from '$components/ui/Accordion.svelte';
 
+	// Supabase-Funktionen
+	import { getTreeById, getTreeSpeciesDescription } from '$lib/supabase';
+
+	// Komponenten
+	import { Accordion, Notice } from '$components/ui';
 	import { DialogPanel } from '$components/overlay';
 	import { Chat } from '$components/chat';
 	import { AdoptTreeButton, WaterTreeButton, TreeMetric, TreeWaterings } from '$components/trees';
-	import Notice from '$components/ui/Notice.svelte';
 
 	export let activeTabIndex = 0;
 	const handleTabChange = (tab: number) => (activeTabIndex = tab);
@@ -30,25 +31,14 @@
 	let tree: TreeData;
 
 	async function loadTree(treeId: string) {
-		const { data: treeData, error } = await supabase
-			.from('trees')
-			.select()
-			.eq('uuid', treeId)
-			.maybeSingle();
-
-		if (error) {
-			console.error('Fehler beim Laden des Baums:', error.message);
-			return;
-		}
-
-		tree = treeData;
+		tree = await getTreeById(treeId);
 
 		if (tree) {
 			treeDescription = await getTreeSpeciesDescription(tree.tree_type_botanic);
 		}
 	}
 
-	// Lädt den Baum neu, sobald sich die treeId in der URL ändert
+	// Reloads the tree whenever the treeId in the URL changes
 	$: if ($page.params.treeId) {
 		loadTree($page.params.treeId);
 	}
