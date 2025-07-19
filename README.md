@@ -166,7 +166,7 @@ Zusätzlich wird eine Datei `segments_index.json` erzeugt, die die Übersicht ü
 Kopiere oder verschiebe anschließend die neu erstellten Segmente aus `preparation/segments/` nach `frontend/static/segments`. Dazu kannst du den `segments/`-Ordner entweder manuell verschieben oder folgenden Befehl ausführen:
 
 ```bash
-cp -r preparation/segments frontend/static
+cp -r preparation/segments frontend/static/segments
 ```
 
 ### ▶️ App starten
