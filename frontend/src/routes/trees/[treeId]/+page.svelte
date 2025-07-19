@@ -23,6 +23,7 @@
 	let openAbout = true;
 	let openWater = false;
 	let openHistory = false;
+	let openEnvironment = false;
 	let treeDescription: string | null = null;
 
 	$: showInfo = activeTabIndex === 0;
@@ -115,6 +116,19 @@
 									position="bottom"
 								/>
 							</div>
+						</div>
+					</Accordion>
+					<hr />
+					<Accordion bind:open={openEnvironment}>
+						<div slot="head">
+							<p class="text-black font-bold">🏙️ Wirkung auf das Stadtklima</p>
+						</div>
+						<div slot="details">
+							<Notice tone="info">
+								Dieser Baum beeinflusst seine Umgebung positiv: Er spendet Schatten, reguliert das
+								Mikroklima, verbessert die Luftqualität und bietet Lebensraum für Tiere und
+								Insekten. Weitere Informationen folgen in einem späteren Update.
+							</Notice>
 						</div>
 					</Accordion>
 					<hr />
