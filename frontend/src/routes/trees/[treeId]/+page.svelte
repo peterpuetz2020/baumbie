@@ -122,7 +122,17 @@
 							<Notice tone="info">
 								Dieser Baum beeinflusst seine Umgebung positiv: Er spendet Schatten, reguliert das
 								Mikroklima, verbessert die Luftqualität und bietet Lebensraum für Tiere und
-								Insekten. Weitere Informationen folgen in einem späteren Update.
+								Insekten. Weitere Informationen folgen in einem späteren Update. <br /><br />Bis
+								dahin kannst du dir die
+								<a
+									href="https://www.bielefeld.de/node/7433"
+									target="_blank"
+									class="text-green-600 underline"
+									rel="noopener noreferrer"
+								>
+									Stadtklimaanalyse Bielefeld
+								</a> durchlesen, um zu erfahren, warum du dank der Stadtbäume in Bielefeld im Sommer
+								besser schlafen kannst. 🤓
 							</Notice>
 						</div>
 					</Accordion>
