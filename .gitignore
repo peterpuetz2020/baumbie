@@ -1,21 +1,50 @@
+# ============================
+# Allgemeine System-Dateien
+# ============================
+
 .DS_Store
-frontend/node_modules
-frontend/build
-frontend/.svelte-kit
-frontend/.vercel
-frontend/.output
-frontend/vite.config.js.timestamp-*
-frontend/vite.config.ts.timestamp-*
+__pycache__/
+.vscode/
 
-frontend/static/segments/
-preparation/segments
-preparation/input
-preparation/venv
-preparation/.venv
-__pycache__
 
-.env*
+# ============================
+# Umgebungsvariablen
+# ============================
+
+# Alle .env-Dateien (z. B. .env, .env.local, .env.production)
+.env*                         
+# Ausnahme: env.example darf versioniert werden
 !env.example
 
-.vscode
 
+# ============================
+# Python-Preprocessing / Vorbereitung
+# ============================
+
+preparation/segments/
+preparation/input/
+preparation/venv/
+preparation/.venv/
+
+
+# ============================
+# Frontend (Svelte / Vite)
+# ============================
+
+frontend/node_modules/
+frontend/build/
+frontend/.svelte-kit/
+frontend/.vercel/
+frontend/.output/
+frontend/vite.config.js.timestamp-*
+frontend/vite.config.ts.timestamp-*
+frontend/static/segments/
+
+
+# ============================
+# Supabase
+# ============================
+
+supabase/.branches/
+supabase/.temp/
+supabase/.env
