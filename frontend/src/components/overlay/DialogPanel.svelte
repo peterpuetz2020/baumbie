@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import Heading from '$components/ui/Heading.svelte';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { Heading } from '$components/ui';
 	import { resetHighlight } from '$lib/map';
+	import { dialogMinimized, toggleDialog } from '$lib/ui';
 
 	export let title;
 	export let closeable: boolean | undefined = true;
@@ -10,7 +11,7 @@
 
 	$: open, closeable;
 
-	let minimized = true;
+	$: minimized = $dialogMinimized;
 
 	onMount(() => {
 		if (closeable === undefined) {
@@ -20,18 +21,12 @@
 
 	const close = () => {
 		resetHighlight();
-
 		open = false;
 		goto('/');
 	};
 
-	function toggleMinimize() {
-		minimized = !minimized;
-	}
-
 	function handleKeyUp(e: KeyboardEvent) {
 		const target = e.target as HTMLElement;
-
 		if (!target || typeof target.click !== 'function') return;
 
 		if (e.key === 'Enter') {
@@ -66,7 +61,7 @@
 				<Heading level={1}>{title}</Heading>
 				<div class="flex items-center gap-6">
 					{#if minimized}
-						<button on:click={toggleMinimize} aria-label="Maximieren" class="translate-y-[-12px]">
+						<button on:click={toggleDialog} aria-label="Maximieren" class="translate-y-[-12px]">
 							↑
 						</button>
 					{/if}
@@ -90,6 +85,7 @@
 		</div>
 	</div>
 {/if}
+
 <!-- Panel END -->
 
 <style>
