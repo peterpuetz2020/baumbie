@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { Button, Notice } from '$components/ui';
+	import { Button, Notice, PanelSection } from '$components/ui';
 	import { selectedTreeFilters, loadTopSpecies } from '$lib/trees';
 	import { minimizeDialog, dialogMinimized, maximizeDialog } from '$lib/ui';
 
@@ -31,7 +31,7 @@
 </script>
 
 <div class="w-full max-w-screen-lg mx-auto space-y-10 pt-2">
-	<!-- Beschreibung - nur im maximierten Zustand anzeigen -->
+	<!-- Info notice is only shown when the panel is fully expanded -->
 	{#if !$dialogMinimized}
 		<div class="space-y-2 text-lg text-gray-800 leading-relaxed">
 			<Notice tone="info">
@@ -45,9 +45,9 @@
 		</div>
 	{/if}
 
-	<!-- Graue Box -->
-	<div class="bg-gray-50 border border-gray-200 rounded-2xl px-6 py-6 space-y-6 w-full">
-		<!-- Baumarten-Buttons -->
+	<!-- Filter buttons and 'reset' button in grey boxed panel section -->
+	<PanelSection className="space-y-6 px-2 sm:px-6">
+		<!-- Species selection buttons -->
 		<div class="flex flex-wrap gap-x-4 gap-y-3">
 			{#each topSpecies as species}
 				<Button
@@ -58,8 +58,7 @@
 				</Button>
 			{/each}
 		</div>
-
-		<!-- 🔁 Alle anzeigen unten -->
+		<!-- Reset button to show all species -->
 		<div>
 			<Button
 				variant={current.length === 0 ? 'primary' : 'default'}
@@ -69,5 +68,5 @@
 				<strong>Alle Baumarten anzeigen</strong>
 			</Button>
 		</div>
-	</div>
+	</PanelSection>
 </div>
