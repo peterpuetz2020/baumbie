@@ -1,5 +1,6 @@
 import { supabase } from './client';
 
+
 /**
  * Holt den deutschen Baumtyp eines Baumes anhand seiner UUID.
  */
@@ -40,9 +41,12 @@ export async function loadSpeciesMap(treeIds: string[]): Promise<Map<string, str
 }
 
 export async function getTreeSpeciesDescription(treeTypeBotanic: string) {
+	const field = Math.random() < 0.5 ? 'description_emotional' : 'description_neutral';
+
+
 	const { data, error } = await supabase
 		.from('tree_species')
-		.select('description')
+		.select(field)
 		.eq('tree_type_botanic', treeTypeBotanic)
 		.maybeSingle();
 
@@ -51,7 +55,7 @@ export async function getTreeSpeciesDescription(treeTypeBotanic: string) {
 		return null;
 	}
 
-	return data?.description ?? null;
+	return (data as Record<string, string | null>)?.[field] ?? null;
 }
 
 /**

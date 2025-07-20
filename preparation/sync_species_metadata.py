@@ -23,8 +23,6 @@ path_to_file = sys.argv[1]
 # 🌐 Datendatei laden
 with open(path_to_file, encoding="utf-8") as f:
     if path_to_file.endswith((".yaml", ".yml")):
-        if not yaml:
-            raise ImportError("PyYAML is not installed. Run: pip install pyyaml")
         data = yaml.safe_load(f)
     elif path_to_file.endswith(".json"):
         data = json.load(f)
@@ -34,3 +32,4 @@ with open(path_to_file, encoding="utf-8") as f:
 # 📥 Daten in Supabase schreiben
 for item in data:
     supabase.table("tree_species").upsert(item, on_conflict="tree_type_botanic").execute()
+    print(f"{item['tree_type_botanic']} ✔")

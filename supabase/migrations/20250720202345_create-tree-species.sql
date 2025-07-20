@@ -6,7 +6,8 @@ create table public.tree_species (
   -- Botanischer Name, identisch zu `tree_type_botanic` aus der `trees`-Tabelle
   tree_type_botanic varchar not null,
 
-  description text
+  description_emotional text,
+  description_neutral text
 );
 
 -- Jede Art darf nur einmal vorkommen
