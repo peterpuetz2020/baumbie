@@ -14,7 +14,7 @@
 
 	const variantClasses: Record<ButtonVariant, string> = {
 		default:
-			'border-black text-black bg-white active:bg-gray-200 active:text-black hover:bg-gray-100 hover:text-black supports-hover:hover:bg-green-800 supports-hover:hover:text-white',
+			'border-black text-black bg-white active:bg-gray-200 active:text-black supports-hover:hover:bg-green-800 supports-hover:hover:text-white',
 		primary:
 			'border-green-600 bg-green-600 text-white active:bg-green-700 supports-hover:hover:bg-green-800',
 		secondary: 'border-green-500 text-black active:bg-green-50 supports-hover:hover:bg-green-100',
