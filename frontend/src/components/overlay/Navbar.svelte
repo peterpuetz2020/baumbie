@@ -31,14 +31,16 @@
 	}
 </script>
 
-<footer class="fixed bottom-0 left-0 right-0 z-[700] bg-white flex justify-around items-center py-4 min-h-16">
+<footer
+	class="fixed bottom-0 left-0 right-0 z-[700] bg-white flex justify-around items-center py-4 min-h-16"
+>
 	<button on:click={() => handleButtonbarClick('accountButton')}
-	><img src="/navbar/settings.svg" class="w-8 h-8" alt="" /></button
+		><img src="/navbar/settings.svg" class="w-8 h-8" alt="" /></button
 	>
 	<button on:click={() => handleButtonbarClick('baumButton')}
-	><img src="/navbar/tree-status.svg" class="w-8 h-8" alt="" /></button
+		><img src="/navbar/tree-status.svg" class="w-8 h-8" alt="" /></button
 	>
 	<button on:click={() => handleButtonbarClick('lupeButton')}
-	><img src="/navbar/search.svg" class="w-8 h-8" alt="" />
+		><img src="/navbar/search.svg" class="w-8 h-8" alt="" />
 	</button>
 </footer>

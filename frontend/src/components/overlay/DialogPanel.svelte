@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { Heading } from '$components/ui';
 	import { resetHighlight } from '$lib/map';
-	import { dialogMinimized, toggleDialog } from '$lib/ui';
+	import { dialogMinimized } from '$lib/ui';
 
 	export let title;
 	export let closeable: boolean | undefined = true;
@@ -36,7 +36,6 @@
 	}
 </script>
 
-<!-- Panel START -->
 {#if open}
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-no-noninteractive-tabindex -->
 	<div
@@ -46,7 +45,7 @@
 		aria-modal="true"
 		on:click|stopPropagation
 		on:keyup={handleKeyUp}
-		class="dialog-panel fixed bottom-[64px] top-[80px] left-0 right-0 z-[800] flex justify-center {minimized
+		class="dialog-panel fixed bottom-[64px] left-0 right-0 z-[800] flex justify-center {minimized
 			? 'minimized'
 			: 'maximized'}"
 	>
@@ -54,18 +53,12 @@
 		<div
 			class="dialog-content bg-white px-4 pt-4 shadow-xl flex flex-col w-full max-w-5xl mx-auto {minimized
 				? 'h-[30vh]'
-				: 'h-full'} rounded-t-xl"
+				: 'h-[calc(100vh-144px)]'} rounded-t-xl"
 		>
 			<!-- Header -->
 			<header class="flex flex-row items-center justify-between shrink-0">
 				<Heading level={1}>{title}</Heading>
 				<div class="flex items-center gap-6">
-					{#if minimized}
-						<button on:click={toggleDialog} aria-label="Maximieren" class="translate-y-[-12px]">
-							↑
-						</button>
-					{/if}
-
 					{#if closeable}
 						<button on:click={close} class="translate-y-[-12px]">
 							<img src="/card/cross.svg" alt="close" />
@@ -86,22 +79,35 @@
 	</div>
 {/if}
 
-<!-- Panel END -->
-
 <style>
 	.dialog-panel {
-		transition: transform 0.3s ease-out;
+		transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	}
 
 	.dialog-content {
 		transition: height 0.3s ease-out;
+		box-shadow:
+			0 -4px 6px -1px rgb(0 0 0 / 0.1),
+			0 -2px 4px -2px rgb(0 0 0 / 0.1);
 	}
 
+	/* Geschlossen: Drawer ist komplett unter der Navbar versteckt */
+	.dialog-panel:not(.maximized):not(.minimized) {
+		transform: translateY(calc(100% + 64px));
+	}
+
+	/* Minimiert: Nur oberer Teil sichtbar, über der Navbar */
 	.dialog-panel.minimized {
 		transform: translateY(calc(100% - 30vh));
 	}
 
+	/* Maximiert: Vollständig sichtbar, über der Navbar */
 	.dialog-panel.maximized {
 		transform: translateY(0);
+	}
+
+	/* Initial state für smooth entrance */
+	.dialog-panel {
+		transform: translateY(calc(100% + 64px));
 	}
 </style>
