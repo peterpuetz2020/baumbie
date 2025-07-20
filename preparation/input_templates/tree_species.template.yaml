@@ -1,7 +1,8 @@
 # YAML-Vorlage für Baumarten-Beschreibungen
-# Jeder Eintrag enthält genau eine botanische Bezeichnung.
+# Jeder Eintrag wird eindeutig durch den botanischen Namen (tree_type_botanic) identifiziert.
+# Für jede Baumart müssen beide Felder – description_emotional und description_neutral – ausgefüllt werden.
+# Für mehrzeiligen Fließtext wird der YAML-Operator > verwendet.
 # Die Reihenfolge ist beliebig, Duplikate sind nicht erlaubt.
-# Mindestens eine der beiden Beschreibungsspalten sollte ausgefüllt sein.
 
 - tree_type_botanic: Ulmus glabra  # Botanischer Name (muss exakt mit 'trees.tree_type_botanic' übereinstimmen)
   description_emotional: >
