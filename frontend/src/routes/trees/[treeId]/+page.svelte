@@ -154,10 +154,7 @@
 							<p class="text-black font-bold">🚿 Gießungen</p>
 						</div>
 						<div slot="details">
-							<TreeWaterings
-								treeId={tree.uuid}
-								on:contentChanged={() => historyAccordionRef?.updateHeightExternally()}
-							/>
+							<TreeWaterings treeId={tree.uuid} />
 						</div>
 					</Accordion>
 

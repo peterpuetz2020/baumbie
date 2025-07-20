@@ -10,7 +10,7 @@
 
 <div class="snap-center shrink-0 w-52 sm:w-56 md:w-auto">
 	<div
-		class="relative grid grid-cols-2 items-center gap-4 p-4 rounded-xl border border-zinc-100 bg-white shadow-sm text-left"
+		class="relative grid grid-cols-2 items-center gap-4 px-4 py-5 rounded-xl border border-zinc-200 bg-white text-left shadow-sm"
 	>
 		<!-- Linke Spalte: Icon + Balken -->
 		<div class="relative flex justify-center items-center w-full h-14 text-green-600">
@@ -66,7 +66,7 @@
 
 		<!-- Rechte Spalte: Text -->
 		<div class="flex flex-col items-center justify-center text-center w-full">
-			<p class="text-sm text-gray-600 leading-tight">
+			<p class="text-xs text-gray-500 leading-tight">
 				{#if label === 'Kronendurchmesser'}
 					Kronen-<br />durchmesser
 				{:else if label === 'Stammdurchmesser'}
@@ -75,7 +75,7 @@
 					{label}
 				{/if}
 			</p>
-			<p class="text-base font-semibold text-gray-900 mt-1">
+			<p class="text-sm font-semibold text-gray-800 mt-1">
 				{value}
 				{unit}
 			</p>
