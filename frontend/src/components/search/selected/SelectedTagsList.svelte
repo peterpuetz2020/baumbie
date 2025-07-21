@@ -5,7 +5,7 @@
 </script>
 
 {#if species.length > 0}
-	<div class="px-2 pt-1 pb-1 flex flex-wrap gap-2">
+	<div class="px-2 -mt-3 flex flex-wrap gap-2">
 		{#each species as label}
 			<SelectedFilterTag {label} on:remove />
 		{/each}

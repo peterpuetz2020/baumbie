@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { Heading } from '$components/ui';
+	import { PanelSection } from '$components/ui';
 	import { selectedTreeFilters, loadTopSpecies } from '$lib/trees';
 	import { minimizeDialog, dialogMinimized, maximizeDialog } from '$lib/ui';
 
@@ -29,18 +29,18 @@
 	}
 </script>
 
-<div class="w-full max-w-screen-lg mx-auto space-y-6 pt-2">
+<div class="w-full max-w-screen-lg mx-auto space-y-3 pt-2">
 	{#if $dialogMinimized}
 		{#if current.length > 0}
 			<SelectedTagsList species={current} on:remove={(e) => toggleSpecies(e.detail)} />
 		{/if}
-
-		<Heading level={2}>Häufigste Baumarten</Heading>
-		<FilterOptionRow
-			options={topSpecies}
-			selected={current}
-			on:toggle={(e) => toggleSpecies(e.detail)}
-		/>
+		<PanelSection title="Häufigste Baumarten">
+			<FilterOptionRow
+				options={topSpecies}
+				selected={current}
+				on:toggle={(e) => toggleSpecies(e.detail)}
+			/>
+		</PanelSection>
 	{:else}
 		<SpeciesFilterPanel
 			options={topSpecies}

@@ -8,7 +8,7 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<div class="overflow-x-auto -mx-2 px-2">
+<div class="scroll-fade overflow-x-auto -mx-2 px-2">
 	<div class="flex gap-2 pb-1" style="width: max-content; min-width: 100%;">
 		{#each options as item}
 			<FilterOptionButton
@@ -20,3 +20,22 @@
 		{/each}
 	</div>
 </div>
+
+<style>
+	.scroll-fade {
+		mask-image: linear-gradient(
+			to right,
+			transparent 0,
+			black 16px,
+			black calc(100% - 16px),
+			transparent 100%
+		);
+		-webkit-mask-image: linear-gradient(
+			to right,
+			transparent 0,
+			black 16px,
+			black calc(100% - 16px),
+			transparent 100%
+		);
+	}
+</style>
