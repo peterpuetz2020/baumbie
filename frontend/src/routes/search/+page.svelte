@@ -3,7 +3,7 @@
 	import { FilterTrees } from '$components/search';
 </script>
 
-<DialogPanel title={'Nach Baumarten filtern'} open={true}>
+<DialogPanel title={'Meine Baumauswahl'} open={true}>
 	<div class="pt-2 pb-6 space-y-4">
 		<FilterTrees />
 	</div>
