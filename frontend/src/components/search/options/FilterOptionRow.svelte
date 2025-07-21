@@ -9,7 +9,7 @@
 </script>
 
 <div class="scroll-fade overflow-x-auto -mx-2 px-2">
-	<div class="flex gap-2 pb-1" style="width: max-content; min-width: 100%;">
+	<div class="flex gap-2 pb-1 mb-4" style="width: max-content; min-width: 100%;">
 		{#each options as item}
 			<FilterOptionButton
 				label={item.label}
@@ -22,7 +22,9 @@
 </div>
 
 <style>
+	/* Horizontal scroll area with fading mask and custom scrollbar */
 	.scroll-fade {
+		/* Fading mask at left and right edges */
 		mask-image: linear-gradient(
 			to right,
 			transparent 0,
@@ -37,5 +39,24 @@
 			black calc(100% - 16px),
 			transparent 100%
 		);
+
+		/* Thin custom scrollbar for Firefox */
+		scrollbar-color: #51af8b #e5e7eb;
+		scrollbar-width: thin;
+	}
+
+	/* WebKit scrollbar styles (Chrome, Safari) */
+	.scroll-fade::-webkit-scrollbar {
+		height: 8px;
+	}
+
+	.scroll-fade::-webkit-scrollbar-track {
+		background: #e5e7eb;
+		border-radius: 4px;
+	}
+
+	.scroll-fade::-webkit-scrollbar-thumb {
+		background-color: #51af8b;
+		border-radius: 4px;
 	}
 </style>
