@@ -11,12 +11,12 @@ url = os.environ.get("VITE_SUPABASE_URL")
 key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
 if not url or not key:
-    raise ValueError("VITE_SUPABASE_URL und SUPABASE_SERVICE_ROLE_KEY müssen gesetzt sein")
+    raise ValueError("VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set")
 
 supabase: Client = create_client(url, key)
 
 if len(sys.argv) != 2:
-    raise ValueError("Usage: python import_species.py <path_to_file.yaml|json>")
+    raise ValueError("Usage: python update_tree_species.py <path_to_file.yaml|json>")
 
 path_to_file = sys.argv[1]
 
