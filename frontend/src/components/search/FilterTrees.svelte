@@ -4,9 +4,9 @@
 	import { selectedTreeFilters, loadTopSpecies } from '$lib/trees';
 	import { minimizeDialog, dialogMinimized, maximizeDialog } from '$lib/ui';
 
-	import SelectedFiltersList from './SelectedFiltersList.svelte';
-	import SpeciesButtonRow from './SpeciesButtonRow.svelte';
-	import SpeciesFilterPanel from './SpeciesFilterPanel.svelte';
+	import SelectedTagsList from './selected/SelectedTagsList.svelte';
+	import FilterOptionRow from './options/FilterOptionRow.svelte';
+	import SpeciesFilterPanel from './options/SpeciesFilterPanel.svelte';
 
 	let topSpecies: { label: string; count: number }[] = [];
 
@@ -32,18 +32,18 @@
 <div class="w-full max-w-screen-lg mx-auto space-y-6 pt-2">
 	{#if $dialogMinimized}
 		{#if current.length > 0}
-			<SelectedFiltersList species={current} on:remove={(e) => toggleSpecies(e.detail)} />
+			<SelectedTagsList species={current} on:remove={(e) => toggleSpecies(e.detail)} />
 		{/if}
 
 		<Heading level={2}>Häufigste Baumarten</Heading>
-		<SpeciesButtonRow
-			speciesList={topSpecies}
+		<FilterOptionRow
+			options={topSpecies}
 			selected={current}
 			on:toggle={(e) => toggleSpecies(e.detail)}
 		/>
 	{:else}
 		<SpeciesFilterPanel
-			speciesList={topSpecies}
+			options={topSpecies}
 			selected={current}
 			on:toggle={(e) => toggleSpecies(e.detail)}
 		/>

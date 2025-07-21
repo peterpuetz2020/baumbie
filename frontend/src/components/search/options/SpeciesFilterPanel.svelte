@@ -1,18 +1,11 @@
 <script lang="ts">
 	import { Heading, PanelSection, Notice } from '$components/ui';
-	import SpeciesButtonGrid from './SpeciesButtonGrid.svelte';
-	import SpeciesButtonRow from './SpeciesButtonRow.svelte';
+	import FilterOptionGrid from './FilterOptionGrid.svelte';
+	import FilterOptionRow from './FilterOptionRow.svelte';
 	import { isMobile } from '$lib/utils/media';
 
-	export let speciesList: { label: string; count: number }[] = [];
+	export let options: { label: string; count: number }[] = [];
 	export let selected: string[] = [];
-
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
-
-	function forwardToggle(e: CustomEvent<string>) {
-		dispatch('toggle', e.detail);
-	}
 </script>
 
 <PanelSection className="space-y-6 px-2 sm:px-6">
@@ -26,8 +19,8 @@
 	</Notice>
 
 	{#if $isMobile}
-		<SpeciesButtonRow {speciesList} {selected} on:toggle={forwardToggle} />
+		<FilterOptionRow {options} {selected} on:toggle />
 	{:else}
-		<SpeciesButtonGrid {speciesList} {selected} on:toggle={forwardToggle} />
+		<FilterOptionGrid {options} {selected} on:toggle />
 	{/if}
 </PanelSection>
