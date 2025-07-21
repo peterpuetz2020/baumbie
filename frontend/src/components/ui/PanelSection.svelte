@@ -7,7 +7,7 @@
 
 <div class={`p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-3 ${className}`.trim()}>
 	{#if title}
-		<Heading {level}>{title}</Heading>
+		<Heading {level} className="!pb-0">{title}</Heading>
 	{/if}
 	<slot />
 </div>

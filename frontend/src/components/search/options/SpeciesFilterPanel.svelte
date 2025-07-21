@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heading, PanelSection, Notice } from '$components/ui';
+	import { PanelSection, Notice } from '$components/ui';
 	import FilterOptionGrid from './FilterOptionGrid.svelte';
 	import FilterOptionRow from './FilterOptionRow.svelte';
 	import { isMobile } from '$lib/utils/media';
@@ -8,14 +8,12 @@
 	export let selected: string[] = [];
 </script>
 
-<PanelSection className="space-y-6 px-2 sm:px-6">
-	<Heading level={2}>Häufigste Baumarten</Heading>
-
+<PanelSection title="Häufigste Baumarten">
 	<Notice tone="info">
-		Hier kannst du gezielt nach bestimmten Baumarten filtern. Zur Auswahl stehen die
-		<strong>30 häufigsten</strong> Arten in Bielefeld, die gemeinsam rund
-		<strong>85% aller Stadtbäume</strong> ausmachen. Wähle eine oder mehrere Arten aus – die Karte zeigt
-		anschließend nur diese an.
+		Wähle eine oder mehrere Arten aus – die Karte zeigt anschließend nur diese an. <br /> Zur
+		Auswahl stehen die
+		<strong>30 häufigsten</strong> Arten in Bielefeld (🌿
+		<strong>85% aller Stadtbäume</strong>).
 	</Notice>
 
 	{#if $isMobile}
