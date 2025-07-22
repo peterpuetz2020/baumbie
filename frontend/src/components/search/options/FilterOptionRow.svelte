@@ -6,10 +6,38 @@
 	export let selected: string[] = [];
 
 	const dispatch = createEventDispatcher();
+
+	// Keyboard navigation for horizontal scrolling
+	function handleKeydown(event: KeyboardEvent) {
+		const container = event.currentTarget as HTMLElement;
+
+		if (event.key === 'ArrowLeft') {
+			event.preventDefault();
+			container.scrollBy({ left: -100, behavior: 'smooth' });
+		} else if (event.key === 'ArrowRight') {
+			event.preventDefault();
+			container.scrollBy({ left: 100, behavior: 'smooth' });
+		} else if (event.key === 'Home') {
+			event.preventDefault();
+			container.scrollTo({ left: 0, behavior: 'smooth' });
+		} else if (event.key === 'End') {
+			event.preventDefault();
+			container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+		}
+	}
 </script>
 
-<div class="scroll-fade overflow-x-auto -mx-2 px-2">
-	<div class="flex gap-2 pb-1 mb-4" style="width: max-content; min-width: 100%;">
+<!-- A11y: Scrollable region with keyboard navigation is a valid pattern -->
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<div
+	class="scroll-fade overflow-x-auto -mx-2 px-2"
+	role="region"
+	aria-label="Filter-Optionen - Pfeiltasten zum Scrollen verwenden"
+	tabindex="0"
+	on:keydown={handleKeydown}
+>
+	<div class="flex gap-2 pb-1 mb-4" style="width: max-content; min-width: 100%;" role="group">
 		{#each options as item}
 			<FilterOptionButton
 				label={item.label}
@@ -58,5 +86,11 @@
 	.scroll-fade::-webkit-scrollbar-thumb {
 		background-color: #51af8b;
 		border-radius: 4px;
+	}
+
+	/* Focus outline for keyboard navigation */
+	.scroll-fade:focus {
+		outline: 2px solid #51af8b;
+		outline-offset: 2px;
 	}
 </style>
