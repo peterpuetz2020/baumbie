@@ -22,9 +22,9 @@ preparation/segments
 preparation/input
 preparation/venv
 preparation/__pycache__
-preparation/citree-scrape/data
-preparation/citree-scrape/images
-preparation/citree-scrape/tree-information.json
+preparation/citree-scraper/data
+preparation/citree-scraper/images
+preparation/citree-scraper/tree-information.json
 
 # ============================
 # Frontend (Svelte / Vite)
