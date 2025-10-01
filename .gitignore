@@ -3,9 +3,7 @@
 # ============================
 
 .DS_Store
-__pycache__/
 .vscode/
-
 
 # ============================
 # Umgebungsvariablen
@@ -16,30 +14,30 @@ __pycache__/
 # Ausnahme: env.example darf versioniert werden
 !env.example
 
-
 # ============================
 # Python-Preprocessing / Vorbereitung
 # ============================
 
-preparation/segments/
-preparation/input/
-preparation/venv/
-preparation/.venv/
-
+preparation/segments
+preparation/input
+preparation/venv
+preparation/__pycache__
+preparation/citree-scraper/data
+preparation/citree-scraper/images
+preparation/citree-scraper/tree-information.json
 
 # ============================
 # Frontend (Svelte / Vite)
 # ============================
 
-frontend/node_modules/
-frontend/build/
-frontend/.svelte-kit/
-frontend/.vercel/
-frontend/.output/
+frontend/node_modules
+frontend/build
+frontend/.svelte-kit
+frontend/.vercel
+frontend/.output
 frontend/vite.config.js.timestamp-*
 frontend/vite.config.ts.timestamp-*
 frontend/static/segments/
-
 
 # ============================
 # Supabase
