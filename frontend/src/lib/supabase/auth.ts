@@ -36,10 +36,42 @@ export async function loginWithEmailPassword(email: string, password: string) {
 	return data.user;
 }
 
-export async function logout(): Promise<void> {
-	await supabase.auth.signOut();
+export async function requestPasswordReset(
+    email: string
+): Promise<{ ok: boolean; error?: string }> {
+    try {
+        const response = await fetch('/api/auth/password-reset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        const payload: { ok?: boolean; error?: string } = await response.json().catch(() => ({}));
+
+        if (!response.ok || !payload.ok) {
+            return {
+                ok: false,
+                error:
+                    payload.error ??
+                    'Zurücksetzen des Passworts nicht möglich. Bitte versuche es erneut.',
+            };
+        }
+
+        return { ok: true };
+    } catch (error) {
+        console.error('Fehler beim Anfordern des Passwort-Resets:', error);
+        return {
+            ok: false,
+            error: 'Zurücksetzen des Passworts nicht möglich. Bitte versuche es erneut.',
+        };
+    }
 }
 
+export async function logout(): Promise<void> {
+    await supabase.auth.signOut();
+}
 
 export async function getCurrentUser() {
 	const sessionResult = await supabase.auth.getSession();

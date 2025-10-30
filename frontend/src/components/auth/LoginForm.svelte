@@ -25,21 +25,33 @@
 </script>
 
 <form on:submit={handleLogin} class="flex flex-col gap-y-4">
-	<div class="flex flex-col gap-y-2">
-		<EmailField
-			id="email"
-			label="E-Mail:"
-			inputClass="w-full"
-			placeholder="lebensbaum@baumbie.de"
-			bind:value={email}
-		/>
-		<PasswordField
-			id="password"
-			label="Passwort:"
-			inputClass="w-full"
-			placeholder="Passwort"
-			bind:value={password}
-		/>
+    <div class="flex flex-col gap-y-2">
+        <EmailField
+        	id="email"
+            label="E-Mail:"
+            inputClass="w-full"
+            placeholder="lebensbaum@baumbie.de"
+            bind:value={email}
+        />
+    	<div class="flex flex-col gap-y-1">
+        	<PasswordField
+            	id="password"
+            	label="Passwort:"
+            	inputClass="w-full"
+            	placeholder="Passwort"
+            	bind:value={password}
+        	/>
+        	<p class="text-sm text-gray-600">
+            	Passwort vergessen?
+            	<a
+                	href="/forgot-password"
+                	class="underline text-green-600"
+                	on:click|preventDefault={() => goto('/forgot-password')}
+            	>
+                	Hier zurücksetzen!
+            	</a>
+        	</p>
+    	</div>
 	</div>
 
 	{#if errorMessage}

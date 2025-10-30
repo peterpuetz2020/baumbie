@@ -1,16 +1,24 @@
+# %%
 import os
 import json
 import sys
 from tqdm import tqdm
 from supabase import create_client, Client
 import pyproj
+from postgrest.exceptions import APIError
 from utils.env import load_env
 
+# %%
 # Lädt Umgebungsvariablen aus .env.local (wenn vorhanden) oder .env
 load_env()
+# does not work, do manually
+#env_path_local = "C:/Users/AnwenderIN/Desktop/code4bielefeld/baumbie/.env.local"
+#load_dotenv(dotenv_path=env_path_local, override=True)
 
+# %%
 url: str = os.environ.get("VITE_SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+print(url, key)
 
 if not url or not key:
     raise ValueError("VITE_SUPABASE_URL und SUPABASE_SERVICE_ROLE_KEY müssen in .env/.env.local gesetzt sein")
@@ -24,11 +32,11 @@ else:
     No path to the geojson file was provided. Please provide the file path as an argument when starting the script:
     python3 import.py /tmp/my-super-geo-json-file.json
     """)
-
+# %%
 projection = pyproj.Proj(proj='utm', zone=32, ellps='WGS84')
+# %%
 def unproject(x, y):
     return projection(x, y, inverse=True)
-
 
 def create_insert_data(feature, provider_id):
     return {
@@ -57,7 +65,7 @@ def create_insert_data(feature, provider_id):
         "geocoordinates": "POINT(" + str(feature["geometry"]["coordinates"][0]) + " " + str(feature["geometry"]["coordinates"][1]) + ")"
     }
 
-
+# %%
 with open(path_to_geojson) as f:
     data = json.load(f)
 
@@ -66,7 +74,12 @@ with open(path_to_geojson) as f:
     }).execute()
     city_uuid = city.data[0]["uuid"]
 
-    rows = [create_insert_data(feature, city_uuid) for feature in data["features"]]
+
+    rows = [
+        create_insert_data(feature, city_uuid) for feature in data["features"]
+    ]
     rows = [row for row in rows if row is not None]
     for row in tqdm(rows):
         supabase.table("trees").insert(row).execute()
+# %%
+
