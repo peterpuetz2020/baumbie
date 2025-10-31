@@ -74,6 +74,46 @@ export async function requestPasswordReset(
     }
 } */
 
+export async function updatePassword(
+    newPassword: string
+): Promise<{ ok: boolean; error?: string }> {
+    const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+
+    if (error) {
+        const normalizedMessage = error.message?.toLowerCase() ?? '';
+
+        if (normalizedMessage.includes('password should be at least')) {
+            return {
+                ok: false,
+                error: 'Passwort muss mindestens 6 Zeichen lang sein.',
+            };
+        }
+
+        if (normalizedMessage.includes('password cannot be empty')) {
+            return {
+                ok: false,
+                error: 'Bitte gib ein neues Passwort ein.',
+            };
+        }
+
+        console.error('Fehler beim Aktualisieren des Passworts:', error);
+        return {
+            ok: false,
+            error: 'Das Passwort konnte nicht aktualisiert werden. Bitte versuche es erneut.',
+        };
+    }
+
+    if (!data?.user) {
+        return {
+            ok: false,
+            error: 'Das Passwort konnte nicht aktualisiert werden. Bitte versuche es erneut.',
+        };
+    }
+
+    return { ok: true };
+}
+
+	
 export async function logout(): Promise<void> {
     await supabase.auth.signOut();
 }

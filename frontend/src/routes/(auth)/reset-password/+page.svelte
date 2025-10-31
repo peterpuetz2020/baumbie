@@ -83,17 +83,17 @@
 </script>
 
 {#if state === 'checking'}
-    <Modal title="Passwort zurücksetzen">
+    <Modal title="Passwort zurücksetzen" closeOnBackdrop={false}>
         <p class="text-sm text-baumbie-gray-700">
             Wir prüfen deinen Zurücksetzungslink …
         </p>
     </Modal>
 {:else if state === 'ready'}
-    <Modal title="Neues Passwort festlegen">
+    <Modal title="Neues Passwort festlegen" closeOnBackdrop={false}>
         <PasswordUpdateForm />
     </Modal>
 {:else}
-    <Modal title="Link ungültig">
+    <Modal title="Link ungültig" closeOnBackdrop={false}>
         <div class="flex flex-col gap-y-4">
             <p class="text-sm text-baumbie-gray-700">{errorMessage}</p>
             <Button type="button" variant="primary" className="w-full" on:click={handleRequestNewMail}>
