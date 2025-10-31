@@ -45,18 +45,6 @@ export const POST: RequestHandler = async ({ request }) => {
         return json({ ok: false, error: 'Bitte gib deine E-Mail-Adresse ein.' }, { status: 400 });
     }
 
-    const { data: userList, error: userLookupError } = await supabaseAdminClient.auth.admin.listUsers({
-        email,
-        perPage: 1,
-    });
-
-    if (userLookupError || !userList?.users?.length) {
-        return json(
-            { ok: false, error: 'E-Mail-Adresse ist nicht bei baumbie registriert!' },
-            { status: 404 }
-        );
-    }
-
     const redirectTo = env.PASSWORD_RESET_REDIRECT_URL ?? env.VITE_PASSWORD_RESET_REDIRECT_URL;
 
     const { error: resetError } = await supabaseAdminClient.auth.resetPasswordForEmail(
@@ -65,6 +53,18 @@ export const POST: RequestHandler = async ({ request }) => {
     );
 
     if (resetError) {
+        const normalizedMessage = resetError.message?.toLowerCase() ?? '';
+        const missingAccount =
+            normalizedMessage.includes('not found') ||
+            normalizedMessage.includes('no user') ||
+            normalizedMessage.includes('no account');
+
+        if (resetError.status === 400 && missingAccount) {
+            return json(
+                { ok: false, error: 'E-Mail-Adresse ist nicht bei baumbie registriert!' },
+                { status: 404 }
+            );
+        }
         console.error('Fehler beim Senden der Passwort-Reset-Mail:', resetError);
         return json(
             {

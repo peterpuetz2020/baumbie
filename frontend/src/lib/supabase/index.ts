@@ -1,6 +1,14 @@
 
 export * from './adoption';
-export * from './auth';
+export {
+    registerWithEmailPassword,
+    loginWithEmailPassword,
+    requestPasswordReset,
+    logout,
+    updatePassword,
+    getCurrentUser,
+    deleteCurrentUser
+} from './auth';
 export * from './client';
 export * from './trees';
 export * from './waterings';
