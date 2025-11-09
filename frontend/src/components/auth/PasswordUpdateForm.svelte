@@ -4,6 +4,8 @@
     import { logout, updatePassword } from '$lib/supabase';
     import { PasswordField, Button, Notice } from '$components/ui';
 
+    const MIN_PASSWORD_LENGTH = 6;
+
     let password = '';
     let passwordConfirmation = '';
     let errorMessage: string | null = null;
@@ -21,7 +23,13 @@
         }
 
         if (password !== passwordConfirmation) {
-            errorMessage = 'Die beiden Passwörter stimmen nicht überein!';
+            errorMessage = 'Die beiden Passwoerter stimmen nicht ueberein!';
+            successMessage = null;
+            return;
+        }
+
+        if (password.length < MIN_PASSWORD_LENGTH) {
+            errorMessage = `Passwort muss mindestens ${MIN_PASSWORD_LENGTH} Zeichen lang sein.`;
             successMessage = null;
             return;
         }
@@ -39,7 +47,7 @@
             }
 
             successMessage =
-                'Dein Passwort wurde erfolgreich geändert. Du wirst gleich zum Login weitergeleitet.';
+                'Dein Passwort wurde erfolgreich geaendert. Du wirst gleich zum Login weitergeleitet.';
 
             await logout();
 
@@ -59,7 +67,7 @@
         passwordConfirmation = '';
     }
 
-    // Aufräumen des Redirect-Timeouts, falls der Nutzer die Seite verlässt
+    // Cleanup redirect timeout if the user leaves the page early
     onDestroy(() => {
         if (redirectTimeout) {
             clearTimeout(redirectTimeout);
@@ -72,7 +80,7 @@
         id="new-password"
         label="Neues Passwort:"
         inputClass="w-full"
-        placeholder="••••••••"
+        placeholder="********"
         bind:value={password}
     />
 
@@ -80,7 +88,7 @@
         id="confirm-password"
         label="Neues Passwort (Wiederholung):"
         inputClass="w-full"
-        placeholder="••••••••"
+        placeholder="********"
         bind:value={passwordConfirmation}
     />
 
@@ -92,6 +100,6 @@
     {/if}
 
     <Button type="submit" variant="primary" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? 'Wird gespeichert …' : 'Passwort speichern'}
+        {isSubmitting ? 'Wird gespeichert ...' : 'Passwort zuruecksetzen'}
     </Button>
 </form>

@@ -10,7 +10,7 @@
 
     let state: ViewState = 'checking';
     let errorMessage =
-        'Der Link zum Zurücksetzen deines Passworts ist leider ungültig oder abgelaufen. Bitte fordere einen neuen Link an.';
+        'Der Link zum Zuruecksetzen deines Passworts ist leider ungueltig oder abgelaufen. Bitte fordere einen neuen Link an.';
 
     onMount(async () => {
         const currentUrl = new URL(window.location.href);
@@ -65,7 +65,7 @@
 
             const { data, error } = await supabase.auth.getSession();
             if (error || !data.session) {
-                throw error ?? new Error('Keine gültige Sitzung für Passwort-Reset vorhanden.');
+                throw error ?? new Error('Keine gueltige Sitzung fuer Passwort-Reset vorhanden.');
             }
 
             cleanupUrl();
@@ -83,17 +83,17 @@
 </script>
 
 {#if state === 'checking'}
-    <Modal title="Passwort zurücksetzen" closeOnBackdrop={false}>
+    <Modal title="Passwort zuruecksetzen" closeOnBackdrop={false}>
         <p class="text-sm text-baumbie-gray-700">
-            Wir prüfen deinen Zurücksetzungslink …
+            Wir pruefen deinen Zuruecksetzungslink ...
         </p>
     </Modal>
 {:else if state === 'ready'}
-    <Modal title="Neues Passwort festlegen" closeOnBackdrop={false}>
+    <Modal title="Passwort zuruecksetzen" closeOnBackdrop={false}>
         <PasswordUpdateForm />
     </Modal>
 {:else}
-    <Modal title="Link ungültig" closeOnBackdrop={false}>
+    <Modal title="Link ungueltig" closeOnBackdrop={false}>
         <div class="flex flex-col gap-y-4">
             <p class="text-sm text-baumbie-gray-700">{errorMessage}</p>
             <Button type="button" variant="primary" className="w-full" on:click={handleRequestNewMail}>

@@ -36,12 +36,52 @@ export async function loginWithEmailPassword(email: string, password: string) {
 	return data.user;
 }
 
-export async function requestPasswordReset(
+/* export async function requestPasswordReset(
     email: string
 ): void {
 	await supabase.auth.resetPasswordForEmail(email, {
 		redirectTo: "/login"
 	})
+} */
+
+const PASSWORD_RESET_PATH = '/reset-password';
+
+const getPasswordResetRedirectUrl = (): string | undefined => {
+    const envUrl = import.meta.env.VITE_PASSWORD_RESET_REDIRECT_URL?.trim();
+    if (envUrl) {
+        return envUrl;
+    }
+
+    if (typeof window !== 'undefined') {
+        return new URL(PASSWORD_RESET_PATH, window.location.origin).toString();
+    }
+
+    return undefined;
+};
+
+export async function requestPasswordReset(email: string): Promise<{ ok: boolean; error?: string }> {
+    try {
+        const redirectTo = getPasswordResetRedirectUrl();
+        const { error } = await supabase.auth.resetPasswordForEmail(
+            email,
+            redirectTo ? { redirectTo } : undefined
+        );
+
+        if (error) {
+            return {
+                ok: false,
+                error: error.message ?? 'Das Zurücksetzen des Passworts ist fehlgeschlagen.',
+            };
+        }
+
+        return { ok: true };
+    } catch (error) {
+        console.error('Fehler beim Zurücksetzen des Passworts:', error);
+        return {
+            ok: false,
+            error: 'Das Zurücksetzen des Passworts ist fehlgeschlagen.',
+        };
+    }
 }
 
 /* export async function requestPasswordReset(
