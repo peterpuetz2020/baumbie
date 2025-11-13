@@ -62,9 +62,11 @@ const getPasswordResetRedirectUrl = (): string | undefined => {
 export async function requestPasswordReset(email: string): Promise<{ ok: boolean; error?: string }> {
     try {
         const redirectTo = getPasswordResetRedirectUrl();
+        console.log(redirectTo)
         const { error } = await supabase.auth.resetPasswordForEmail(
             email,
-            redirectTo ? { redirectTo } : undefined
+            //redirectTo ? { redirectTo } : undefined
+            {redirectTo: "/reset-password"} // ? { redirectTo } : undefined
         );
 
         if (error) {
